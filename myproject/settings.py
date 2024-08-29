@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-sbi45=(i6ddz!v@7$cq1pb#7-0znfk%)v3o56_5xvgxsdy=6%9
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1']
+ALLOWED_HOSTS = ['127.0.0.1','localhost']
 
 
 # Application definition
@@ -80,9 +80,9 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'crios',
         'USER': 'root',
-        'PASSWORD': 'mauro0510',
+        'PASSWORD': 'Samilove2016*',
         'HOST': 'localhost',
-        'PORT': '3307'  
+        'PORT': '3306'  
     }
 }
 
