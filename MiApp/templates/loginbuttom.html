@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Boton de Login</title>
+</head>
+<body>
+    <h1>CRIOS</h1>
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li class="{{ message.tags }}">{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    <form action="http://127.0.0.1:8000/login/">
+        <button type="submit"><h1><b>Iniciar Sesion</b></h1></button> 
+    </form>
+</body>
+</html>
+
+
