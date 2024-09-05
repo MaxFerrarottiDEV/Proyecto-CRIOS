@@ -23,6 +23,9 @@ def login(request):
 def test(request):
     return render(request, 'test.html')
 
+def homebeta(request):
+    return render(request, 'homebeta.html')
+
 @login_required
 def home(request):
     return render(request, 'home.html')
