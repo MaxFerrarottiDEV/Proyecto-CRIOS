@@ -14,9 +14,6 @@ class PreinscripcionForm(forms.ModelForm):
     class Meta:
         model = DatInsc
         #fields = 'all'
-        fields = ['iidcliente', 'Nombres','Apellidos','Fecha de Nacimiento',
-                  'Documento de Identidad (DNI)', 'Provincia','Domicilio','Estado Civil',
-                  '¿Tiene Hijos?','Lugar de Trabajo','Numero de Celular','Telefono Fijo',
-                  'Correo Electronico','Colegio de egreso','Año de Egreso','Titulo de Egreso',
-                  'Otros Titulos','¿Tuvo otro ingreso a nivel Superior o Universitario anterior a este?',
-                  '¿Cuales?','¿Completo los estudios?','¿Completo los estudios?']
+        fields = ['id_datinsc', 'nombre','apellido','fecha_nac','provincia','dni','edad','domicilio',
+                  'telefono_fijo','celular_nro','email','estado_civil','hijos','lugar_trabajo','tel_emergencia',
+                  'col_egreso','titulo','otro_titulo','anio_egreso','preg_1','resp_1','resp_2','preg_2']

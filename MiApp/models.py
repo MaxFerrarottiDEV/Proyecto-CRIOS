@@ -153,7 +153,7 @@ class DatInsc(models.Model):
     preg_2 = models.CharField(db_column='Preg_2', max_length=200, blank=True, null=True)  # Field name made lowercase.
     matricula = models.IntegerField(db_column='Matricula')  # Field name made lowercase.
     legajo_fisico = models.IntegerField(db_column='Legajo_Fisico')  # Field name made lowercase.
-
+    
     class Meta:
         managed = False
         db_table = 'dat_insc'

@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+{% load crispy_forms_tags %}
+
+<div class="modal-header">
+        <h5 class="modal-title">Formulario de Preinscripción</h5>
+</div>
+<div class="modal-body">
+        <form id="PreinscripcionForm" method="post" action="">
+            {% csrf_token %}
+            <div class="card mx-auto" style="width: 25rem;">
+                <div class="card-body">
+                    {{ form|crispy }}
+                <button class="btn btn-sm btn-primary float-end" type="submit">Guardar Solicitud</button>
+                </div>
+            </div>
+        </form>
+    <div id="messageContainer" class="alert" style="display:none; margin-top: 10px;"></div>
+  </div>
+{% endblock content %}
