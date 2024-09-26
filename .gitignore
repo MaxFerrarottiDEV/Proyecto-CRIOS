@@ -1,3 +1,6 @@
+# Created by https://www.toptal.com/developers/gitignore/api/django,python,venv
+# Edit at https://www.toptal.com/developers/gitignore?templates=django,python,venv
+
 ### Django ###
 *.log
 *.pot
@@ -272,4 +275,4 @@ pyrightconfig.json
 pyvenv.cfg
 pip-selfcheck.json
 
-# End of https://www.toptal.com/developers/gitignore/api/venv,django,python
+# End of https://www.toptal.com/developers/gitignore/api/django,python,venv
