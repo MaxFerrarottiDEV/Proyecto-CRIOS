@@ -28,6 +28,7 @@ def agregar_solicitud(request):
         form = PreinscripcionForm(request.POST)
         if form.is_valid():
             form.save()
+            messages.success(request, f'La solicitud de inscripcion se ha creado correctamente!')
             return redirect('lista_solicitudes')
     else:
         form = PreinscripcionForm()
@@ -49,7 +50,7 @@ def register_view(request):
             messages.success(request, '¡Cuenta creada exitosamente! Ahora puedes iniciar sesión.')
             return redirect('login')  # Redirige a la página de inicio de sesión
         else:
-            messages.error(request, 'Hubo un error en la creación de la cuenta. Inténtalo de nuevo.')
+            messages.error(request, 'Hubo un error en la creación de la solicitud. Inténtalo de nuevo.')
     else:
         form = UserCreationForm()
     

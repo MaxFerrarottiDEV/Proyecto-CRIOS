@@ -1,17 +1,21 @@
       /* Footer style */
+      body {
+        background-color: #c4dafa;
+      }
       #title {
+        text-align: left;
+        padding-left: 5%;
+      }   
+      #carrusel{
+        background-color: #84b6f4;
         text-align: center;
       }
-      #redes {
-        text-align: justify;
-      }
-      
       .carousel-item img {
         height: 400px;  /* Ajusta la altura de las imágenes */
         object-fit: contain; /* Esto asegura que la imagen se recorte y ajuste al tamaño del contenedor sin deformarse */
       }
       footer {
-        background-color: #f8f9fa; /* Color de fondo del footer */
+        background-color: #005187; /* Color de fondo del footer */
         padding: 15px;
         border-top: 2px solid #dee2e6; /* Borde superior */
         position: fixed;
@@ -21,12 +25,13 @@
       }
       .footer-text {
         margin: 0;
+        color: #fff;
         font-size: 16px;
       }
 
       /* Navbar style */
       .navbar {
-        background-color: #f8f9fa; /* Fondo claro */
+        background-color: #005187; /* Fondo claro */
         border-bottom: 2px solid #dee2e6; /* Borde inferior */
       }
       .navbar-brand {
@@ -34,7 +39,7 @@
         font-size: 20px;
       }
       .nav-link {
-        color: #333; /* Color del texto */
+        color: #fff; /* Color del texto */
         font-size: 16px;
         padding-right: 20px;
       }
@@ -54,3 +59,4 @@
       .logout-button:hover {
         background-color: #c82333; /* Color del botón al pasar el ratón */
       }
+

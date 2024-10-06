@@ -146,13 +146,13 @@ class DatInsc(models.Model):
     col_egreso = models.CharField(db_column='Col_Egreso', max_length=200)  # Field name made lowercase.
     titulo = models.CharField(db_column='Titulo', max_length=200)  # Field name made lowercase.
     otro_titulo = models.CharField(db_column='Otro_Titulo', max_length=200, blank=True, null=True)  # Field name made lowercase.
-    anio_egreso = models.TextField(db_column='Anio_Egreso', blank=True, null=True)  # Field name made lowercase. This field type is a guess.
-    preg_1 = models.CharField(db_column='Preg_1', max_length=200, blank=True, null=True)  # Field name made lowercase.
+    anio_egreso = models.IntegerField(db_column='Anio_Egreso', blank=True, null=True)  # Field name made lowercase. This field type is a guess.
+    preg_1 = models.IntegerField(db_column='Preg_1', blank=True, null=True)  # Field name made lowercase.
     resp_1 = models.CharField(db_column='Resp_1', max_length=200, blank=True, null=True)  # Field name made lowercase.
-    resp_2 = models.CharField(db_column='Resp_2', max_length=200, blank=True, null=True)  # Field name made lowercase.
+    resp_2 = models.IntegerField(db_column='Resp_2', blank=True, null=True)  # Field name made lowercase.
     preg_2 = models.CharField(db_column='Preg_2', max_length=200, blank=True, null=True)  # Field name made lowercase.
-    matricula = models.IntegerField(db_column='Matricula')  # Field name made lowercase.
-    legajo_fisico = models.IntegerField(db_column='Legajo_Fisico')  # Field name made lowercase.
+    matricula = models.BooleanField(db_column='Matricula',blank=True, null=True)  # Field name made lowercase.
+    legajo_fisico = models.BooleanField(db_column='Legajo_Fisico',blank=True, null=True)  # Field name made lowercase.
     
     class Meta:
         managed = False
