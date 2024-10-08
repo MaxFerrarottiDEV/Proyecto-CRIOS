@@ -125,7 +125,7 @@ CREATE TABLE `auth_user` (
 
 LOCK TABLES `auth_user` WRITE;
 /*!40000 ALTER TABLE `auth_user` DISABLE KEYS */;
-INSERT INTO `auth_user` VALUES (1,'pbkdf2_sha256$870000$6lnvxys3zCACPBD9d5C0f2$4G6W6mvf7qOt76XEJx71ZSZUmNVX4VTdrk4pbImhYSc=',NULL,0,'tilin','','','tilininsano@gmail.com',0,1,'2024-08-29 17:34:42.604996'),(2,'pbkdf2_sha256$870000$R7a2adOd5v3qJGE76hbm0u$XvHrURD24jSy8DnBkNSctZuvmpHYmZeJEQ7l5qzHJi4=','2024-09-23 19:24:28.148995',1,'maxim','','','maximo_ferrarotti@hotmail.com',1,1,'2024-08-29 17:38:46.693918'),(3,'!7DsGUIseKmpELsJKb6iQzcWG9IWSZMcF7F8dBhxU',NULL,0,'pedro','','','pedro@correo.com',0,1,'2024-08-30 18:56:29.204257'),(4,'!vOVMSHQCxU6kwjy4SHukIrZrP2t6GV6o3acjnryE',NULL,0,'juan','','','juan@correo.com',0,1,'2024-08-30 18:57:17.993873'),(5,'!miZvQb1Z7u3ay9AtKk7C78uP0nFGybUY2uqvaYqu',NULL,0,'carlos','','','',0,1,'2024-08-30 19:09:57.438328'),(6,'pbkdf2_sha256$870000$nUlbv8E1qYtammZjeYXGIU$JDOz/Q3IuGzsW+lEbn9kvNQaCrHa+ahGAsp5eJY470w=','2024-09-05 19:00:01.472354',0,'user','','','',0,1,'2024-09-05 18:59:45.340114');
+INSERT INTO `auth_user` VALUES (2,'pbkdf2_sha256$870000$R7a2adOd5v3qJGE76hbm0u$XvHrURD24jSy8DnBkNSctZuvmpHYmZeJEQ7l5qzHJi4=','2024-10-08 16:20:17.540500',1,'maxim','','','maximo_ferrarotti@hotmail.com',1,1,'2024-08-29 17:38:46.693918');
 /*!40000 ALTER TABLE `auth_user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -322,28 +322,28 @@ CREATE TABLE `dat_insc` (
   `Apellido` varchar(200) NOT NULL,
   `Fecha_Nac` date NOT NULL,
   `Provincia` varchar(45) NOT NULL,
-  `DNI` bigint NOT NULL,
+  `DNI` varchar(10) NOT NULL,
   `Edad` char(2) NOT NULL,
   `Domicilio` varchar(200) NOT NULL,
   `Telefono_Fijo` varchar(12) DEFAULT 'No agregado',
   `Celular_Nro` varchar(12) NOT NULL,
   `Email` varchar(200) DEFAULT 'No agregado',
   `Estado_Civil` varchar(45) NOT NULL,
-  `Hijos` tinyint NOT NULL DEFAULT '0',
+  `Hijos` int DEFAULT '0',
   `Lugar_Trabajo` varchar(200) DEFAULT 'No agregado',
   `Tel_Emergencia` varchar(12) NOT NULL,
   `Col_Egreso` varchar(200) NOT NULL,
-  `Titulo` varchar(200) NOT NULL,
+  `Titulo` varchar(200) DEFAULT NULL,
   `Otro_Titulo` varchar(200) DEFAULT 'No agregado',
-  `Anio_Egreso` year DEFAULT '2000',
-  `Preg_1` varchar(200) DEFAULT 'No agregado',
-  `Resp_1` varchar(200) DEFAULT 'No agregado',
-  `Resp_2` varchar(200) DEFAULT 'No agregado',
-  `Preg_2` varchar(200) DEFAULT 'No agregado',
-  `Matricula` tinyint NOT NULL DEFAULT '0',
-  `Legajo_Fisico` tinyint NOT NULL DEFAULT '0',
+  `Anio_Egreso` char(4) DEFAULT '----',
+  `Preg_1` int DEFAULT '0',
+  `Resp_1` varchar(200) DEFAULT 'Sin responder',
+  `Resp_2` int DEFAULT NULL,
+  `Preg_2` varchar(200) DEFAULT 'Sin responder',
+  `Matricula` int DEFAULT '0',
+  `Legajo_Fisico` int DEFAULT '0',
   PRIMARY KEY (`Id_DatInsc`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -377,7 +377,7 @@ CREATE TABLE `django_admin_log` (
   CONSTRAINT `django_admin_log_content_type_id_c4bce8eb_fk_django_co` FOREIGN KEY (`content_type_id`) REFERENCES `django_content_type` (`id`),
   CONSTRAINT `django_admin_log_user_id_c564eba6_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`),
   CONSTRAINT `django_admin_log_chk_1` CHECK ((`action_flag` >= 0))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -386,6 +386,7 @@ CREATE TABLE `django_admin_log` (
 
 LOCK TABLES `django_admin_log` WRITE;
 /*!40000 ALTER TABLE `django_admin_log` DISABLE KEYS */;
+INSERT INTO `django_admin_log` VALUES (1,'2024-09-26 06:15:07.963881','5','carlos',3,'',4,2),(2,'2024-09-26 06:15:07.964881','4','juan',3,'',4,2),(3,'2024-09-26 06:15:07.964881','3','pedro',3,'',4,2),(4,'2024-09-26 06:15:07.964881','1','tilin',3,'',4,2),(5,'2024-09-26 06:15:07.964881','6','user',3,'',4,2);
 /*!40000 ALTER TABLE `django_admin_log` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -463,7 +464,7 @@ CREATE TABLE `django_session` (
 
 LOCK TABLES `django_session` WRITE;
 /*!40000 ALTER TABLE `django_session` DISABLE KEYS */;
-INSERT INTO `django_session` VALUES ('bjajg11u9dpq0uiq11p2ppxg02sgx2f7','.eJxVjEEOwiAQRe_C2hDAgQGX7j0DYQaQqmmT0q6Md7dNutDte-__t4hpXVpce5njkMVFGHH6ZZT4WcZd5Eca75PkaVzmgeSeyMN2eZtyeV2P9u-gpd62NTEFMuhsriF7D2hcIdDEWmlGa7xKqMB6YLCBTYDsHQJW3Hg9hyA-X9eWNwI:1ssofc:yYN7rJlTOGli8X0wAaU8FnldRNtekeDDJVo8ni4I1sM','2024-10-07 19:24:28.153112'),('f6ngk3v3uspmh2cxqcp59utt6jllojp9','.eJxVjEEOwiAQRe_C2hDAgQGX7j0DYQaQqmmT0q6Md7dNutDte-__t4hpXVpce5njkMVFGHH6ZZT4WcZd5Eca75PkaVzmgeSeyMN2eZtyeV2P9u-gpd62NTEFMuhsriF7D2hcIdDEWmlGa7xKqMB6YLCBTYDsHQJW3Hg9hyA-X9eWNwI:1slYae:d0rmJfWJMWKIMSkmdh8j_hyqbpgApXl1rxE3p7Jo5EY','2024-09-17 18:49:20.427478'),('gmpvgjs3c9ohozz81bbhdo9awqxdel2q','.eJxVjEEOwiAQRe_C2hDAgQGX7j0DYQaQqmmT0q6Md7dNutDte-__t4hpXVpce5njkMVFGHH6ZZT4WcZd5Eca75PkaVzmgeSeyMN2eZtyeV2P9u-gpd62NTEFMuhsriF7D2hcIdDEWmlGa7xKqMB6YLCBTYDsHQJW3Hg9hyA-X9eWNwI:1sk6e9:FeFZLcZvQj47swIffpi8DiO3EJDTACtvDUuPQrNQXU8','2024-09-13 18:46:57.569887'),('lciihhf99s5j51iya9fio7zrl9yq3suu','.eJxVjEEOwiAQRe_C2hDAgQGX7j0DYQaQqmmT0q6Md7dNutDte-__t4hpXVpce5njkMVFGHH6ZZT4WcZd5Eca75PkaVzmgeSeyMN2eZtyeV2P9u-gpd62NTEFMuhsriF7D2hcIdDEWmlGa7xKqMB6YLCBTYDsHQJW3Hg9hyA-X9eWNwI:1sjj7J:YZ1dQrAFZaVOpwHQWU3HP4v1rIuTttynXf2edlipVb4','2024-09-12 17:39:29.328110');
+INSERT INTO `django_session` VALUES ('1g87p0cgim8k2uho5j82nqge7re17s9a','.eJxVjEEOwiAQRe_C2hDAgQGX7j0DYQaQqmmT0q6Md7dNutDte-__t4hpXVpce5njkMVFGHH6ZZT4WcZd5Eca75PkaVzmgeSeyMN2eZtyeV2P9u-gpd62NTEFMuhsriF7D2hcIdDEWmlGa7xKqMB6YLCBTYDsHQJW3Hg9hyA-X9eWNwI:1sww0w:zbhjeJAesCCmN-YYd8K_mE8xMIorsreaTZK0XuZJR3I','2024-10-19 04:03:30.321606'),('769hladeooryhsyqtxsqyrog9jxpyzbh','.eJxVjEEOwiAQRe_C2hDAgQGX7j0DYQaQqmmT0q6Md7dNutDte-__t4hpXVpce5njkMVFGHH6ZZT4WcZd5Eca75PkaVzmgeSeyMN2eZtyeV2P9u-gpd62NTEFMuhsriF7D2hcIdDEWmlGa7xKqMB6YLCBTYDsHQJW3Hg9hyA-X9eWNwI:1swZKr:InpaomdsPyrstF8Si7fhDvqpUDY2geuRfQ2R9sgwwSI','2024-10-18 03:50:33.812603'),('f6ngk3v3uspmh2cxqcp59utt6jllojp9','.eJxVjEEOwiAQRe_C2hDAgQGX7j0DYQaQqmmT0q6Md7dNutDte-__t4hpXVpce5njkMVFGHH6ZZT4WcZd5Eca75PkaVzmgeSeyMN2eZtyeV2P9u-gpd62NTEFMuhsriF7D2hcIdDEWmlGa7xKqMB6YLCBTYDsHQJW3Hg9hyA-X9eWNwI:1slYae:d0rmJfWJMWKIMSkmdh8j_hyqbpgApXl1rxE3p7Jo5EY','2024-09-17 18:49:20.427478'),('gmpvgjs3c9ohozz81bbhdo9awqxdel2q','.eJxVjEEOwiAQRe_C2hDAgQGX7j0DYQaQqmmT0q6Md7dNutDte-__t4hpXVpce5njkMVFGHH6ZZT4WcZd5Eca75PkaVzmgeSeyMN2eZtyeV2P9u-gpd62NTEFMuhsriF7D2hcIdDEWmlGa7xKqMB6YLCBTYDsHQJW3Hg9hyA-X9eWNwI:1sk6e9:FeFZLcZvQj47swIffpi8DiO3EJDTACtvDUuPQrNQXU8','2024-09-13 18:46:57.569887'),('it0i5h2rapn8hwz8drdr6swvmguyrj7a','.eJxVjEEOwiAQRe_C2hDAgQGX7j0DYQaQqmmT0q6Md7dNutDte-__t4hpXVpce5njkMVFGHH6ZZT4WcZd5Eca75PkaVzmgeSeyMN2eZtyeV2P9u-gpd62NTEFMuhsriF7D2hcIdDEWmlGa7xKqMB6YLCBTYDsHQJW3Hg9hyA-X9eWNwI:1sx6Vd:4N-kJhEAGN2qgmnsI8H8eYx4eju6stngfkYVSbUnPyU','2024-10-19 15:15:53.564760'),('lciihhf99s5j51iya9fio7zrl9yq3suu','.eJxVjEEOwiAQRe_C2hDAgQGX7j0DYQaQqmmT0q6Md7dNutDte-__t4hpXVpce5njkMVFGHH6ZZT4WcZd5Eca75PkaVzmgeSeyMN2eZtyeV2P9u-gpd62NTEFMuhsriF7D2hcIdDEWmlGa7xKqMB6YLCBTYDsHQJW3Hg9hyA-X9eWNwI:1sjj7J:YZ1dQrAFZaVOpwHQWU3HP4v1rIuTttynXf2edlipVb4','2024-09-12 17:39:29.328110'),('sik4hnf8pu3b7y8nbc5h8ysz5urqnae9','.eJxVjEEOwiAQRe_C2hDAgQGX7j0DYQaQqmmT0q6Md7dNutDte-__t4hpXVpce5njkMVFGHH6ZZT4WcZd5Eca75PkaVzmgeSeyMN2eZtyeV2P9u-gpd62NTEFMuhsriF7D2hcIdDEWmlGa7xKqMB6YLCBTYDsHQJW3Hg9hyA-X9eWNwI:1sx5kS:8OPCM-D2p-pKdEkLO_LjNq4xRVLDcdS95Glt4GwWWks','2024-10-19 14:27:08.275591'),('y2nwgv2p6km9xyn8w5vr8ewnwit2asel','.eJxVjEEOwiAQRe_C2hDAgQGX7j0DYQaQqmmT0q6Md7dNutDte-__t4hpXVpce5njkMVFGHH6ZZT4WcZd5Eca75PkaVzmgeSeyMN2eZtyeV2P9u-gpd62NTEFMuhsriF7D2hcIdDEWmlGa7xKqMB6YLCBTYDsHQJW3Hg9hyA-X9eWNwI:1syCwb:KvGVvnnIGDvqZRbriDdYbwSc3aGoZFgatkr5W5ghqrk','2024-10-22 16:20:17.546325');
 /*!40000 ALTER TABLE `django_session` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -795,4 +796,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-09-25 16:13:31
+-- Dump completed on 2024-10-08 16:53:51
