@@ -5,7 +5,7 @@
 #   * Make sure each ForeignKey and OneToOneField has `on_delete` set to the desired behavior
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
 # Feel free to rename the models, but don't rename db_table values or field names.
-from django.db import models
+from django.db import models # type: ignore
 
 
 class AuthGroup(models.Model):
@@ -140,7 +140,7 @@ class DatInsc(models.Model):
     celular_nro = models.CharField(db_column='Celular_Nro', max_length=12)  # Field name made lowercase.
     email = models.CharField(db_column='Email', max_length=200, blank=True, null=True)  # Field name made lowercase.
     estado_civil = models.CharField(db_column='Estado_Civil', max_length=45)  # Field name made lowercase.
-    hijos = models.IntegerField(db_column='Hijos')  # Field name made lowercase.
+    hijos = models.IntegerField(db_column='Hijos', blank=True, null=True)  # Field name made lowercase.
     lugar_trabajo = models.CharField(db_column='Lugar_Trabajo', max_length=200, blank=True, null=True)  # Field name made lowercase.
     tel_emergencia = models.CharField(db_column='Tel_Emergencia', max_length=12)  # Field name made lowercase.
     col_egreso = models.CharField(db_column='Col_Egreso', max_length=200)  # Field name made lowercase.
