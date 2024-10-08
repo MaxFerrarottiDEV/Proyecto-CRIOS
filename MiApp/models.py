@@ -133,7 +133,7 @@ class DatInsc(models.Model):
     apellido = models.CharField(db_column='Apellido', max_length=200)  # Field name made lowercase.
     fecha_nac = models.DateField(db_column='Fecha_Nac')  # Field name made lowercase.
     provincia = models.CharField(db_column='Provincia', max_length=45)  # Field name made lowercase.
-    dni = models.BigIntegerField(db_column='DNI')  # Field name made lowercase.
+    dni = models.CharField(db_column='DNI',max_length=10)  # Field name made lowercase.
     edad = models.CharField(db_column='Edad', max_length=2)  # Field name made lowercase.
     domicilio = models.CharField(db_column='Domicilio', max_length=200)  # Field name made lowercase.
     telefono_fijo = models.CharField(db_column='Telefono_Fijo', max_length=12, blank=True, null=True)  # Field name made lowercase.
@@ -146,7 +146,7 @@ class DatInsc(models.Model):
     col_egreso = models.CharField(db_column='Col_Egreso', max_length=200)  # Field name made lowercase.
     titulo = models.CharField(db_column='Titulo', max_length=200)  # Field name made lowercase.
     otro_titulo = models.CharField(db_column='Otro_Titulo', max_length=200, blank=True, null=True)  # Field name made lowercase.
-    anio_egreso = models.IntegerField(db_column='Anio_Egreso', blank=True, null=True)  # Field name made lowercase. This field type is a guess.
+    anio_egreso = models.CharField(db_column='Anio_Egreso', max_length=4, blank=True, null=True)  # Field name made lowercase. This field type is a guess.
     preg_1 = models.IntegerField(db_column='Preg_1', blank=True, null=True)  # Field name made lowercase.
     resp_1 = models.CharField(db_column='Resp_1', max_length=200, blank=True, null=True)  # Field name made lowercase.
     resp_2 = models.IntegerField(db_column='Resp_2', blank=True, null=True)  # Field name made lowercase.
