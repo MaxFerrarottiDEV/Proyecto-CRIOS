@@ -1,0 +1,76 @@
+body{
+    background-size: cover;
+    background-color: #c4dafa;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 100vh;
+    margin: 0;}
+  
+  
+
+
+.nav-link-custom,.botonHome,.btn-custom,.btn-btn-primary {
+    color: #fff;
+    background-color: #00a2ff;
+    border: none;
+    padding: 10px 16px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 20px;
+    margin: 5px;
+    transition: background-color 0.5s, color 0.5s;
+    border-radius: 20px;}
+
+.botonCancelar,.botonEliminar {
+    color: #fff;
+    background-color: #ff0000;
+    border: none;
+    padding: 10px 16px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 20px;
+    margin: 5px;
+    transition: background-color 0.5s, color 0.5s;
+    border-radius: 20px;}
+
+.botonCancelar:hover,.botonEliminar:hover,.logout-button:hover {
+        background-color: #b30000; 
+        color: #fff;}
+    
+   
+.botonModificar{
+    color: rgb(0, 0, 0);
+    background-color: #ffff00;
+    border: none;
+    padding: 10px 16px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 20px;
+    margin: 5px;
+    transition: background-color 0.5s, color 0.5s;
+    border-radius: 20px;}
+
+.botonModificar:hover{
+    color: #000000;
+    background-color: #baba03;}
+
+.nav-link-custom:hover,.botonHome:hover,.btn-custom:hover,.btn-btn-primary:hover{
+    background-color: #001f3f;
+    color: #fff;}
+  
+.dropdown-menu-custom {
+    background-color: #00a2ff;
+    border-radius: 20px;}
+  
+.dropdown-item-custom {
+    color: white;
+    transition: background-color 0.5s;
+    border-radius: 20px;}
+  
+.dropdown-item-custom:hover {
+    background-color: #001f3f;
+    color: white;
+    border-radius: 20px;}
