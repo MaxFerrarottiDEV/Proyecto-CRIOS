@@ -10,15 +10,17 @@
     <title>Profesorado CRIOS - Pagina Principal</title>
     <link rel="icon" href="{% static 'icons/crios_logo.png' %}" type="image/x-icon">
     <link href="{% static 'home/style.css' %}" rel="stylesheet">
-    <link  href="{% static 'inscripciones/solicitudes/style.css'%}" rel="stylesheet">
+    <link href="{% static 'inscripciones/solicitudes/style.css'%}" rel="stylesheet">
     <link href="{% static 'DataTables-1.13.6/css/dataTables.bootstrap5.css' %}" rel="stylesheet">
+    <link href="{% static 'inscripciones/consultas.css' %}" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css" rel="stylesheet">
   </head>
   <body>
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg">
       <div class="container-fluid">
-        <a class="navbar-brand" href="#">
-          <img src="{% static 'images/crios_logo.jpg'%}" alt="Logo" width="60" height="48" class="d-inline-block align-text-top">
+        <a class="navbar-brand" href="{% url 'home' %}">
+          <img src="{% static 'icons/crios_logo.png'%}" alt="Logo" width="55" height="48" class="d-inline-block align-text-top">
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
@@ -26,30 +28,31 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="#">INICIO</a>
+                <a class="nav-link active" aria-current="page" href="{% url 'home' %}" style="color: #fff;">Pagina Principal</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">EXAMENES</a>
+                <a class="nav-link" href="#">Examenes</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">ESTADOS CURRICULARES</a>
+                <a class="nav-link" href="#">Estados Curriculares</a>
             </li>
             <!-- Dropdown de INSCRIPCIONES -->
             <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="inscripcionesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                INSCRIPCIONES
-              </a>
+                <a class="nav-link dropdown-toggle" href="#" id="inscripcionesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Inscripciones
+                </a>
               <ul class="dropdown-menu" aria-labelledby="inscripcionesDropdown">
-                <li><a class="dropdown-item" href="inscripciones/solicitudes">Solicitudes</a></li>
-                <li><a class="dropdown-item" href="#">CONSULTAS</a></li>
+                <li><a class="dropdown-item" href="{% url 'lista_solicitudes' %}">Solicitudes de Inscripcion</a></li>
+                <li><a class="dropdown-item" href="{% url 'consultas' %}">Consultas de Datos de Estudiantes</a></li>
               </ul>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">CUOTAS</a>
+                <a class="nav-link" href="#">Cuotas</a>
             </li>
           </ul>
           <!-- Botón de Cerrar Sesión -->
           <ul class="navbar-nav mb-2 mb-lg-0">
+            <p style="color: #fff; padding-right: 0.5%;">Hola, (Nombre de Usuario)</p>
             <li class="nav-item">
               <a class="nav-link logout-button" href="#" onclick="document.getElementById('logout-form').submit();">Cerrar sesión</a>
               <form id="logout-form" method="post" action="{% url 'logout' %}" style="display: none;">
@@ -60,28 +63,37 @@
         </div>
       </div>
     </nav>
-
     <!-- Contenido -->
     <div class="container mt-5">
-
         {% block content %}
 
 
         {% endblock content %}
     </div>
-
     <!-- Footer -->
     <footer>
-      <p class="footer-text">Profesorado CRIOS - Dirección: Tucumán 667, Salta, Argentina | Teléfono: 423-3761</p>
+      <p class="footer-text">Profesorado CRIOS - Dirección: Tucumán 667, Salta, Argentina | 
+        Teléfono: 423-3761
+        <br>
+        Redes:  
+        <a href="https://www.facebook.com/criosprofesorado/?locale=es_LA" target="_blank">
+          <img src="{% static 'icons/fb_icon.png'%}" alt="Facebook" width="30px" height="auto">
+        </a>
+        <a href="https://www.instagram.com/criosprofesorado/?hl=es" target="_blank">
+          <img src="{% static 'icons/insta_icon.png'%}" alt="Instagram" width="30px" height="auto">
+        </a> |
+        Portal educativo: 
+        <a href="https://crios-sal.infd.edu.ar/sitio/" target="_blank">
+          <img src="{% static 'icons/escudoargentino_icon.png'%}" alt="Portal" width="20px" height="auto">
+        </a>
+      </p>
     </footer>
+    {% block javascript %}
+
+    {% endblock javascript %}
     <script src="{% static 'jQuery-3.7.0/jquery-3.7.0.js' %}"></script>  
     <script src="{% static 'DataTables-1.13.6/js/jquery.dataTables.js' %}"></script>
     <script src="{% static 'DataTables-1.13.6/js/dataTables.bootstrap5.js' %}"></script> 
     <script src="{% static 'bootbox/bootbox.all.min.js' %}"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-    {% block javascript %}
-
-    {% endblock javascript %}
   </body>
 </html>

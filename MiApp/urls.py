@@ -13,4 +13,8 @@ urlpatterns = [
     path('inscripciones/solicitudes/', views.lista_solicitudes, name='lista_solicitudes'),
     path('inscripciones/solicitudes/agregar/', views.agregar_solicitud, name='agregar_solicitud'),
     path('inscripciones/solicitudes/eliminar/<int:id>/', views.eliminar_solicitud, name='eliminar_solicitud'),
+    path('inscripciones/consultas/', views.consultas, name='consultas'),
+    path('inscripciones/consultas/modificar/<int:id>/', views.modificar, name='modificar'),
+    path('upload/', views.adjuntar_archivo, name='adjuntar_archivo'),
+    path('eliminar_estudiante_ajax/', views.eliminar_estudiante_ajax, name='eliminar_estudiante_ajax'),
     ]

@@ -1,6 +1,7 @@
       /* Footer style */
       body {
         background-color: #c4dafa;
+        font-family: "Rubik", sans-serif;
       }
       #title {
         text-align: left;
@@ -18,7 +19,7 @@
         background-color: #005187; /* Color de fondo del footer */
         padding: 15px;
         border-top: 2px solid #dee2e6; /* Borde superior */
-        position: fixed;
+        position: relative;
         bottom: 0;
         width: 100%;
         text-align: center;
