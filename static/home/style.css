@@ -1,0 +1,63 @@
+      /* Footer style */
+      body {
+        background-color: #c4dafa;
+        font-family: "Rubik", sans-serif;
+      }
+      #title {
+        text-align: left;
+        padding-left: 5%;
+      }   
+      #carrusel{
+        background-color: #84b6f4;
+        text-align: center;
+      }
+      .carousel-item img {
+        height: 400px;  /* Ajusta la altura de las imágenes */
+        object-fit: contain; /* Esto asegura que la imagen se recorte y ajuste al tamaño del contenedor sin deformarse */
+      }
+      footer {
+        background-color: #005187; /* Color de fondo del footer */
+        padding: 15px;
+        border-top: 2px solid #dee2e6; /* Borde superior */
+        position: relative;
+        bottom: 0;
+        width: 100%;
+        text-align: center;
+      }
+      .footer-text {
+        margin: 0;
+        color: #fff;
+        font-size: 16px;
+      }
+
+      /* Navbar style */
+      .navbar {
+        background-color: #005187; /* Fondo claro */
+        border-bottom: 2px solid #dee2e6; /* Borde inferior */
+      }
+      .navbar-brand {
+        font-weight: bold;
+        font-size: 20px;
+      }
+      .nav-link {
+        color: #fff; /* Color del texto */
+        font-size: 16px;
+        padding-right: 20px;
+      }
+      .nav-link:hover {
+        color: #0056b3; /* Color al pasar el ratón */
+      }
+      .nav-item .active {
+        color: #0056b3; /* Color de la página activa */
+      }
+      /* Estilo especial para el botón de cerrar sesión */
+      .logout-button {
+        background-color: #dc3545; /* Botón de cerrar sesión con estilo */
+        color: #fff;
+        border-radius: 5px;
+        padding: 5px 15px;
+      }
+      .logout-button:hover {
+        background-color: #c82333; /* Color del botón al pasar el ratón */
+      }
+
