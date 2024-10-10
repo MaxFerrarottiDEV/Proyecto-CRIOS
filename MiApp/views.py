@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
+from django.contrib.auth.forms import CandidatoForm
 
 def register_view(request):
     if request.method == 'POST':
@@ -29,3 +30,13 @@ def homebeta(request):
 @login_required
 def home(request):
     return render(request, 'home.html')
+
+def registrar_candidato(request):
+    if request.method == 'POST':
+        form = CandidatoForm(request.POST)
+        if form.is_valid():
+            form.save()
+            # Redireccionar o mostrar un mensaje de éxito
+    else:
+        form = CandidatoForm()
+    return render(request, 'registro_candidato.html', {'form': form})
