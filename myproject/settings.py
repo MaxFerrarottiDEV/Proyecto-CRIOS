@@ -30,7 +30,7 @@ SECRET_KEY = 'django-insecure-sbi45=(i6ddz!v@7$cq1pb#7-0znfk%)v3o56_5xvgxsdy=6%9
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1','localhost']
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'MiApp',
     'django_bootstrap5',
+    'crispy_forms',
+    'crispy_bootstrap5', 
 ]
 
 MIDDLEWARE = [
@@ -57,6 +59,10 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'myproject.urls'
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap5"
+
 
 TEMPLATES = [
     {
@@ -80,10 +86,17 @@ WSGI_APPLICATION = 'myproject.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'crios',
+        'NAME': 'criosdb',
         'USER': 'root',
         'PASSWORD': '2797',
         'HOST': 'localhost',

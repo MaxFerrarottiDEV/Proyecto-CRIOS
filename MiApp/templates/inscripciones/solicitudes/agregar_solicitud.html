@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+{% load crispy_forms_tags %}
+
+<div class="modal-header">
+    <h5 class="modal-title">Formulario de Preinscripción</h5>
+</div>
+<div class="modal-body">
+    <form id="PreinscripcionForm" method="post" action="" class="mt-3" autocomplete="off">
+        {% csrf_token %}
+        <div class="card mx-auto" style="width: 50rem;">  <!-- Ajustamos el tamaño del card -->
+            <div class="card-body">
+                <div class="row">
+                    <!-- Columna 1 -->
+                    <div class="col-md-6 custom-column-spacing" >
+                        {{ form.nombre|as_crispy_field }}
+                        {{ form.apellido|as_crispy_field }}
+                        {{ form.fecha_nac|as_crispy_field }}
+                        {{ form.provincia|as_crispy_field }}
+                        {{ form.dni|as_crispy_field }}
+                        {{ form.edad|as_crispy_field }}
+                        {{ form.domicilio|as_crispy_field }}
+                        {{ form.telefono_fijo|as_crispy_field }}
+                        {{ form.celular_nro|as_crispy_field }}
+                        {{ form.email|as_crispy_field }}
+                        {{ form.estado_civil|as_crispy_field }}
+                    </div>
+                    <!-- Columna 2 -->
+                    <div class="col-md-6">
+                        {{ form.hijos|as_crispy_field }}
+                        {{ form.lugar_trabajo|as_crispy_field }}
+                        {{ form.tel_emergencia|as_crispy_field }}
+                        {{ form.col_egreso|as_crispy_field }}
+                        {{ form.titulo|as_crispy_field }}
+                        {{ form.otro_titulo|as_crispy_field }}
+                        {{ form.anio_egreso|as_crispy_field }}
+                        {{ form.preg_1|as_crispy_field }}
+                        {{ form.resp_1|as_crispy_field }}
+                        {{ form.resp_2|as_crispy_field }}
+                        {{ form.preg_2|as_crispy_field }}
+                    </div>
+                </div>
+                <button class="btn btn-sm btn-primary float-end" type="submit">Guardar Solicitud</button>
+            </div>
+        </div>
+    </form>
+    <div id="messageContainer" class="alert" style="display:none; margin-top: 10px;"></div>
+</div>
+{% endblock content %}
