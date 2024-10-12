@@ -19,7 +19,6 @@ def home(request):
     return render(request, 'home.html')
 
 @login_required
-
 def lista_solicitudes(request):
     solicitudes = DatInsc.objects.all()  # Reemplaza con tu consulta real
 
@@ -43,16 +42,6 @@ def lista_solicitudes(request):
         'solicitudes': solicitudes,
         'form': form  # Pasamos el formulario al contexto
     })
-def agregar_solicitud(request):
-    if request.method == "POST":
-        form = PreinscripcionForm(request.POST)
-        if form.is_valid():
-            form.save()
-            messages.success(request, f'La solicitud de inscripcion se ha creado correctamente!')
-            return redirect('lista_solicitudes')
-    else:
-        form = PreinscripcionForm()
-    return render(request, 'inscripciones/solicitudes/agregar_solicitud.html', {'form': form})
 
 def eliminar_solicitud(request, id):
     solicitud = get_object_or_404(DatInsc, id=id)
@@ -130,3 +119,6 @@ def adjuntar_archivo(request):
         except KeyError:
             return HttpResponse('No se encontró el archivo.') # type: ignore
     return render(request, 'Insc/consultas.html')
+
+def build(request):
+    return render(request, 'build.html')
