@@ -19,6 +19,10 @@ def home(request):
     return render(request, 'home.html')
 
 @login_required
+def tipo_inscripcion(request):
+    return render(request, 'inscripciones/tipo_inscripcion.html')
+
+@login_required
 def lista_solicitudes(request):
     solicitudes = DatInsc.objects.all()  # Reemplaza con tu consulta real
 
