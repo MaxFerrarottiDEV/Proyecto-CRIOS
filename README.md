@@ -1,5 +1,5 @@
 # ProyectoCRIOS
-
+_____________________________________________________
 1- crear entorno virtual virtual y activarlo
 
 py -m venv env
@@ -18,4 +18,4 @@ pip install django-crispy-forms
 
 pip install crispy-bootstrap5
 
-
+____________________________________________
