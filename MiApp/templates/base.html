@@ -1,9 +1,9 @@
 <!doctype html>
-{% load static %}
-<html lang="es">
+<html lang="en">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% load static %}
     {% load django_bootstrap5 %}
     {% bootstrap_css %}
     {% bootstrap_javascript %}
@@ -15,9 +15,11 @@
     <link href="{% static 'inscripciones/consultas.css' %}" rel="stylesheet">
     <link href="{% static 'formulario/style.css' %}"  rel="stylesheet" type="text/css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css" rel="stylesheet">
-    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
   </head>
-  <body>
+  <body  class="d-flex flex-column min-vh-100">
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg">
       <div class="container-fluid">
@@ -66,14 +68,14 @@
       </div>
     </nav>
     <!-- Contenido -->
-    <div class="container mt-5">
+    <div class="flex-grow-1 container mt-5">
         {% block content %}
 
 
         {% endblock content %}
     </div>
     <!-- Footer -->
-    <footer>
+    <footer class="text-white text-center py-3 mt-auto">
       <p class="footer-text">Profesorado CRIOS - Dirección: Tucumán 667, Salta, Argentina | 
         Teléfono: 423-3761
         <br>
