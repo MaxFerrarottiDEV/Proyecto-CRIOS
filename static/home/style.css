@@ -4,16 +4,50 @@
         font-family: "Rubik", sans-serif;
       }
       #title {
-        text-align: left;
-        padding-left: 5%;
-      }   
+        font-size: 3rem;
+        font-weight: bold;
+      }
+    
+      #subtitle {
+          font-size: 1.75rem;
+      }
       #carrusel{
-        background-color: #84b6f4;
+        background-color: #4d82b4;
         text-align: center;
+        height: 100%;
       }
       .carousel-item img {
         height: 400px;  /* Ajusta la altura de las imágenes */
         object-fit: contain; /* Esto asegura que la imagen se recorte y ajuste al tamaño del contenedor sin deformarse */
+      }
+      #mision-text{
+        align-items: center;
+        justify-content: left;
+        padding-left: 20px;
+        height: 100%;
+        text-align: justify;
+        line-height: 200%;
+        letter-spacing:2px;
+      }
+      #mision-text h2{
+        text-align: center;
+      }
+      #mision-text p{
+        font-weight:bold;
+      }
+      #carrusel, #mision-text {
+        padding: 40px;
+      }
+      #BotonIr {
+        width: 200px; 
+        margin-left:auto;
+        display: block;
+        background-color: #005187;
+        color: rgb(255, 255, 255);
+        border: none;
+      }
+      #BotonIr:hover {
+        background-color: #c71c4d;
       }
       footer {
         background-color: #005187; /* Color de fondo del footer */
@@ -23,6 +57,7 @@
         bottom: 0;
         width: 100%;
         text-align: center;
+        
       }
       .footer-text {
         margin: 0;
@@ -40,15 +75,15 @@
         font-size: 20px;
       }
       .nav-link {
-        color: #fff; /* Color del texto */
+        color: #ffffff; /* Color del texto */
         font-size: 16px;
         padding-right: 20px;
       }
       .nav-link:hover {
-        color: #0056b3; /* Color al pasar el ratón */
+        color: #3162aa; /* Color al pasar el ratón */
       }
       .nav-item .active {
-        color: #0056b3; /* Color de la página activa */
+        color: white;
       }
       /* Estilo especial para el botón de cerrar sesión */
       .logout-button {
@@ -56,8 +91,55 @@
         color: #fff;
         border-radius: 5px;
         padding: 5px 15px;
+        margin-left: 10px;
       }
       .logout-button:hover {
         background-color: #c82333; /* Color del botón al pasar el ratón */
       }
+@media (max-width: 768px) {
+      #carrusel, #mision-text {
+        flex-direction: column;
+        width: 100%;
+        }
+      }
+      #saludo { 
+        color: #fff;
+        margin-right: 20px;
+        display: flex;
+        align-items: center;
+        
+        margin-top: auto;
+        margin-bottom: auto;
+    } 
 
+/* estilo de los botones del encabezado*/
+    .nav-titulo {
+      position: relative;
+      display: inline-block;
+      
+  }
+  .nav-titulo:hover {
+      color: #c71c4d;
+}
+  
+  .nav-titulo::after {
+      content: "";
+      display: block;
+      height: 5%;
+      background: transparent;
+      transition: background 0.5s ease; /*ease hace la transicion sea lenta*/
+      width: 100%;
+      position: absolute;
+      left: 0;
+      bottom: -5%;
+  }
+  
+  .nav-titulo:hover::after {
+      background: #c71c4d;
+  }
+
+  #modulo {
+    text-align: center;
+    font-size: 3rem;
+    font-weight: bold;
+  }

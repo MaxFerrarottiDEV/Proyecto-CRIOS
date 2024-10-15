@@ -19,20 +19,33 @@ def home(request):
     return render(request, 'home.html')
 
 @login_required
-def lista_solicitudes(request):
-    solicitudes = DatInsc.objects.all()
-    return render(request, 'inscripciones/solicitudes/lista_solicitudes.html', {'solicitudes': solicitudes})
+def tipo_inscripcion(request):
+    return render(request, 'inscripciones/tipo_inscripcion.html')
 
-def agregar_solicitud(request):
-    if request.method == "POST":
+@login_required
+def lista_solicitudes(request):
+    solicitudes = DatInsc.objects.all()  # Reemplaza con tu consulta real
+
+    # Inicializamos el formulario de la solicitud
+    form = PreinscripcionForm()
+
+    if request.method == 'POST':
         form = PreinscripcionForm(request.POST)
         if form.is_valid():
-            form.save()
-            messages.success(request, f'La solicitud de inscripcion se ha creado correctamente!')
-            return redirect('lista_solicitudes')
-    else:
-        form = PreinscripcionForm()
-    return render(request, 'inscripciones/solicitudes/agregar_solicitud.html', {'form': form})
+            try:
+                form.save()
+                messages.success(request, 'Se ha agregado exitosamente la solicitud.')
+                return redirect('lista_solicitudes')
+            except Exception as e:
+                messages.error(request, f'Ocurrió un error al agregar la solicitud: {str(e)}')
+        else:
+            messages.error(request, 'Formulario inválido. Por favor revisa los campos e inténtalo de nuevo.')
+
+    # Siempre devolver el formulario y las solicitudes, incluso para GET
+    return render(request, 'inscripciones/solicitudes/lista_solicitudes.html', {
+        'solicitudes': solicitudes,
+        'form': form  # Pasamos el formulario al contexto
+    })
 
 def eliminar_solicitud(request, id):
     solicitud = get_object_or_404(DatInsc, id=id)
@@ -110,3 +123,6 @@ def adjuntar_archivo(request):
         except KeyError:
             return HttpResponse('No se encontró el archivo.') # type: ignore
     return render(request, 'Insc/consultas.html')
+
+def build(request):
+    return render(request, 'build.html')
