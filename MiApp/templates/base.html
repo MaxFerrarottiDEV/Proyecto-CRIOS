@@ -32,27 +32,26 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item">
-                <a class="nav-link" href="{% url 'home' %}">Pagina Principal</a>
+                <a class="nav-link active" aria-current="page" href="{% url 'home' %}" style="color: #fff;">Pagina Principal</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{% url 'build' %}">Examenes</a>
+                <a class="nav-link" href="#">Examenes</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{% url 'build' %}">Estados Curriculares</a>
+                <a class="nav-link" href="#">Estados Curriculares</a>
             </li>
             <!-- Dropdown de INSCRIPCIONES -->
             <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="{% url 'build' %}" id="inscripcionesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <a class="nav-link dropdown-toggle" href="#" id="inscripcionesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                   Inscripciones
                 </a>
               <ul class="dropdown-menu" aria-labelledby="inscripcionesDropdown">
                 <li><a class="dropdown-item" href="{% url 'lista_solicitudes' %}">Solicitudes de Inscripcion</a></li>
-                <li><hr class="dropdown-divider"></li>
                 <li><a class="dropdown-item" href="{% url 'consultas' %}">Consultas de Datos de Estudiantes</a></li>
               </ul>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{% url 'build' %}">Cuotas</a>
+                <a class="nav-link" href="#">Cuotas</a>
             </li>
           </ul>
           <!-- Botón de Cerrar Sesión -->
@@ -80,12 +79,12 @@
       <p class="footer-text">Profesorado CRIOS - Dirección: Tucumán 667, Salta, Argentina | 
         Teléfono: 423-3761
         <br>
-        Redes Sociales:  
+        Redes:  
         <a href="https://www.facebook.com/criosprofesorado/?locale=es_LA" target="_blank">
-          <img src="{% static 'icons/fb_icon.png'%}" alt="Facebook" width="1.80%" height="auto">
+          <img src="{% static 'icons/fb_icon.png'%}" alt="Facebook" width="30px" height="auto">
         </a>
         <a href="https://www.instagram.com/criosprofesorado/?hl=es" target="_blank">
-          <img src="{% static 'icons/insta_icon.png'%}" alt="Instagram" width="1.80%" height="auto">
+          <img src="{% static 'icons/insta_icon.png'%}" alt="Instagram" width="30px" height="auto">
         </a> |
         Portal educativo: 
         <a href="https://crios-sal.infd.edu.ar/sitio/" target="_blank">

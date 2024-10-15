@@ -1,108 +1,40 @@
 {% extends 'base.html' %}
-{% load static %}
-{% block content %}
-
-{% load crispy_forms_tags %}
-
-<div class="container mt-5">
-    <h2>Solicitudes de Inscripción</h2>
-
-    <!-- Mostrar mensajes si existen (de éxito o error) -->
-    {% if messages %}
-        {% for message in messages %}
-            <div class="alert alert-{{ message.tags }}">
-                {{ message }}
-            </div>
-        {% endfor %}
-    {% endif %}
-
-    <!-- Botón para añadir una solicitud -->
-    <div class="d-flex justify-content-end mb-3">
-        <!-- Botón que abre el modal -->
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#agregarSolicitudModal">
-            Añadir una solicitud
-        </button>
-    </div>
-
-    <!-- Tabla de solicitudes -->
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Nombres</th>
-                <th>Apellido</th>
-                <th>DNI</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for solicitud in solicitudes %}
-            <tr>
-                <td>{{ solicitud.nombre }}</td>
-                <td>{{ solicitud.apellido }}</td>
-                <td>{{ solicitud.dni }}</td>
-                <td>
-                    <!-- Agrega botones de acción si es necesario -->
-                </td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="4">No hay solicitudes disponibles</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
-
-<!-- Modal para agregar solicitud -->
-<div class="modal fade" id="agregarSolicitudModal" tabindex="-1" aria-labelledby="agregarSolicitudModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="agregarSolicitudModalLabel">Agregar Solicitud</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <!-- Aquí se cargará el formulario -->
-                <form id="PreinscripcionForm" method="post" action="" autocomplete="off">
-                    {% csrf_token %}
-                    <div class="row">
-                        <!-- Columna 1 -->
-                        <div class="col-md-6">
-                            {{ form.nombre|as_crispy_field }}
-                            {{ form.apellido|as_crispy_field }}
-                            {{ form.fecha_nac|as_crispy_field }}
-                            {{ form.provincia|as_crispy_field }}
-                            {{ form.dni|as_crispy_field }}
-                            {{ form.edad|as_crispy_field }}
-                            {{ form.domicilio|as_crispy_field }}
-                            {{ form.telefono_fijo|as_crispy_field }}
-                            {{ form.celular_nro|as_crispy_field }}
-                            {{ form.email|as_crispy_field }}
-                            {{ form.estado_civil|as_crispy_field }}
-                        </div>
-                        <!-- Columna 2 -->
-                        <div class="col-md-6">
-                            {{ form.hijos|as_crispy_field }}
-                            {{ form.lugar_trabajo|as_crispy_field }}
-                            {{ form.tel_emergencia|as_crispy_field }}
-                            {{ form.col_egreso|as_crispy_field }}
-                            {{ form.titulo|as_crispy_field }}
-                            {{ form.otro_titulo|as_crispy_field }}
-                            {{ form.anio_egreso|as_crispy_field }}
-                            {{ form.preg_1|as_crispy_field }}
-                            {{ form.resp_1|as_crispy_field }}
-                            {{ form.resp_2|as_crispy_field }}
-                            {{ form.preg_2|as_crispy_field }}
-                        </div>
-                    </div>
-                    <button class="btn btn-primary float-end" type="submit">Guardar Solicitud</button>
-                </form>
-            </div>
+{% load static %} 
+{% block content %} 
+    <div class="container mt-5">
+        <h2>Solicitudes de Inscripción</h2>
+        <!-- Botón para añadir una solicitud -->
+        <div class="d-flex justify-content-end mb-3">
+            <a href="{% url 'agregar_solicitud' %}" class="btn btn-primary">Añadir una solicitud</a>
         </div>
+        <!-- Tabla de solicitudes -->
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Nombres</th>
+                    <th>Apellido</th>
+                    <th>DNI</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for solicitud in solicitudes %}
+                <tr>
+                    <td>{{ solicitud.nombre }}</td>
+                    <td>{{ solicitud.apellido }}</td>
+                    <td>{{ solicitud.dni }}</td>
+                    <td>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4">No hay solicitudes disponibles</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
-</div>
-
 {% endblock content %}
 {% block javascript %}
-<!-- Incluye el script de Bootstrap si no lo has hecho -->
+
 {% endblock javascript %}

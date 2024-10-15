@@ -17,7 +17,7 @@
       }
       footer {
         background-color: #005187; /* Color de fondo del footer */
-        padding: 2%;
+        padding: 15px;
         border-top: 2px solid #dee2e6; /* Borde superior */
         position: relative;
         bottom: 0;
@@ -45,14 +45,14 @@
         padding-right: 20px;
       }
       .nav-link:hover {
-        color: #00adb3; /* Color al pasar el ratón */
+        color: #0056b3; /* Color al pasar el ratón */
       }
       .nav-item .active {
         color: #0056b3; /* Color de la página activa */
       }
       /* Estilo especial para el botón de cerrar sesión */
       .logout-button {
-        background-color: #ff0000; /* Botón de cerrar sesión con estilo */
+        background-color: #dc3545; /* Botón de cerrar sesión con estilo */
         color: #fff;
         border-radius: 5px;
         padding: 5px 15px;
