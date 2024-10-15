@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% load static %}
+    {% load django_bootstrap5 %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+    <title>Profesorado CRIOS - Pagina Principal</title>
+    <link rel="icon" href="{% static 'icons/crios_logo.png' %}" type="image/x-icon">
+    <link href="{% static 'home/style.css' %}" rel="stylesheet">
+    <link href="{% static 'inscripciones/solicitudes/style.css'%}" rel="stylesheet">
+    <link href="{% static 'DataTables-1.13.6/css/dataTables.bootstrap5.css' %}" rel="stylesheet">
+    <link href="{% static 'inscripciones/consultas.css' %}" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+  </head>
+  <body  class="d-flex flex-column min-vh-100">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="{% url 'home' %}">
+          <img src="{% static 'icons/crios_logo.png'%}" alt="Logo" width="55" height="48" class="d-inline-block align-text-top">
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="{% url 'home' %}" style="color: #fff;">Pagina Principal</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Examenes</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Estados Curriculares</a>
+            </li>
+            <!-- Dropdown de INSCRIPCIONES -->
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="inscripcionesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Inscripciones
+                </a>
+              <ul class="dropdown-menu" aria-labelledby="inscripcionesDropdown">
+                <li><a class="dropdown-item" href="{% url 'lista_solicitudes' %}">Solicitudes de Inscripcion</a></li>
+                <li><a class="dropdown-item" href="{% url 'consultas' %}">Consultas de Datos de Estudiantes</a></li>
+              </ul>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Cuotas</a>
+            </li>
+          </ul>
+          <!-- Botón de Cerrar Sesión -->
+          <ul class="navbar-nav mb-2 mb-lg-0">
+            <p style="color: #fff; padding-right: 0.5%;">Hola, (Nombre de Usuario)</p>
+            <li class="nav-item">
+              <a class="nav-link logout-button" href="#" onclick="document.getElementById('logout-form').submit();">Cerrar sesión</a>
+              <form id="logout-form" method="post" action="{% url 'logout' %}" style="display: none;">
+                  {% csrf_token %}
+              </form>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <!-- Contenido -->
+    <div class="flex-grow-1 container mt-5">
+        {% block content %}
+
+
+        {% endblock content %}
+    </div>
+    <!-- Footer -->
+    <footer class="text-white text-center py-3 mt-auto">
+      <p class="footer-text">Profesorado CRIOS - Dirección: Tucumán 667, Salta, Argentina | 
+        Teléfono: 423-3761
+        <br>
+        Redes:  
+        <a href="https://www.facebook.com/criosprofesorado/?locale=es_LA" target="_blank">
+          <img src="{% static 'icons/fb_icon.png'%}" alt="Facebook" width="30px" height="auto">
+        </a>
+        <a href="https://www.instagram.com/criosprofesorado/?hl=es" target="_blank">
+          <img src="{% static 'icons/insta_icon.png'%}" alt="Instagram" width="30px" height="auto">
+        </a> |
+        Portal educativo: 
+        <a href="https://crios-sal.infd.edu.ar/sitio/" target="_blank">
+          <img src="{% static 'icons/escudoargentino_icon.png'%}" alt="Portal" width="20px" height="auto">
+        </a>
+      </p>
+    </footer>
+    {% block javascript %}
+
+    {% endblock javascript %}
+    <script src="{% static 'jQuery-3.7.0/jquery-3.7.0.js' %}"></script>  
+    <script src="{% static 'DataTables-1.13.6/js/jquery.dataTables.js' %}"></script>
+    <script src="{% static 'DataTables-1.13.6/js/dataTables.bootstrap5.js' %}"></script> 
+    <script src="{% static 'bootbox/bootbox.all.min.js' %}"></script>
+  </body>
+</html>
