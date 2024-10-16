@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load static %} 
+{% block content %} 
+    <div class="container mt-5">
+        <h2>Modificar Datos del Estudiante</h2>
+        <hr>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="dni" class="form-label">DNI</label>
+                <input type="text" class="form-control" id="dni" name="dni" value="{{ estudiante.dni }}" required>
+            </div>
+            <div class="mb-3">
+                <label for="nombre" class="form-label">Nombre</label>
+                <input type="text" class="form-control" id="nombre" name="nombre" value="{{ estudiante.nombre }}" required>
+            </div>
+            <div class="mb-3">
+                <label for="apellido" class="form-label">Apellido</label>
+                <input type="text" class="form-control" id="apellido" name="apellido" value="{{ estudiante.apellido }}" required>
+            </div>
+            <div class="mb-3">
+                <label for="telefono" class="form-label">Teléfono</label>
+                <input type="text" class="form-control" id="telefono" name="telefono" value="{{ estudiante.celular_nro }}" required>
+            </div>
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" name="email" value="{{ estudiante.email }}" required>
+            </div>
+            <div class="mb-3">
+                <label for="domicilio" class="form-label">Domicilio</label>
+                <input type="text" class="form-control" id="domicilio" name="domicilio" value="{{ estudiante.domicilio }}" required>
+            </div>
+
+            <!-- Campo para Matricula -->
+            <div class="mb-3 form-check">
+                <input type="checkbox" class="form-check-input" id="matricula" name="matricula" 
+                    {% if estudiante.matricula %} checked {% endif %}>
+                <label class="form-check-label" for="matricula">Matrícula</label>
+            </div>
+
+            <!-- Campo para Legajo Físico -->
+            <div class="mb-3 form-check">
+                <input type="checkbox" class="form-check-input" id="legajo_fisico" name="legajo_fisico" 
+                    {% if estudiante.legajo_fisico %} checked {% endif %}>
+                <label class="form-check-label" for="legajo_fisico">Legajo Físico</label>
+            </div>
+
+            <button type="submit" class="botonGuardar">Guardar Cambios</button>
+            <a href="{% url 'consultas' %}" class="botonCancelar">Cancelar</a>
+        </form>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+{% endblock content %}
+
+

@@ -1,0 +1,117 @@
+
+
+
+.navbar {
+  background-color: #005187; 
+  border-bottom: 2px solid #dee2e6; }
+      
+/*PROPIEDADES PARA EL LOGO CRIOS */
+.navbar-brand {
+  font-weight: bold;
+  font-size: 20px;}
+  
+.navbar-brand:hover,.redes:hover{
+  transform: scale(1.3);
+  transition: transform 0.3s ease;}
+
+/*PIBES ESTOS SON LOS BOTONES DE NAVEGACION */
+.nav-link,.saludo { 
+  font-size: 16px;
+  padding-right: 20px;
+  background-color: #c4dafa; 
+  color: #000000;
+  border-radius: 18px;
+  padding: 5px 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  height: 40px;
+  width: 180px;
+  text-decoration: none;}
+
+.nav-link:hover,.saludo:hover {
+  transform: scale(1.1);
+  transition: transform 0.3s ease; }
+      
+.nav-item .active {
+  color: #005187;
+}
+.logout-button { /*BOTON DE CERRAR SESION */
+  background-color: #ff0000; 
+  color: #fff;
+  border-radius: 18px;
+  padding: 5px 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 40px;
+  width: 180px;}
+
+.logout-button:hover {
+  color: #fff;
+  transform: scale(1.1);
+  transition: transform 0.3s ease; }
+
+.botonCancelar,.botonEliminar {
+  color: #fff;
+  background-color: #ff0000;
+  border: none;
+  padding: 10px 16px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 20px;
+  margin: 5px;
+  transition: background-color 0.5s, color 0.5s;
+  border-radius: 20px;}
+      
+.botonCancelar:hover,.botonEliminar:hover{
+  color: #fff;
+  transform: scale(1.1);
+  transition: transform 0.3s ease;}
+
+.botonSubir,.botonBuscar,.botonAgregarSolicitud,.botonGuardar,.BotonIr{
+  color: #fff;
+  background-color: #005187;
+  border: none;
+  padding: 10px 16px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 20px;
+  margin: 5px;
+  transition: background-color 0.5s, color 0.5s;
+  border-radius: 20px;}
+
+.botonSubir:hover,.botonAgregarSolicitud:hover,.botonGuardar:hover{
+  transform: scale(1.1); 
+  transition: transform 0.3s ease;}
+.botonBuscar:hover{
+  background-color:#000000;
+}
+
+.botonModificar{
+  color: rgb(0, 0, 0);
+  background-color: #ffff00;
+  border: none;
+  padding: 10px 16px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 20px;
+  margin: 5px;
+  transition: background-color 0.5s, color 0.5s;
+  border-radius: 20px;}
+    
+.botonModificar:hover{
+  color: #000000;
+  transform: scale(1.1);
+  transition: transform 0.3s ease; }
+
+.form-control{
+  border: 1px solid #005187;}
+  
+.custom-column-spacing {
+  margin-right: 30px; }   
+  
