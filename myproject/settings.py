@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 import os
 from pathlib import Path
-from django.contrib.messages import constants as messages
+from django.contrib.messages import constants as messages 
 
 MESSAGE_TAGS = {
     messages.ERROR: 'danger',
@@ -137,10 +137,11 @@ LOGIN_REDIRECT_URL='/'
 LOGOUT_REDIRECT_URL='/login/'
 LOGIN_URL='/login/'
 
-#CONFIGURACION DE EMAIL
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = "smtp.gmail.com"
+# Configuración de email en settings.py
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'  # Servidor SMTP de Gmail
+EMAIL_PORT = 587  # Puerto para TLS
 EMAIL_USE_TLS = True
-EMAIL_PORT = 587
-EMAIL_HOST_USER = "maximo.ferrarotti1@gmail.com"
-EMAIL_HOST_PASSWORD = "samilove2016"
+EMAIL_HOST_USER = "maximo.ferrarotti1@gmail.com"  # Reemplaza con tu dirección de correo
+EMAIL_HOST_PASSWORD = "6666 6859" # Contraseña de tu correo
+DEFAULT_FROM_EMAIL = "maximo.ferrarotti1@gmail.com" 

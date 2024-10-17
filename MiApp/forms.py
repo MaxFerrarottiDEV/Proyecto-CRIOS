@@ -1,10 +1,9 @@
 from typing import Any
-from django import forms
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
-from MiApp.models import DatInsc
-from django.contrib.auth.forms import UserCreationForm
-from django import forms
+from django import forms  # type: ignore
+from django.contrib.auth.forms import UserCreationForm # type: ignore
+from django.contrib.auth.models import User # type: ignore
+from MiApp.models import DatInsc # type: ignore
+from django import forms # type: ignore
 
 class CustomRegisterForm(UserCreationForm):
     email = forms.EmailField(required=True)
@@ -81,8 +80,8 @@ class PreinscripcionForm(forms.ModelForm):
     telefono_fijo = forms.CharField(label='Teléfono Fijo:', max_length=12, required=False,)
     celular_nro = forms.CharField(label='Número de Celular:', max_length=12,required=True)
     email = forms.CharField(label='Correo Electronico:', max_length=200, required=False,)
-    estado_civil = forms.ChoiceField(label='Estado Civil:', choices=ESTADO_CIVIL_CHOICES, widget=forms.RadioSelect,required=True,)
-    hijos = forms.ChoiceField(label='¿Tiene hijos?:',choices=TIENE_HIJOS_CHOICES, widget=forms.RadioSelect, required=False,)
+    estado_civil = forms.ChoiceField(label='Estado Civil:', choices=ESTADO_CIVIL_CHOICES, widget=forms.RadioSelect(attrs={'class': 'radio', 'style': 'font-size: 16px; margin-right: 10px;'}),required=True,)
+    hijos = forms.ChoiceField(label='¿Tiene hijos?:',choices=TIENE_HIJOS_CHOICES, widget=forms.RadioSelect(attrs={'class': 'radio', 'style': 'font-size: 16px; margin-right: 10px;'}), required=False,)
     lugar_trabajo = forms.CharField(label='Lugar de Trabajo:', max_length=200, required=False,)
     tel_emergencia = forms.CharField(label='Teléfono de Emergencia:', max_length=12, required=True,)
     col_egreso = forms.CharField(label='Colegio que Egresó:', max_length=200,required=True,)
@@ -91,7 +90,7 @@ class PreinscripcionForm(forms.ModelForm):
     anio_egreso = forms.CharField(label='Año de Egreso:',max_length=4,required=True)
     preg_1 = forms.ChoiceField(label='¿Tuvo otro ingreso a nivel Superior o universitario anterior a este?:',choices=PREG_1_CHOICES, widget=forms.RadioSelect,required=False,)
     resp_1 = forms.CharField(label='¿Cuál?', required=False,)
-    resp_2 = forms.ChoiceField(label='¿Completo esos estudios?:', choices=RESP_2_CHOICES, widget=forms.RadioSelect,required=False,)
+    resp_2 = forms.ChoiceField(label='¿Completo esos estudios?:', choices=RESP_2_CHOICES, widget=forms.RadioSelect(attrs={'class': 'radio', 'style': 'font-size: 16px; margin-right: 10px;'}),required=False,)
     preg_2 = forms.CharField(label='¿Es beneficiario de algún tipo de Beca/Ayuda Social? (Especifique):',required=False,)
 
     class Meta:

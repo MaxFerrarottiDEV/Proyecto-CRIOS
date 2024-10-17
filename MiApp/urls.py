@@ -1,7 +1,7 @@
-from django.urls import path, include
+from django.urls import path, include # type: ignore
 from . import views
-from django.contrib.auth import views as auth_views
-from django.contrib import admin
+from django.contrib.auth import views as auth_views # type: ignore
+from django.contrib import admin # type: ignore
 
 urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
@@ -9,6 +9,10 @@ urlpatterns = [
     path('', views.home, name='home'), # Configuración para la URL raíz
     path('register/', views.register_view, name='register'),
     path('login/', auth_views.LoginView.as_view(), name='login'),
+    path('reset_password/',auth_views.PasswordResetView.as_view(),name='password_reset'),
+    path('reset_password_send/', auth_views.PasswordResetDoneView.as_view(), name='password_reset_done'),
+    path('reset/<uidb64>/<token>', auth_views.PasswordResetConfirmView.as_view(),name='password_reset_confirm'),
+    path('reset_password_complete/', auth_views.PasswordResetCompleteView.as_view(),name='password_reset_complete'),
     path('build/',views.build, name='build'),
     path('inscripciones/tipoInscripcion/',views.tipo_inscripcion, name='tipo_inscripcion'),
     path('inscripciones/solicitudes/', views.lista_solicitudes, name='lista_solicitudes'),

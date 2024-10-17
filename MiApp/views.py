@@ -1,6 +1,6 @@
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
-from django.contrib import messages
+from django.shortcuts import render, redirect, get_object_or_404 # type: ignore
+from django.contrib.auth.decorators import login_required # type: ignore
+from django.contrib import messages # type: ignore
 from .models import DatInsc
 from .forms import PreinscripcionForm , CustomRegisterForm
 
@@ -55,7 +55,6 @@ def lista_solicitudes(request):
         'solicitudes': solicitudes,
         'form': form  # Pasamos el formulario al contexto
     })
-
 
 def eliminar_solicitud(request, id):
     solicitud = get_object_or_404(DatInsc, id=id)
