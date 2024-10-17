@@ -8,23 +8,26 @@ body {
     background-size: cover;
     margin: 0;
     font-family: "Rubik", sans-serif;
-    color: #ffffff;}
+    color: #ffffff; /* Este color se aplica a todo el texto por defecto */
+}
 
 .form-container {
-    background-color: #dee2e6;
-    width: 500px;
-    height: 400px;
+    background-color: #ffffff;
+    width: 550px;
+    height: auto; /* Cambiado a 'auto' para que se ajuste al contenido */
     padding: 50px;
     border-radius: 10px;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.25);
     text-align: center;
-    position: relative;}
+    position: relative;
+}
 
 label {
     display: block;
     margin-bottom: 8px;
     font-size: 22px;
-    color: #333;}
+    color: #333;
+}
 
 input {
     display: block;
@@ -36,12 +39,18 @@ input {
     font-size: 16px;
     color: #333;
 }
+
 .forgot-password {
-    font-size: 20px;
-    color: #333;
+    font-size: 18px;
+    color: #005187;
     text-decoration: none;
+    display: block; 
+    text-align: right; 
+    margin-top: 20px; 
 }
-.botonLogin{
+
+
+.botonLogin,.botonRegistrarse {
     background-color: #005187;
     color: #fff;
     border: none;
@@ -49,23 +58,19 @@ input {
     padding: 10px 24px;
     font-size: 24px;
     cursor: pointer;
+    width: 220px;
+    height: 50px;
+    margin-bottom: 20px; 
+    text-decoration: none;
 }
-.botonLogin:hover{
-    transform: scale(1.1);
-    transition: transform 0.3s ease;}
 
-.botonRegistrarse{
-    background-color: #005187;
-    color: #fff;
-    border: none;
-    border-radius: 20px;
-    padding: 10px 10px;
-    font-size: 20px;
-    cursor: pointer;}
-.botonRegistrarse:hover{
+.botonLogin:hover,.botonRegistrarse:hover {
     transform: scale(1.1);
-    transition: transform 0.3s ease;}
+    transition: transform 0.3s ease;
+}
 
-h1{
-    color: #000000;
+
+h1 {
+    color: #000000; /* Este color se aplica solo al h1 */
+    margin-bottom: 20px; /* Añadido margen inferior para espacio */
 }

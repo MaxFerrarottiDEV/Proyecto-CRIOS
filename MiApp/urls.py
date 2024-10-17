@@ -6,8 +6,8 @@ from django.contrib import admin
 urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
     path('admin/', admin.site.urls),
-    path('', views.home, name='home'), # Configuración para la URL raíz
-    path('register/', views.register_view, name='register'),
+    path('', views.home, name='home'),
+    path('register/', views.register, name='register'),
     path('login/', auth_views.LoginView.as_view(), name='login'),
     path('build/',views.build, name='build'),
     path('inscripciones/tipoInscripcion/',views.tipo_inscripcion, name='tipo_inscripcion'),

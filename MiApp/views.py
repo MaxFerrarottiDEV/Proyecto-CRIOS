@@ -9,15 +9,24 @@ from django.http import JsonResponse
 def login(request):
     return render(request, 'login.html')
 
-def test(request):
-    return render(request, 'test.html')
+def register(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save() 
+            messages.success(request, '¡Cuenta creada exitosamente! Ahora puedes iniciar sesión.')
+            return redirect('login')  
+        else:
+            messages.error(request, 'Hubo un error en la creación de la solicitud. Inténtalo de nuevo.')
+    else:
+        form = UserCreationForm()
+    
+    return render(request, 'registration/register.html', {'form': form}) 
 
-def homebeta(request):
-    return render(request, 'homebeta.html')
 
 @login_required
 def home(request):
-    return render(request, 'home.html')
+    return render(request,'home.html')
 
 @login_required
 def tipo_inscripcion(request):
@@ -55,20 +64,7 @@ def eliminar_solicitud(request, id):
         return redirect('lista_solicitudes')
     return render(request, 'inscripciones/solicitudes/eliminar_solicitud.html', {'solicitud': solicitud})
 
-@login_required
-def register_view(request):
-    if request.method == 'POST':
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            form.save()  # Guarda el nuevo usuario en la base de datos
-            messages.success(request, '¡Cuenta creada exitosamente! Ahora puedes iniciar sesión.')
-            return redirect('login')  # Redirige a la página de inicio de sesión
-        else:
-            messages.error(request, 'Hubo un error en la creación de la solicitud. Inténtalo de nuevo.')
-    else:
-        form = UserCreationForm()
-    
-    return render(request, 'registration/register.html', {'form': form}) 
+
 
 def consultas(request):
     dni = request.GET.get('dni')  

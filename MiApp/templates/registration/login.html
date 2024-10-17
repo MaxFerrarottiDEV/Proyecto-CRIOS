@@ -12,7 +12,6 @@
 <body>
     <div class="form-container">
         <h1 style="color: #001f3f;">Inicio de Sesión</h1>
-        <!-- Formulario de inicio de sesión -->
         <form method="post" action="{% url 'login' %}">
             {% csrf_token %}
             <label for="username">Usuario</label>
@@ -23,8 +22,6 @@
 
             <button class="botonLogin" type="submit">Iniciar Sesión</button>
         </form>
-        <br>
-        <!-- Botón de registro -->
         <form action="{% url 'register' %}">
             <button type="submit" class="botonRegistrarse">Registrarse</button>
         </form>
