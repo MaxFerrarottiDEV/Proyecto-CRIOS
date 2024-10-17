@@ -3,14 +3,24 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from MiApp.models import DatInsc
+from django.contrib.auth.forms import UserCreationForm
+from django import forms
 
-class SignUpForm(UserCreationForm):
+class CustomRegisterForm(UserCreationForm):
     email = forms.EmailField(required=True)
 
     class Meta:
         model = User
         fields = ['username', 'email', 'password1', 'password2']
-
+        
+    def clean_password1(self):
+        password = self.cleaned_data.get('password1')
+        
+        # Validar si la contraseña contiene al menos un número
+        if not any(char.isdigit() for char in password):
+            raise forms.ValidationError("La contraseña debe contener al menos un número.")
+        
+        return password
 
 class PreinscripcionForm(forms.ModelForm):
     # Campo de seleccion para barra de opciones:

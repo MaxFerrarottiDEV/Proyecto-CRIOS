@@ -1,18 +1,27 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from .models import DatInsc
-from .forms import PreinscripcionForm 
+from .forms import PreinscripcionForm , CustomRegisterForm
 
 def login(request):
     return render(request, 'login.html')
 
+def register_view(request):
+    if request.method == 'POST':
+        form = CustomRegisterForm(request.POST)
+        if form.is_valid():
+            form.save()  # Esto guarda el usuario en la base de datos
+            messages.success(request, 'Tu cuenta ha sido creada con éxito. ¡Ahora puedes iniciar sesión!')
+            return redirect('login')  # Redirigir a la página de inicio de sesión
+        else:
+            messages.error(request, 'Hubo un error en la creación de la cuenta. Inténtalo de nuevo.')
+    else:
+        form = CustomRegisterForm()
+    return render(request, 'registration/register.html', {'form': form})
+
 def test(request):
     return render(request, 'test.html')
-
-def homebeta(request):
-    return render(request, 'homebeta.html')
 
 @login_required
 def home(request):
@@ -47,6 +56,7 @@ def lista_solicitudes(request):
         'form': form  # Pasamos el formulario al contexto
     })
 
+
 def eliminar_solicitud(request, id):
     solicitud = get_object_or_404(DatInsc, id=id)
     if request.method == "POST":
@@ -55,20 +65,6 @@ def eliminar_solicitud(request, id):
     return render(request, 'inscripciones/solicitudes/eliminar_solicitud.html', {'solicitud': solicitud})
 
 @login_required
-def register_view(request):
-    if request.method == 'POST':
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            form.save()  # Guarda el nuevo usuario en la base de datos
-            messages.success(request, '¡Cuenta creada exitosamente! Ahora puedes iniciar sesión.')
-            return redirect('login')  # Redirige a la página de inicio de sesión
-        else:
-            messages.error(request, 'Hubo un error en la creación de la solicitud. Inténtalo de nuevo.')
-    else:
-        form = UserCreationForm()
-    
-    return render(request, 'registration/register.html', {'form': form}) 
-
 def consultas(request):
     dni = request.GET.get('dni')  
     if dni:
