@@ -10,13 +10,12 @@ body {
     background-repeat: no-repeat;
     margin: 0;
     font-family: 'Open Sans', sans-serif;
-    color: #ffffff;
 }
 .error-message {
     color: red;
-    font-size: 18px;
-    margin-bottom: 20px;
-    text-align: center;
+    font-weight: bold;
+    margin-top: 20px;
+    transition: opacity 1s ease-out;
 }
 .form-container {
     background-color: #f6f6f6;

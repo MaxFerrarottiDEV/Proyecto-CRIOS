@@ -1,6 +1,8 @@
 from typing import Any
 from django import forms  # type: ignore
 from django.contrib.auth.forms import UserCreationForm # type: ignore
+from django.contrib.auth.forms import PasswordResetForm
+from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User # type: ignore
 from MiApp.models import DatInsc # type: ignore
 from django import forms # type: ignore
@@ -21,6 +23,14 @@ class CustomRegisterForm(UserCreationForm):
         
         return password
 
+class CustomPasswordResetForm(PasswordResetForm):
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if not User.objects.filter(email=email).exists():
+            raise ValidationError("Este correo no está asociado a ninguna cuenta.")
+        return email
+    
 class PreinscripcionForm(forms.ModelForm):
     # Campo de seleccion para barra de opciones:
     PROVINCIA_CHOICES = {

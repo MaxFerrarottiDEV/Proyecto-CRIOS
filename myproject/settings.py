@@ -114,7 +114,7 @@ AUTH_PASSWORD_VALIDATORS = []
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'es'
 
 TIME_ZONE = 'UTC'
 
@@ -143,5 +143,5 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = "maximo.ferrarotti1@gmail.com"  # Reemplaza con tu dirección de correo
-EMAIL_HOST_PASSWORD = "javq hksc afwz oxgz" # Contraseña de tu correo
+EMAIL_HOST_PASSWORD = "javq hksc afwz oxgz" # Contraseña de aplicacion de tu correo
 DEFAULT_FROM_EMAIL = "maximo.ferrarotti1@gmail.com" 
