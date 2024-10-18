@@ -11,7 +11,7 @@
 
 <body>
     <div class="form-container">
-        <h1 style="color: #001f3f;">Inicio de Sesión</h1>
+        <img src="{% static 'icons/crios_logo.png'%}" alt="Logo" width="250" height="250" class="d-inline-block align-text-top">
         <form method="post" action="{% url 'login' %}">
             {% csrf_token %}
             <label for="username">Usuario</label>

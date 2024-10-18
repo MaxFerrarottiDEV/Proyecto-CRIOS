@@ -3,6 +3,7 @@ body {
   background-color: #c4dafa;
   font-family: "Rubik", sans-serif;
   }
+
 #title {
   font-size: 3rem;
   font-weight: bold;
@@ -17,7 +18,7 @@ body {
   height: 100%;
   }
 .carousel-item img {
-  height: 400px;  /* Ajusta la altura de las imágenes */
+  height: 440px;  /* Ajusta la altura de las imágenes */
   object-fit: contain; /* Esto asegura que la imagen se recorte y ajuste al tamaño del contenedor sin deformarse */
   }
 #mision-text{
@@ -50,9 +51,9 @@ body {
   background-color: #c71c4d;
   }
 footer {
-  background-color: #005187; /* Color de fondo del footer */
+  background-color: #005187;
   padding: 15px;
-  border-top: 2px solid #dee2e6; /* Borde superior */
+  border-top: 2px solid #dee2e6; 
   position: relative;
   bottom: 0;
   width: 100%;
@@ -64,8 +65,8 @@ footer {
   font-size: 16px;}
 
 .navbar {
-  background-color: #005187; /* Fondo claro */
-  border-bottom: 2px solid #dee2e6; /* Borde inferior */}
+  background-color: #005187; 
+  border-bottom: 2px solid #dee2e6;}
 
 .navbar-brand {
   font-weight: bold;
@@ -80,7 +81,7 @@ footer {
   padding-right: 20px;
   background-color: #c4dafa; 
   color: #000000;
-  border-radius: 18px;
+  border-radius: 8px;
   padding: 5px 15px;
   display: flex;
   justify-content: center;
@@ -91,8 +92,10 @@ footer {
 .nav-link:hover{
   transform: scale(1.1);
   transition: transform 0.3s ease; }
-
-  .saludo{
+.nav-item {
+  margin-right: 10px;}
+  
+.saludo{
   font-size: 18px;
   padding-right: 20px;
   background-color: #c4dafa; 
