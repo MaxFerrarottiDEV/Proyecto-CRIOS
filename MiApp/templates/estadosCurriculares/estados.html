@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% load static %} 
+{% block content %} 
+    <div class="container mt-4">
+        <form method="GET" action="{% url 'estados' %}" class="mb-4">
+            <div class="input-group">
+                <input type="text" name="dni" class="form-control" 
+                placeholder="Ingrese el DNI del estudiante" required>
+                <button class="botonBuscar" type="submit">Buscar</button>
+            </div>
+        </form>
+
+        <div class="table-container">
+            <h1 class="mb-4 text-center">Estado Curricular</h1>
+            <hr>
+
+            {% if estudiante %}
+            <table class="table table-striped table-bordered table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>DNI</th>
+                        <th>Nombre</th>
+                        <th>Apellido</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{ estudiante.dni }}</td>
+                        <td>{{ estudiante.nombre }}</td>
+                        <td>{{ estudiante.apellido }}</td>
+                    </tr>
+                </tbody>     
+            </table>
+
+            <h2 class="mt-4">Materias y Estado</h2>
+            <table class="table table-striped table-bordered table-hover mt-3">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Materia</th>
+                        <th>Nota</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for materia in estudiante.estado_curricular %}
+                    <tr>
+                        <td>{{ materia.nombre }}</td>
+                        <td>{{ materia.nota }}</td>
+                        <td>{{ materia.estado }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            {% elif estudiantes %}
+            <table class="table table-striped table-bordered table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>DNI</th>
+                        <th>Nombre</th>
+                        <th>Apellido</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for estudiante in estudiantes %}
+                    <tr>
+                        <td>{{ estudiante.dni }}</td>
+                        <td>{{ estudiante.nombre }}</td>
+                        <td>{{ estudiante.apellido }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>     
+            </table>
+
+            {% else %}
+                <p>No se encontró ningún estudiante con ese DNI.</p>
+            {% endif %}
+        </div>
+    </div>
+{% endblock content %}
+
+

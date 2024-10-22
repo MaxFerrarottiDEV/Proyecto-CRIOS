@@ -2,9 +2,10 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
-from .models import DatInsc
 from .forms import PreinscripcionForm 
 from django.http import JsonResponse
+from django.shortcuts import render, get_object_or_404
+from .models import DatInsc, EstadosCurriculares 
 
 def login(request):
     return render(request, 'login.html')
@@ -125,3 +126,22 @@ def adjuntar_archivo(request):
 
 def build(request):
     return render(request, 'build.html')
+
+
+ 
+
+def estados(request):
+    dni = request.GET.get('dni')
+    
+    if dni:
+        estudiantes = DatInsc.objects.filter(dni=dni)  
+        if estudiantes.exists(): 
+            context = {'estudiantes': estudiantes}
+        else:
+            context = {'error': 'Estudiante no encontrado'}
+    else:
+        lista_estudiantes = DatInsc.objects.all()
+        context = {'estudiantes': lista_estudiantes}
+
+    return render(request, 'estadosCurriculares/estados.html', context)
+
