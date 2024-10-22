@@ -7,7 +7,9 @@
     {% load django_bootstrap5 %}
     {% bootstrap_css %}
     {% bootstrap_javascript %}
-    <title>Profesorado CRIOS - Pagina Principal</title>
+    <title>
+      {% block title %} {% endblock %}
+    </title>
     <link rel="icon" href="{% static 'icons/crios_logo.png' %}" type="image/x-icon">
     <link href="{% static 'home/style.css' %}" rel="stylesheet">
     <link href="{% static 'home/style-tipoInscripcion.css' %}" rel="stylesheet">

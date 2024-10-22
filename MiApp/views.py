@@ -56,8 +56,8 @@ def lista_solicitudes(request):
         'form': form  # Pasamos el formulario al contexto
     })
 
-def eliminar_solicitud(request, id):
-    solicitud = get_object_or_404(DatInsc, id=id)
+def eliminar_solicitud(request, id_datinsc):
+    solicitud = get_object_or_404(DatInsc, id_datinsc=id_datinsc)
     if request.method == "POST":
         solicitud.delete()
         return redirect('lista_solicitudes')

@@ -1,4 +1,7 @@
 {% extends 'base.html' %}
+{% block title %}
+Inscripciones
+{% endblock %}
 {% load static %} 
 
 {% block content %} 
@@ -17,7 +20,8 @@
       <img src="..." class="card-img-top" alt="...">
       <div class="card-body">
         <h5 class="card-title">Consultas</h5>
-        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+        <p class="card-text">Proporciona una tabla con el listado completo de los estudiantes inscritos en el profesorado. Además, permite adjuntar un legajo digital, modificar la información 
+          del estudiante y eliminar su registro en caso de abandono de la carrera.</p>
         <a href="{% url 'consultas' %}" class="btn btn-custom">Ir</a>
       </div>
     </div>    
