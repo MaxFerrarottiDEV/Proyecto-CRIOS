@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% block title %} 
+Editar Solicitud de Preinscripción 
+{% endblock %}
+
+{% load crispy_forms_tags %}
+{% block content %}
+
+<div class="container mt-5">
+    <h2>Editar Solicitud</h2>
+
+    <!-- Mostrar mensajes si existen (de éxito o error) -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Formulario de edición de solicitud -->
+    <form method="post" action="" autocomplete="off">
+        {% csrf_token %}
+        <div class="row">
+            <!-- Columna 1 -->
+            <div class="col-md-6">
+                {{ form.nombre|as_crispy_field }}
+                {{ form.apellido|as_crispy_field }}
+                {{ form.fecha_nac|as_crispy_field }}
+                {{ form.provincia|as_crispy_field }}
+                {{ form.dni|as_crispy_field }}
+                {{ form.edad|as_crispy_field }}
+                {{ form.domicilio|as_crispy_field }}
+                {{ form.telefono_fijo|as_crispy_field }}
+                {{ form.celular_nro|as_crispy_field }}
+                {{ form.email|as_crispy_field }}
+                {{ form.estado_civil|as_crispy_field }}
+            </div>
+            <!-- Columna 2 -->
+            <div class="col-md-6">
+                {{ form.hijos|as_crispy_field }}
+                {{ form.lugar_trabajo|as_crispy_field }}
+                {{ form.tel_emergencia|as_crispy_field }}
+                {{ form.col_egreso|as_crispy_field }}
+                {{ form.titulo|as_crispy_field }}
+                {{ form.otro_titulo|as_crispy_field }}
+                {{ form.anio_egreso|as_crispy_field }}
+                {{ form.preg_1|as_crispy_field }}
+                {{ form.resp_1|as_crispy_field }}
+                {{ form.resp_2|as_crispy_field }}
+                {{ form.preg_2|as_crispy_field }}
+            </div>
+        </div>
+
+        <!-- Botón de guardar cambios -->
+        <button class="btn btn-success float-end" type="submit">Guardar Cambios</button>
+    </form>
+
+    <!-- Botón de cancelar -->
+    <a href="{% url 'lista_solicitudes' %}" class="btn btn-secondary mt-3">Cancelar</a>
+</div>
+
+{% endblock content %}
+
+{% block javascript %}
+<!-- Aquí puedes agregar JavaScript si es necesario -->
+{% endblock javascript %}

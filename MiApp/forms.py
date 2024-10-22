@@ -1,8 +1,8 @@
 from typing import Any
 from django import forms  # type: ignore
 from django.contrib.auth.forms import UserCreationForm # type: ignore
-from django.contrib.auth.forms import PasswordResetForm
-from django.core.exceptions import ValidationError
+from django.contrib.auth.forms import PasswordResetForm # type: ignore
+from django.core.exceptions import ValidationError # type: ignore
 from django.contrib.auth.models import User # type: ignore
 from MiApp.models import DatInsc # type: ignore
 from django import forms # type: ignore

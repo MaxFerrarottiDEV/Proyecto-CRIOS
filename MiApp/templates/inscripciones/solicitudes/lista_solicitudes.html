@@ -1,19 +1,20 @@
 {% extends 'base.html' %}
 {% block title %} 
-Inscripciones - Solicitudes de Preinscripcion 
+Inscripciones - Solicitudes de Preinscripción 
 {% endblock %}
+
 {% load static %}
 {% block content %}
 
 {% load crispy_forms_tags %}
 
 <div class="container mt-5">
-    <h2>Solicitudes de Inscripción</h2>
+    <h2 style="text-align: center;">Lista de Solicitudes de Preinscripción</h2>
 
     <!-- Mostrar mensajes si existen (de éxito o error) -->
     {% if messages %}
         {% for message in messages %}
-            <div class="alert alert-{{ message.tags }}">
+            <div class="alert alert-{{ message.tags }} fade-out">
                 {{ message }}
             </div>
         {% endfor %}
@@ -34,7 +35,7 @@ Inscripciones - Solicitudes de Preinscripcion
                 <th>Nombres</th>
                 <th>Apellido</th>
                 <th>DNI</th>
-                <th colspan="2">Acciones</th>
+                <th colspan="3" style="text-align: center;">Acciones</th>
             </tr>
         </thead>
         <tbody>
@@ -43,7 +44,8 @@ Inscripciones - Solicitudes de Preinscripcion
                 <td>{{ solicitud.nombre }}</td>
                 <td>{{ solicitud.apellido }}</td>
                 <td>{{ solicitud.dni }}</td>
-                <td><a href="eliminar/{{solicitud.id_datinsc}}"  class="btn btn-info">Editar</a></td>
+                <td><a href="eliminar/{{solicitud.id_datinsc}}"  class="btn btn-primary">Confirmar</a></td>
+                <td><a href="editar/{{solicitud.id_datinsc}}"  class="btn btn-info">Editar</a></td>
                 <td><a href="eliminar/{{solicitud.id_datinsc}}" class="btn btn-danger">Eliminar</a></td>
             </tr>
             {% empty %}
@@ -105,6 +107,20 @@ Inscripciones - Solicitudes de Preinscripcion
 </div>
 
 {% endblock content %}
+
 {% block javascript %}
-<!-- Incluye el script de Bootstrap si no lo has hecho -->
+<!-- Script para ocultar el mensaje después de 5 segundos -->
+<script>
+    // Seleccionar todos los elementos de alerta (flash messages)
+    const alerts = document.querySelectorAll('.alert');
+
+    // Desaparecer los mensajes después de 5 segundos
+    setTimeout(() => {
+        alerts.forEach(alert => {
+            alert.style.transition = 'opacity 0.5s ease';
+            alert.style.opacity = '0';
+            setTimeout(() => alert.remove(), 500);  // Después de ocultar, eliminar del DOM
+        });
+    }, 3000);  // 3000 milisegundos = 3 segundos
+</script>
 {% endblock javascript %}

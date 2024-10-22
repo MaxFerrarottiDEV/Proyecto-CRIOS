@@ -56,6 +56,27 @@ def lista_solicitudes(request):
         'form': form  # Pasamos el formulario al contexto
     })
 
+@login_required
+def editar_solicitud(request, id_datinsc):
+    # Obtener la solicitud por su ID
+    solicitud = get_object_or_404(DatInsc, id_datinsc=id_datinsc)
+
+    if request.method == 'POST':
+        # Llenar el formulario con los datos POST
+        form = PreinscripcionForm(request.POST, instance=solicitud)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Solicitud actualizada con éxito.')
+            return redirect('lista_solicitudes')
+        else:
+            messages.error(request, 'Hubo un error en el formulario. Por favor, corrige los errores.')
+    else:
+        # Pre-poblar el formulario con los datos de la solicitud
+        form = PreinscripcionForm(instance=solicitud)
+
+    return render(request, 'inscripciones/solicitudes/editar_solicitud.html', {'form': form})
+
+@login_required
 def eliminar_solicitud(request, id_datinsc):
     solicitud = get_object_or_404(DatInsc, id_datinsc=id_datinsc)
     if request.method == "POST":
