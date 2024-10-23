@@ -1,11 +1,14 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, get_object_or_404 , redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from .forms import PreinscripcionForm 
 from django.http import JsonResponse
-from django.shortcuts import render, get_object_or_404
-from .models import DatInsc, EstadosCurriculares 
+from .models import DatInsc, EstadosCurriculares ,Estudiantes,Materias
+
+
+
+
 
 def login(request):
     return render(request, 'login.html')
@@ -105,7 +108,7 @@ def modificar(request, id):
 
 
 
-# Vista para eliminar estudiante
+
 @login_required
 def eliminar_estudiante_ajax(request):
     estudiante_id = request.POST.get('id')
@@ -128,20 +131,52 @@ def build(request):
     return render(request, 'build.html')
 
 
- 
 
 def estados(request):
     dni = request.GET.get('dni')
-    
     if dni:
-        estudiantes = DatInsc.objects.filter(dni=dni)  
-        if estudiantes.exists(): 
-            context = {'estudiantes': estudiantes}
+        estudiante_datinsc = DatInsc.objects.filter(dni=dni).first()
+        if estudiante_datinsc:
+            estudiante = Estudiantes.objects.filter(id_datinsc=estudiante_datinsc).first()
+            if estudiante:
+                estado_curricular = EstadosCurriculares.objects.filter(id_estudiante_estcur=estudiante)
+                context = {
+                    'estudiante': estudiante,
+                    'estudiante_datinsc': estudiante_datinsc,  
+                    'estado_curricular': estado_curricular  }
+            else:
+                context = {'error': 'No se encontró el estado curricular para este estudiante.'}
         else:
-            context = {'error': 'Estudiante no encontrado'}
+            context = {'error': 'Estudiante no encontrado.'}
     else:
         lista_estudiantes = DatInsc.objects.all()
         context = {'estudiantes': lista_estudiantes}
-
     return render(request, 'estadosCurriculares/estados.html', context)
+
+
+
+def agregarNota(request):
+    if request.method == 'POST':
+        materia_id = request.POST.get('materia')
+        condicion_nota = request.POST.get('condicion')
+        nota = request.POST.get('nota')
+        fecha_finalizacion = request.POST.get('fecha')
+        materia = Materias.objects.get(id_materia=materia_id)
+        estudiante_id = request.POST.get('estudiante_id')  
+        estudiante = Estudiantes.objects.get(id=estudiante_id)
+        nueva_nota = EstadosCurriculares(
+            Id_MatXPlan_EstCur=materia,  
+            Id_Estudiante_EstCur=estudiante,  
+            Condicion_Nota=condicion_nota,
+            Nota=nota,
+            Fecha_Finalizacion=fecha_finalizacion
+        )
+        nueva_nota.save()
+        return redirect('estados')  
+    else:
+        materias = Materias.objects.all()
+        return render(request, 'tu_template.html', {'materias': materias})
+
+
+
 

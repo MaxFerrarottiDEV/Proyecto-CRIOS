@@ -18,5 +18,6 @@ urlpatterns = [
     path('upload/', views.adjuntar_archivo, name='adjuntar_archivo'),
     path('eliminar_estudiante_ajax/', views.eliminar_estudiante_ajax, name='eliminar_estudiante_ajax'),
     path('estadosCurriculares/estados', views.estados, name='estados'),
-    
+    path('estadosCurriculares/estados', views.agregarNota, name='agregarNota'),
+
     ]
