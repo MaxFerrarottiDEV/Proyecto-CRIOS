@@ -4,7 +4,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from .forms import PreinscripcionForm 
 from django.http import JsonResponse
-from .models import DatInsc, EstadosCurriculares ,Estudiantes,Materias
+from .models import DatInsc, EstadosCurriculares ,Estudiantes,Materias,MateriasxplanesEstudios
 
 
 
@@ -132,51 +132,56 @@ def build(request):
 
 
 
+
 def estados(request):
     dni = request.GET.get('dni')
     if dni:
         estudiante_datinsc = DatInsc.objects.filter(dni=dni).first()
         if estudiante_datinsc:
+        
             estudiante = Estudiantes.objects.filter(id_datinsc=estudiante_datinsc).first()
             if estudiante:
+              
                 estado_curricular = EstadosCurriculares.objects.filter(id_estudiante_estcur=estudiante)
                 context = {
                     'estudiante': estudiante,
                     'estudiante_datinsc': estudiante_datinsc,  
-                    'estado_curricular': estado_curricular  }
+                    'estado_curricular': estado_curricular}
             else:
                 context = {'error': 'No se encontró el estado curricular para este estudiante.'}
         else:
             context = {'error': 'Estudiante no encontrado.'}
     else:
-        lista_estudiantes = DatInsc.objects.all()
+        lista_estudiantes = Estudiantes.objects.all()  
         context = {'estudiantes': lista_estudiantes}
     return render(request, 'estadosCurriculares/estados.html', context)
 
 
 
+
+
+
 def agregarNota(request):
     if request.method == 'POST':
+        # Obtenemos los datos del formulario
         materia_id = request.POST.get('materia')
         condicion_nota = request.POST.get('condicion')
         nota = request.POST.get('nota')
         fecha_finalizacion = request.POST.get('fecha')
-        materia = Materias.objects.get(id_materia=materia_id)
-        estudiante_id = request.POST.get('estudiante_id')  
-        estudiante = Estudiantes.objects.get(id=estudiante_id)
+        estudiante_id = request.POST.get('estudiante_id')
+        try:
+            materia_plan = MateriasxplanesEstudios.objects.get(id_materia=materia_id)
+        except MateriasxplanesEstudios.DoesNotExist:   
+            return render(request, 'estados.html', {'error': 'La materia seleccionada no existe.'})
+        estudiante = Estudiantes.objects.get(id_estudiante=estudiante_id)
         nueva_nota = EstadosCurriculares(
-            Id_MatXPlan_EstCur=materia,  
-            Id_Estudiante_EstCur=estudiante,  
-            Condicion_Nota=condicion_nota,
-            Nota=nota,
-            Fecha_Finalizacion=fecha_finalizacion
-        )
+            id_matxplan_estcur=materia_plan, 
+            id_estudiante_estcur=estudiante,  
+            condicion_nota=condicion_nota,
+            nota=nota,
+            fecha_finalizacion=fecha_finalizacion)
         nueva_nota.save()
-        return redirect('estados')  
+        return redirect('estados')
     else:
         materias = Materias.objects.all()
-        return render(request, 'tu_template.html', {'materias': materias})
-
-
-
-
+        return render(request, 'estados.html', {'materias': materias})
