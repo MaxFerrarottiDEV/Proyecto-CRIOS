@@ -44,9 +44,9 @@ Inscripciones - Solicitudes de Preinscripción
                 <td>{{ solicitud.nombre }}</td>
                 <td>{{ solicitud.apellido }}</td>
                 <td>{{ solicitud.dni }}</td>
-                <td><a href="eliminar/{{solicitud.id_datinsc}}"  class="btn btn-success">Confirmar</a></td>
-                <td><a href="editar/{{solicitud.id_datinsc}}"  class="btn btn-primary">Editar</a></td>
-                <td><a href="eliminar/{{solicitud.id_datinsc}}" class="btn btn-danger">Eliminar</a></td>
+                <td><a href="{% url 'build' %}"  class="btn btn-success">Confirmar</a></td>
+                <td><a href="{% url 'editar_solicitud' solicitud.id_datinsc %}"  class="btn btn-primary">Editar</a></td>
+                <td><a href="{% url 'eliminar_solicitud' solicitud.id_datinsc %}" class="btn btn-danger">Eliminar</a></td>
             </tr>
             {% empty %}
             <tr>

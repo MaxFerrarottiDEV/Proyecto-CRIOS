@@ -78,10 +78,22 @@ def editar_solicitud(request, id_datinsc):
 
 @login_required
 def eliminar_solicitud(request, id_datinsc):
+    # Obtener la solicitud o devolver un 404 si no existe
     solicitud = get_object_or_404(DatInsc, id_datinsc=id_datinsc)
+    
     if request.method == "POST":
-        solicitud.delete()
+        try:
+            solicitud.delete()
+            # Si la eliminación es exitosa, enviamos un mensaje de éxito
+            messages.success(request, "La solicitud ha sido eliminada correctamente.")
+        except Exception as e:
+            # Si ocurre un error, enviamos un mensaje de error
+            messages.error(request, f"Ocurrió un error al eliminar la solicitud: {str(e)}")
+        
+        # Redirigir a la lista de solicitudes
         return redirect('lista_solicitudes')
+    
+    # Si no es POST, simplemente renderizar la página de confirmación
     return render(request, 'inscripciones/solicitudes/eliminar_solicitud.html', {'solicitud': solicitud})
 
 @login_required
@@ -131,6 +143,7 @@ def eliminar_estudiante_ajax(request):
 
 
 # Vista para adjuntar un archivo
+@login_required
 def adjuntar_archivo(request):
     if request.method == 'POST':
         try:
