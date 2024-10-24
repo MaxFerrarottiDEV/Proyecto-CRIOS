@@ -1,8 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404 # type: ignore
 from django.contrib.auth.decorators import login_required # type: ignore
-from django.contrib import messages # type: ignore
-from .models import DatInsc
 from .forms import PreinscripcionForm , CustomRegisterForm
+from django.contrib import messages # type: ignore
+from .models import DatInsc, Estudiantes
+from datetime import date
+
 
 def login(request):
     return render(request, 'login.html')
@@ -33,7 +35,8 @@ def tipo_inscripcion(request):
 
 @login_required
 def lista_solicitudes(request):
-    solicitudes = DatInsc.objects.all()  # Reemplaza con tu consulta real
+    # Filtramos las solicitudes que no están confirmadas (cuando ambos campos son False)
+    solicitudes = DatInsc.objects.filter(matricula=False, legajo_fisico=False)
 
     # Inicializamos el formulario de la solicitud
     form = PreinscripcionForm()
@@ -55,6 +58,34 @@ def lista_solicitudes(request):
         'solicitudes': solicitudes,
         'form': form  # Pasamos el formulario al contexto
     })
+
+@login_required
+def confirmar_solicitud(request, id_datinsc):
+    solicitud = get_object_or_404(DatInsc, id_datinsc=id_datinsc)
+
+    if request.method == 'POST':
+        matricula = request.POST.get('matricula') == 'True'  # Si no se marca, será False
+        legajo_fisico = request.POST.get('legajo_fisico') == 'True'  # Si no se marca, será False
+
+        # Actualizamos los campos en la solicitud
+        solicitud.matricula = matricula
+        solicitud.legajo_fisico = legajo_fisico
+        solicitud.save()
+
+        # Creamos un nuevo estudiante basado en la solicitud
+        nuevo_estudiante = Estudiantes.objects.create(
+            id_datinsc=solicitud,
+            fecha_insc_est=date.today(),  # Corregido a date.today()
+            nro_legajo=None,  # Esto puede depender de tus necesidades
+            legajo_digital=None  # Esto puede depender de tus necesidades
+        )
+
+        # Mensaje de éxito y redirigir a la lista de solicitudes
+        messages.success(request, 'Solicitud confirmada exitosamente.')
+        return redirect('lista_solicitudes')
+
+    return render(request, 'inscripciones/solicitudes/confirmar_solicitud.html', {'solicitud': solicitud})
+
 
 @login_required
 def editar_solicitud(request, id_datinsc):

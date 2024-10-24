@@ -44,7 +44,7 @@ Inscripciones - Solicitudes de Preinscripción
                 <td>{{ solicitud.nombre }}</td>
                 <td>{{ solicitud.apellido }}</td>
                 <td>{{ solicitud.dni }}</td>
-                <td><a href="{% url 'build' %}"  class="btn btn-success">Confirmar</a></td>
+                <td><a href="{% url 'confirmar_solicitud' solicitud.id_datinsc %}" class="btn btn-success">Confirmar</a></td>
                 <td><a href="{% url 'editar_solicitud' solicitud.id_datinsc %}"  class="btn btn-primary">Editar</a></td>
                 <td><a href="{% url 'eliminar_solicitud' solicitud.id_datinsc %}" class="btn btn-danger">Eliminar</a></td>
             </tr>
@@ -82,29 +82,41 @@ Inscripciones - Solicitudes de Preinscripción
                             {{ form.telefono_fijo|as_crispy_field }}
                             {{ form.celular_nro|as_crispy_field }}
                             {{ form.email|as_crispy_field }}
+
+                            <!-- Estado Civil -->
                             {{ form.estado_civil|as_crispy_field }}
+                            <a href="#" class="text-primary" style="text-decoration: underline;" onclick="borrarSeleccion('estado_civil')">Borrar selección</a>
                         </div>
+
                         <!-- Columna 2 -->
                         <div class="col-md-6">
+                            <!-- ¿Tiene Hijos? -->
                             {{ form.hijos|as_crispy_field }}
+                            <a href="#" class="text-primary" style="text-decoration: underline;" onclick="borrarSeleccion('hijos')">Borrar selección</a>
+
                             {{ form.lugar_trabajo|as_crispy_field }}
                             {{ form.tel_emergencia|as_crispy_field }}
                             {{ form.col_egreso|as_crispy_field }}
                             {{ form.titulo|as_crispy_field }}
                             {{ form.otro_titulo|as_crispy_field }}
                             {{ form.anio_egreso|as_crispy_field }}
+
+                            <!-- ¿Tuvo otro ingreso a nivel superior? -->
                             {{ form.preg_1|as_crispy_field }}
-                            {{ form.resp_1|as_crispy_field }}
-                            {{ form.resp_2|as_crispy_field }}
+                            <a href="#" class="text-primary" style="text-decoration: underline;" onclick="borrarSeleccion('preg_1')">Borrar selección</a>
+
+                            <!-- ¿Completó esos estudios? -->
                             {{ form.preg_2|as_crispy_field }}
                         </div>
                     </div>
+
                     <button class="btn btn-primary float-end" type="submit">Guardar Solicitud</button>
                 </form>
             </div>
         </div>
     </div>
 </div>
+
 
 {% endblock content %}
 
@@ -123,4 +135,15 @@ Inscripciones - Solicitudes de Preinscripción
         });
     }, 3000);  // 3000 milisegundos = 3 segundos
 </script>
+
+<script type="text/javascript">
+    function borrarSeleccion(nameGrupoRadio) {
+        // Obtiene todos los elementos del grupo de radio por el atributo 'name'
+        var radios = document.getElementsByName(nameGrupoRadio);
+        radios.forEach(function(radio) {
+            radio.checked = false;  // Desmarca todas las opciones del grupo
+        });
+    }
+</script>
+
 {% endblock javascript %}
