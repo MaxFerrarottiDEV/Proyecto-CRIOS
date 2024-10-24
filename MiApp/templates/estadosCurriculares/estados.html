@@ -1,6 +1,5 @@
 {% extends 'base.html' %}
 {% load static %} 
-
 {% block content %} 
 <div class="container mt-4">
     <h1 class="mb-4 text-center">Estado Curricular</h1>
@@ -30,7 +29,7 @@
                     <input type="text" id="dni" class="form-control" value="{{ estudiante.id_datinsc.dni }}" readonly>
                 </div>
             </div>
-        </div>
+        </div> 
         
         <div class="row mb-3">
             <div class="col-md-6">
@@ -103,35 +102,54 @@
                         <form method="POST" action="{% url 'agregarNota' %}">
                             {% csrf_token %}
                             <input type="hidden" name="estudiante_id" value="{{ estudiante.id }}">
-
+        
                             <div class="mb-3">
                                 <label for="materia" class="form-label">Materia</label>
                                 <div class="input-group">
                                     <span class="input-group-text">
-                                        <i class="bi bi-book"></i>
+                                        <i class="bi bi-journal-text"></i> <!-- Icono para materia -->
                                     </span>
-                                    <input type="text" id="materia" name="materia" class="form-control" placeholder="Ingrese el nombre de la materia" required>
+                                    <select id="materia" name="materia" class="form-select" required>
+                                        <option value="" disabled selected>Seleccione una materia</option>
+                                        {% for materia in materias %}
+                                            <option value="{{ materia.id_materia }}">{{ materia.nombre }}</option>
+                                        {% empty %}
+                                            <option value="">No hay materias disponibles</option>
+                                        {% endfor %}
+                                    </select>
                                 </div>
                             </div>
-
+                            
+                            
+        
                             <div class="mb-3">
                                 <label for="condicion" class="form-label">Condición Nota</label>
-                                <select id="condicion" name="condicion" class="form-control" required>
-                                    <option value="">Seleccionar...</option>
-                                    <option value="Libre">Libre</option>
-                                    <option value="Regular">Regular</option>
-                                    <option value="Promocionado">Promocionado</option>
-                                </select>
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i class="bi bi-check2-circle"></i> 
+                                    </span>
+                                    <select id="condicion" name="condicion" class="form-control" required>
+                                        <option value="">Seleccionar...</option>
+                                        <option value="Libre">Libre</option>
+                                        <option value="Regular">Regular</option>
+                                        <option value="Promocionado">Promocionado</option>
+                                    </select>
+                                </div>
                             </div>
                             
                             <div class="mb-3">
                                 <label for="nota" class="form-label">Nota</label>
-                                <input type="number" id="nota" name="nota" class="form-control" required>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-pencil"></i> </span>
+                                    <input type="number" id="nota" name="nota" class="form-control" required>
+                                </div>
                             </div>
+        
                             <div class="mb-3">
                                 <label for="fecha" class="form-label">Fecha de Finalización</label>
                                 <input type="date" id="fecha" name="fecha" class="form-control" required>
                             </div>
+        
                             <div class="modal-footer">
                                 <button type="submit" class="botonGuardar">Guardar Nota</button>
                                 <button type="button" class="botonEliminar" data-bs-dismiss="modal">Cerrar</button>
@@ -141,15 +159,16 @@
                 </div>
             </div>
         </div>
+        
 
         {% elif estudiantes %}
         <table class="table table-striped table-bordered table-hover">
-            <thead class="table-dark">
-                <tr class="text-center">
-                    <th>Nro Legajo</th>
-                    <th>DNI</th>
-                    <th>Apellido y Nombre</th>
-                    <th colspan="2">Acciones</th> 
+            <class="table-dark">
+                <tr>
+                    <th style="color: white;background-color:#005187;">Nro Legajo</th>
+                    <th style="color: white;background-color:#005187;">DNI</th>
+                    <th style="color: white;background-color:#005187;">Apellido y Nombre</th>
+                    <th style="color: white;background-color:#005187;" class="text-center"  colspan="2">Acciones</th> 
                 </tr>
             </thead>
             <tbody>
@@ -167,9 +186,8 @@
                 {% endfor %}
             </tbody>     
         </table>
-        {% else %}
-            <p>No se encontró ningún estudiante con ese DNI.</p>
-        {% endif %}
+        
+        {% else %}<p>No se encontró ningún estudiante con ese DNI.</p>{% endif %}
     </div>
 </div>
 {% endblock content %}
