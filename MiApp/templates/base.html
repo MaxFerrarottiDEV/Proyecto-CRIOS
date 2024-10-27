@@ -96,11 +96,16 @@
       </p>
     </footer>
     {% block javascript %}
-
-    {% endblock javascript %}
     <script src="{% static 'jQuery-3.7.0/jquery-3.7.0.js' %}"></script>  
     <script src="{% static 'DataTables-1.13.6/js/jquery.dataTables.js' %}"></script>
     <script src="{% static 'DataTables-1.13.6/js/dataTables.bootstrap5.js' %}"></script> 
     <script src="{% static 'bootbox/bootbox.all.min.js' %}"></script>
+    <script>
+        $(document).ready(function () {
+            $('#myTable').DataTable();
+        });
+    </script>
+{% endblock javascript %}
+
   </body>
 </html>

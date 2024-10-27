@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block title %} 
+Confirmar Solicitud
+{% endblock %}
+
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Confirmar Solicitud</h2>
+
+    <form method="POST" action="">
+        {% csrf_token %}
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="matricula" name="matricula" value="True">
+            <label class="form-check-label" for="matricula">
+                ¿Ya se ha realizado el pago de matrícula? (Si/No)
+            </label>
+        </div>
+
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="legajo_fisico" name="legajo_fisico" value="True">
+            <label class="form-check-label" for="legajo_fisico">
+                ¿Ya posee un legajo físico? (Si/No)
+            </label>
+        </div>
+
+        <button type="submit" class="btn btn-primary mt-4" onclick="return confirm('¿Está seguro que desea confirmar la inscripción?')">Confirmar Inscripción</button>
+    </form>
+</div>
+{% endblock %}
+
+{% block javascript %}
+<!-- Aquí puedes agregar JavaScript si es necesario -->
+{% endblock javascript %}
