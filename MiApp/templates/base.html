@@ -7,9 +7,12 @@
     {% load django_bootstrap5 %}
     {% bootstrap_css %}
     {% bootstrap_javascript %}
-    <title>Profesorado CRIOS - Pagina Principal</title>
+    <title>
+      {% block title %} {% endblock %}
+    </title>
     <link rel="icon" href="{% static 'icons/crios_logo.png' %}" type="image/x-icon">
     <link href="{% static 'home/style.css' %}" rel="stylesheet">
+    <link href="{% static 'home/style-tipoInscripcion.css' %}" rel="stylesheet">
     <link href="{% static 'inscripciones/solicitudes/style.css'%}" rel="stylesheet">
     <link href="{% static 'DataTables-1.13.6/css/dataTables.bootstrap5.css' %}" rel="stylesheet">
     <link href="{% static 'inscripciones/consultas.css' %}" rel="stylesheet">
@@ -20,6 +23,7 @@
   </head>
   <body  class="d-flex flex-column min-vh-100">
     <!-- Navbar -->
+    <!-- Navbar -->
     <nav class="navbar navbar-expand-lg">
       <div class="container-fluid">
         <a class="navbar-brand" href="{% url 'home' %}">
@@ -28,34 +32,36 @@
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <!-- Botones encabezado-->
+        <div class="collapse navbar-collapse" id="navbarSupportedContent" >
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="{% url 'home' %}" style="color: #fff;">Pagina Principal</a>
+              <a class="nav-link nav-titulo" href="{% url 'home' %}">Pagina Principal</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Examenes</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Estados Curriculares</a>
-            </li>
-            <!-- Dropdown de INSCRIPCIONES -->
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="inscripcionesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  Inscripciones
-                </a>
-              <ul class="dropdown-menu" aria-labelledby="inscripcionesDropdown">
-                <li><a class="dropdown-item" href="{% url 'lista_solicitudes' %}">Solicitudes de Inscripcion</a></li>
-                <li><a class="dropdown-item" href="{% url 'consultas' %}">Consultas de Datos de Estudiantes</a></li>
-              </ul>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Cuotas</a>
-            </li>
-          </ul>
+              <a class="nav-link nav-titulo" href="{% url 'build' %}">Examenes</a>
+          </li>
+          <li class="nav-item">
+              <a class="nav-link nav-titulo" href="{% url 'build' %}">Estados Curriculares</a>
+          </li>
+          <!-- Dropdown de INSCRIPCIONES -->
+          <li class="nav-item dropdown">
+              <a class="nav-link nav-titulo" href="{% url 'build' %}" id="inscripcionesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Inscripciones
+              </a>
+            <ul class="dropdown-menu" aria-labelledby="inscripcionesDropdown">
+              <li><a class="dropdown-item" href="{% url 'lista_solicitudes' %}">Solicitudes de Inscripcion</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="{% url 'consultas' %}">Consultas de Datos de Estudiantes</a></li>
+            </ul>
+          </li>
+          <li class="nav-item">
+              <a class="nav-link nav-titulo" href="{% url 'build' %}">Cuotas</a>
+          </li>
+        </ul>
           <!-- Botón de Cerrar Sesión -->
           <ul class="navbar-nav mb-2 mb-lg-0">
-            <p style="color: #fff; padding-right: 0.5%;">Hola, (Nombre de Usuario)</p>
+            <p id="saludo" class="nav-link">Hola, {{ user.username }}</p>
             <li class="nav-item">
               <a class="nav-link logout-button" href="#" onclick="document.getElementById('logout-form').submit();">Cerrar sesión</a>
               <form id="logout-form" method="post" action="{% url 'logout' %}" style="display: none;">
@@ -87,7 +93,7 @@
         </a> |
         Portal educativo: 
         <a href="https://crios-sal.infd.edu.ar/sitio/" target="_blank">
-          <img src="{% static 'icons/escudoargentino_icon.png'%}" alt="Portal" width="20px" height="auto">
+          <img src="{% static 'icons/escudoargentino_icon.png'%}" alt="Portal" width="1.80%" height="auto">
         </a>
       </p>
     </footer>
