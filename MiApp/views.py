@@ -36,8 +36,8 @@ def tipo_inscripcion(request):
 
 @login_required
 def lista_solicitudes(request):
-    # Filtramos las solicitudes que no están confirmadas (cuando ambos campos son False)
-    solicitudes = DatInsc.objects.filter(matricula=False, legajo_fisico=False)
+    
+    solicitudes = DatInsc.objects.filter
 
     # Inicializamos el formulario de la solicitud
     form = PreinscripcionForm()
@@ -90,11 +90,8 @@ def confirmar_solicitud(request, id_datinsc):
 
 @login_required
 def editar_solicitud(request, id_datinsc):
-    # Obtener la solicitud por su ID
     solicitud = get_object_or_404(DatInsc, id_datinsc=id_datinsc)
-
     if request.method == 'POST':
-        # Llenar el formulario con los datos POST
         form = PreinscripcionForm(request.POST, instance=solicitud)
         if form.is_valid():
             form.save()
@@ -103,55 +100,45 @@ def editar_solicitud(request, id_datinsc):
         else:
             messages.error(request, 'Hubo un error en el formulario. Por favor, corrige los errores.')
     else:
-        # Pre-poblar el formulario con los datos de la solicitud
         form = PreinscripcionForm(instance=solicitud)
 
     return render(request, 'inscripciones/solicitudes/editar_solicitud.html', {'form': form})
 
 @login_required
 def eliminar_solicitud(request, id_datinsc):
-    # Obtener la solicitud o devolver un 404 si no existe
     solicitud = get_object_or_404(DatInsc, id_datinsc=id_datinsc)
     
     if request.method == "POST":
         try:
             solicitud.delete()
-            # Si la eliminación es exitosa, enviamos un mensaje de éxito
             messages.success(request, "La solicitud ha sido eliminada correctamente.")
         except Exception as e:
-            # Si ocurre un error, enviamos un mensaje de error
             messages.error(request, f"Ocurrió un error al eliminar la solicitud: {str(e)}")
-        
-        # Redirigir a la lista de solicitudes
         return redirect('lista_solicitudes')
-    
-    # Si no es POST, simplemente renderizar la página de confirmación
     return render(request, 'inscripciones/solicitudes/eliminar_solicitud.html', {'solicitud': solicitud})
 
 
-
+@login_required
 def consultas(request):
     dni = request.GET.get('dni')  
     if dni:
-        estudiante = DatInsc.objects.filter(dni=dni).first()
-        if estudiante:
-            print(estudiante.id_datinsc)  
+        estudiante_datinsc = DatInsc.objects.filter(dni=dni).first()
+        if estudiante_datinsc:
+            estudiante = Estudiantes.objects.filter(id_datinsc=estudiante_datinsc).first()
             context = {'estudiante': estudiante}
         else:
-
             context = {'error': 'Estudiante no encontrado'}
     else:
-        
-        lista_estudiantes = DatInsc.objects.all()
-        for est in lista_estudiantes:
-            print(est.id_datinsc) 
+        lista_estudiantes = Estudiantes.objects.select_related('id_datinsc').all()
         context = {'estudiantes': lista_estudiantes}
     
-    return render(request, 'inscripciones/consultas/consultas.html',context)
+    return render(request, 'inscripciones/consultas/consultas.html', context)
+
 
 @login_required
-def modificar(request, id):
-    estudiante = get_object_or_404(DatInsc, pk=id)
+def modificar(request, dni):
+    estudiante = get_object_or_404(DatInsc, dni=dni)
+    
     if request.method == 'POST':
         estudiante.nombre = request.POST.get('nombre')
         estudiante.apellido = request.POST.get('apellido')
@@ -167,28 +154,16 @@ def modificar(request, id):
     return render(request, 'inscripciones/consultas/modificar.html', {'estudiante': estudiante})
 
 
-
 @login_required
-def eliminar_estudiante_ajax(request):
-    estudiante_id = request.POST.get('id')
-    estudiante = get_object_or_404(DatInsc, id_datinsc=estudiante_id)
+def eliminar_estudiante(request, dni):
+    estudiante = get_object_or_404(Estudiantes, id_datinsc__dni=dni)
     estudiante.delete()
-    
-    return JsonResponse({'success': True, 'message': 'Estudiante eliminado'})
+    messages.success(request, 'El estudiante ha sido eliminado exitosamente.')
+    return redirect('consultas')
 
-def adjuntar_archivo(request):
-    if request.method == 'POST':
-        try:
-            archivo = request.FILES['fileUpload']
-            return HttpResponse('Archivo subido exitosamente.') # type: ignore
-        except KeyError:
-            return HttpResponse('No se encontró el archivo.') # type: ignore
-    return render(request, 'Insc/consultas.html')
 
 def build(request):
     return render(request, 'build.html')
-
-
 
 
 def estados(request):
@@ -196,36 +171,39 @@ def estados(request):
     if dni:
         estudiante_datinsc = DatInsc.objects.filter(dni=dni).first()
         if estudiante_datinsc:
-        
             estudiante = Estudiantes.objects.filter(id_datinsc=estudiante_datinsc).first()
             if estudiante:
-              
                 estado_curricular = EstadosCurriculares.objects.filter(id_estudiante_estcur=estudiante)
+                materias = Materias.objects.all()
                 context = {
                     'estudiante': estudiante,
-                    'estudiante_datinsc': estudiante_datinsc,  
-                    'estado_curricular': estado_curricular}
+                    'estudiante_datinsc': estudiante_datinsc,
+                    'estado_curricular': estado_curricular,
+                    'materias': materias  }
             else:
                 context = {'error': 'No se encontró el estado curricular para este estudiante.'}
         else:
             context = {'error': 'Estudiante no encontrado.'}
     else:
-        lista_estudiantes = Estudiantes.objects.all()  
-        context = {'estudiantes': lista_estudiantes}
+        lista_estudiantes = Estudiantes.objects.all()
+        materias = Materias.objects.all()  #
+        context = {
+            'estudiantes': lista_estudiantes,
+            'materias': materias }
+
     return render(request, 'estadosCurriculares/estados.html', context)
+
 
 def agregarNota(request):
     if request.method == 'POST':
-        # Obtener datos del formulario
         materia_id = request.POST.get('materia')
         condicion_nota = request.POST.get('condicion')
         nota = request.POST.get('nota')
         fecha_finalizacion = request.POST.get('fecha')
         estudiante_id = request.POST.get('estudiante_id')
 
-        # Crear una nueva nota sin considerar relaciones
         nueva_nota = EstadosCurriculares(
-            id_matxplan_estcur_id=materia_id,  # Aquí usas directamente el ID de la materia
+            id_matxplan_estcur_id=materia_id, 
             id_estudiante_estcur_id=estudiante_id,
             condicion_nota=condicion_nota,
             nota=nota,
@@ -234,9 +212,11 @@ def agregarNota(request):
         nueva_nota.save()
         return redirect('estados')
     else:
-        # Aquí obtenemos las materias
-        materias = Materias.objects.all()  # Obtiene todas las materias
+        materias = Materias.objects.all()
         return render(request, 'estados.html', {'materias': materias})
+
+def examenes(request):
+    return render(request, 'examenes/examenes.html')
 
 
 

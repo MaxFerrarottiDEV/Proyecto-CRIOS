@@ -107,7 +107,7 @@
                                 <label for="materia" class="form-label">Materia</label>
                                 <div class="input-group">
                                     <span class="input-group-text">
-                                        <i class="bi bi-journal-text"></i> <!-- Icono para materia -->
+                                        <i class="bi bi-journal-text"></i>
                                     </span>
                                     <select id="materia" name="materia" class="form-select" required>
                                         <option value="" disabled selected>Seleccione una materia</option>
@@ -163,8 +163,8 @@
             <thead class="table-dark">
                 <tr>
                     <th style="color: white;background-color:#005187;">Nro Legajo</th>
-                    <th style="color: white;background-color:#005187;">DNI</th>
                     <th style="color: white;background-color:#005187;">Apellido y Nombre</th>
+                    <th style="color: white;background-color:#005187;">DNI</th>
                     <th style="color: white;background-color:#005187;" class="text-center">Acciones</th>
                 </tr>
             </thead>
@@ -172,8 +172,8 @@
                 {% for estudiante in estudiantes %}
                 <tr>
                     <td>{{ estudiante.nro_legajo }}</td>
-                    <td>{{ estudiante.id_datinsc.dni }}</td>
                     <td>{{ estudiante.id_datinsc.apellido }} {{ estudiante.id_datinsc.nombre }}</td>
+                    <td>{{ estudiante.id_datinsc.dni }}</td>
                     <td style="width: 1px; white-space: nowrap;" class="text-end">
                         <a href="#" class="botonAzul">Estado Curricular</a>
                         <a href="#" class="botonModificar">Agregar Notas</a>

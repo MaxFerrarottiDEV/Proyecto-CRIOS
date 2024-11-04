@@ -1,7 +1,8 @@
-from django.urls import path, include
-from . import views
 from django.contrib.auth import views as auth_views
+from django.urls import path, include
 from django.contrib import admin
+from . import views
+from .forms import CustomPasswordResetForm
 
 urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
@@ -16,8 +17,18 @@ urlpatterns = [
 
     path('build/',views.build, name='build'),
 
+    # Password Reset
+    path('reset_password/', 
+    auth_views.PasswordResetView.as_view(
+    template_name='registration/password_reset/password_reset_form.html', 
+    form_class=CustomPasswordResetForm,
+    email_template_name='registration/password_reset/password_reset_email.html'),
+    name='password_reset'),
+    path('reset_password_send/', auth_views.PasswordResetDoneView.as_view(template_name='registration/password_reset/password_reset_done.html'), name='password_reset_done'),
+    path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(template_name='registration/password_reset/password_reset_confirm.html'), name='password_reset_confirm'),
+    path('reset_password_complete/', auth_views.PasswordResetCompleteView.as_view(template_name='registration/password_reset/password_reset_complete.html'), name='password_reset_complete'),
     
-    # Modulo de estados inscripciones
+    # Modulo de solicitudes inscripciones
     path('inscripciones/tipoInscripcion/',views.tipo_inscripcion, name='tipo_inscripcion'),
     path('inscripciones/solicitudes/', views.lista_solicitudes, name='lista_solicitudes'),
     path('inscripciones/solicitudes/confirmar/<int:id_datinsc>/', views.confirmar_solicitud, name='confirmar_solicitud'),
@@ -26,9 +37,9 @@ urlpatterns = [
 
     # Modulo de estados inscripciones
     path('inscripciones/consultas/', views.consultas, name='consultas'),
-    path('inscripciones/consultas/modificar/<int:id>/', views.modificar, name='modificar'),
-    path('upload/', views.adjuntar_archivo, name='adjuntar_archivo'),
-    path('eliminar_estudiante_ajax/', views.eliminar_estudiante_ajax, name='eliminar_estudiante_ajax'),
+    path('inscripciones/consultas/modificar/<str:dni>/', views.modificar, name='modificar'),
+    path('eliminar/<int:dni>/', views.eliminar_estudiante, name='eliminar_estudiante'),
+
 
     # Modulo de estados Curriculares
     path('estadosCurriculares/estados', views.estados, name='estados'),

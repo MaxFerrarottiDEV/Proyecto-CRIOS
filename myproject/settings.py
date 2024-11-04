@@ -107,26 +107,13 @@ DATABASES = {
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 
-AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
-]
+AUTH_PASSWORD_VALIDATORS = []
 
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'es'
 
 TIME_ZONE = 'UTC'
 
@@ -149,3 +136,11 @@ LOGIN_REDIRECT_URL='/'
 LOGOUT_REDIRECT_URL='/login/'
 LOGIN_URL='/login/'
 
+# Configuración de email en settings.py
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = "maximo.ferrarotti1@gmail.com"  # Reemplaza con tu dirección de correo
+EMAIL_HOST_PASSWORD = "javq hksc afwz oxgz" # Contraseña de aplicacion de tu correo
+DEFAULT_FROM_EMAIL = "maximo.ferrarotti1@gmail.com" 

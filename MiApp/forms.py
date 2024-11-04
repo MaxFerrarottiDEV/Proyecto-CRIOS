@@ -1,16 +1,35 @@
 from typing import Any
-from django import forms
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
-from MiApp.models import DatInsc
+from django import forms  # type: ignore
+from django.contrib.auth.forms import UserCreationForm # type: ignore
+from django.contrib.auth.forms import PasswordResetForm # type: ignore
+from django.core.exceptions import ValidationError # type: ignore
+from django.contrib.auth.models import User # type: ignore
+from MiApp.models import DatInsc # type: ignore
+from django import forms # type: ignore
 
-class SignUpForm(UserCreationForm):
+class CustomRegisterForm(UserCreationForm):
     email = forms.EmailField(required=True)
 
     class Meta:
         model = User
         fields = ['username', 'email', 'password1', 'password2']
+        
+    def clean_password1(self):
+        password = self.cleaned_data.get('password1')
+        
+        # Validar si la contraseña contiene al menos un número
+        if not any(char.isdigit() for char in password):
+            raise forms.ValidationError("La contraseña debe contener al menos un número.")
+        
+        return password
 
+class CustomPasswordResetForm(PasswordResetForm):
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if not User.objects.filter(email=email).exists():
+            raise ValidationError("Este correo no está asociado a ninguna cuenta.")
+        return email
 
 class PreinscripcionForm(forms.ModelForm):
     # Campo de seleccion para barra de opciones:

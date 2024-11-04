@@ -11,6 +11,7 @@ Confirmar Solicitud
     <form method="POST" action="">
         {% csrf_token %}
         <div class="form-check">
+            <h4>Por favor, confirme marcando la casilla para "Sí" o dejándola vacía para "No".</h4>
             <input class="form-check-input" type="checkbox" id="matricula" name="matricula" value="True">
             <label class="form-check-label" for="matricula">
                 ¿Ya se ha realizado el pago de matrícula? (Si/No)

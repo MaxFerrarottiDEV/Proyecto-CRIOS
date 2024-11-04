@@ -151,8 +151,8 @@ class DatInsc(models.Model):
     resp_1 = models.CharField(db_column='Resp_1', max_length=200, blank=True, null=True)  # Field name made lowercase.
     resp_2 = models.IntegerField(db_column='Resp_2', blank=True, null=True)  # Field name made lowercase.
     preg_2 = models.CharField(db_column='Preg_2', max_length=200, blank=True, null=True)  # Field name made lowercase.
-    matricula = models.BooleanField(db_column='Matricula',blank=True, null=True)  # Field name made lowercase.
-    legajo_fisico = models.BooleanField(db_column='Legajo_Fisico',blank=True, null=True)  # Field name made lowercase.
+    matricula = models.BooleanField(db_column='Matricula',default="False")  # Field name made lowercase.
+    legajo_fisico = models.BooleanField(db_column='Legajo_Fisico',default="False")  # Field name made lowercase.
     
     class Meta:
         managed = False
