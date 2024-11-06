@@ -6,7 +6,14 @@ from .forms import PreinscripcionForm
 from django.http import JsonResponse
 from .models import DatInsc, EstadosCurriculares ,Estudiantes,Materias,MateriasxplanesEstudios
 from datetime import date
-
+from django.template.loader import render_to_string
+from django.http import HttpResponse
+from io import BytesIO
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
+from reportlab.lib import colors
+from reportlab.lib.units import inch
+from reportlab.platypus import Table, TableStyle
 
 def login(request):
     return render(request, 'login.html')
@@ -165,6 +172,12 @@ def eliminar_estudiante(request, dni):
 def build(request):
     return render(request, 'build.html')
 
+def verEstado(request, dni): 
+    estudiante = get_object_or_404(Estudiantes, id_datinsc__dni=dni)
+    estado_curricular = EstadosCurriculares.objects.filter(id_estudiante_estcur=estudiante) 
+    return render(request, 'estadosCurriculares/verEstado.html', {
+        'estudiante': estudiante,
+        'estado_curricular': estado_curricular})
 
 def estados(request):
     dni = request.GET.get('dni')
@@ -193,7 +206,6 @@ def estados(request):
 
     return render(request, 'estadosCurriculares/estados.html', context)
 
-
 def agregarNota(request):
     if request.method == 'POST':
         materia_id = request.POST.get('materia')
@@ -214,9 +226,76 @@ def agregarNota(request):
     else:
         materias = Materias.objects.all()
         return render(request, 'estados.html', {'materias': materias})
+    
+def agregar_nota(request, dni):
+    estudiante = get_object_or_404(Estudiantes, id_datinsc__dni=dni)
+    
+    if request.method == 'POST':
+        materia_id = request.POST.get('materia')
+        condicion = request.POST.get('condicion')
+        nota = request.POST.get('nota')
+        fecha = request.POST.get('fecha')
 
-def examenes(request):
-    return render(request, 'examenes/examenes.html')
+        # Crear la nueva nota
+        materia = get_object_or_404(Materias, id=materia_id)
+        nuevo_estado = EstadosCurriculares(
+            id_estudiante=estudiante,
+            id_matxplan=materia,
+            condicion_nota=condicion,
+            nota=nota,
+            fecha_finalizacion=fecha
+        )
+        nuevo_estado.save()
+        return redirect('estado_curricular', dni=dni)
+    materias = Materias.objects.all()
+    return render(request, 'estadosCurriculares/agregar_nota.html', {'estudiante': estudiante, 'materias': materias})
+
+def pdf_estadoCurricular(request):
+    dni = request.GET.get('dni')
+    if not dni:
+        return HttpResponse("DNI no proporcionado.", status=400)
+    estudiante = get_object_or_404(Estudiantes, id_datinsc__dni=dni)
+    buffer = BytesIO()
+    p = canvas.Canvas(buffer, pagesize=letter)
+    p.drawString(100, 710, f"Apellidos: {estudiante.id_datinsc.apellido}"),p.drawString(100, 690, f"Nombres: {estudiante.id_datinsc.nombre}")
+    p.drawString(100, 750, f"Legajo N: {estudiante.nro_legajo}"), p.drawString(100, 730, f"DNI: {estudiante.id_datinsc.dni}")
+    p.drawString(100, 650, "Notas del Estudiante")
+    estado_curricular = estudiante.estadoscurriculares_set.all()
+   
+    data = [["Materia", "Estado", "Nota", "Fecha"]]  
+    for materia in estado_curricular:
+        data.append([
+            materia.id_matxplan_estcur.id_materia.nombre,
+            materia.condicion_nota,
+            str(materia.nota),
+            materia.fecha_finalizacion.strftime("%d/%m/%Y")
+        ])
+    
+    table = Table(data, colWidths=[2*inch, 1.5*inch, 1*inch, 1.5*inch])
+    table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),  
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('FONTSIZE', (0, 0), (-1, 0), 10),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+        ('GRID', (0, 0), (-1, -1), 1, colors.black)
+    ]))
+
+    table.wrapOn(p, 100, 500)
+    table.drawOn(p, 100, 500)
+
+    p.showPage()
+    p.save()
+    
+    buffer.seek(0)
+    response = HttpResponse(buffer, content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="{estudiante.id_datinsc.apellido} {estudiante.id_datinsc.nombre}-Estado Curricular.pdf"'
+    return response
+
+
+
 
 
 

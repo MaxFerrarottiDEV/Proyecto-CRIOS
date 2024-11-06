@@ -35,7 +35,7 @@ urlpatterns = [
     path('inscripciones/solicitudes/editar/<id_datinsc>', views.editar_solicitud, name='editar_solicitud'),
     path('inscripciones/solicitudes/eliminar/<id_datinsc>', views.eliminar_solicitud, name='eliminar_solicitud'),
 
-    # Modulo de estados inscripciones
+    # Modulo de consultas
     path('inscripciones/consultas/', views.consultas, name='consultas'),
     path('inscripciones/consultas/modificar/<str:dni>/', views.modificar, name='modificar'),
     path('eliminar/<int:dni>/', views.eliminar_estudiante, name='eliminar_estudiante'),
@@ -44,5 +44,7 @@ urlpatterns = [
     # Modulo de estados Curriculares
     path('estadosCurriculares/estados', views.estados, name='estados'),
     path('estadosCurriculares/estados', views.agregarNota, name='agregarNota'),
-
+    path('estadosCurriculares/agregar_nota/<str:dni>/', views.agregar_nota, name='agregar_nota'),
+    path('estadosCurriculares/verEstado/<str:dni>/', views.verEstado, name='verEstado'),
+    path('pdf_estadoCurricular', views.pdf_estadoCurricular, name='descargar_pdf'),
     ]

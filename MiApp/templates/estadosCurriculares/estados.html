@@ -51,7 +51,8 @@
         
         <div class="text-left mt-4">
             <button type="button" class="botonGuardar" data-bs-toggle="modal" data-bs-target="#modalNotas">Ver Estado Curricular</button>
-            <button type="button" class="botonGuardar" data-bs-toggle="modal" data-bs-target="#modalAgregarNota">Agregar Notas</button> 
+            <button type="button" class="botonModificar" data-bs-toggle="modal" data-bs-target="#modalAgregarNota">Agregar Notas</button> 
+            <a href="{% url 'estados' %}" class="botonCancelar">Volver</a>
         </div>
         
         <div class="modal fade" id="modalNotas" tabindex="-1" aria-labelledby="modalNotasLabel" aria-hidden="true">
@@ -84,7 +85,7 @@
                         </table>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="botonDescargar">Descargar PDF</button>
+                        <a href="{% url 'descargar_pdf' %}?dni={{ estudiante.id_datinsc.dni }}" class="botonDescargar">Descargar PDF </a>
                         <button type="button" class="botonEliminar" data-bs-dismiss="modal">Cerrar</button>
                     </div>
                 </div>
@@ -95,10 +96,11 @@
             <div class="modal-dialog modal-custom">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title" id="modalAgregarNotaLabel">Agregar Nota</h4>
+                        <h3 class="modal-title" id="modalAgregarNotaLabel">Agregar Nota</h3>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
+                        <h4 >Estudiante: {{ estudiante.id_datinsc.apellido }} {{ estudiante.id_datinsc.nombre }}</h4>
                         <form method="POST" action="{% url 'agregarNota' %}">
                             {% csrf_token %}
                             <input type="hidden" name="estudiante_id" value="{{ estudiante.id }}">
@@ -175,9 +177,9 @@
                     <td>{{ estudiante.id_datinsc.apellido }} {{ estudiante.id_datinsc.nombre }}</td>
                     <td>{{ estudiante.id_datinsc.dni }}</td>
                     <td style="width: 1px; white-space: nowrap;" class="text-end">
-                        <a href="#" class="botonAzul">Estado Curricular</a>
-                        <a href="#" class="botonModificar">Agregar Notas</a>
-                        <a href="#" class="botonDescargar">Descargar PDF</a>
+                        <a href="{% url 'verEstado' dni=estudiante.id_datinsc.dni %}" class="botonGuardar">Estado Curricular</a>
+                        <a href="{% url 'agregar_nota' dni=estudiante.id_datinsc.dni %}" class="botonModificar">Agregar Nota</a>
+                        <a href="{% url 'descargar_pdf' %}?dni={{ estudiante.id_datinsc.dni }}" class="botonDescargar">Descargar PDF</a>
                     </td>
                 </tr>
                 {% endfor %}
@@ -192,39 +194,30 @@
 {% endblock content %}
 
 {% block javascript %}
-    <script src="{% static 'jQuery-3.7.0/jquery-3.7.0.js' %}"></script>  
-    <script src="{% static 'DataTables-1.13.6/js/jquery.dataTables.js' %}"></script>
-    <script src="{% static 'DataTables-1.13.6/js/dataTables.bootstrap5.js' %}"></script>
-    <script>
-        $(document).ready(function () {
-            $('#dataTable').DataTable({
-                language: {
-                    "sProcessing":   "Procesando...",
-                    "sLengthMenu":   "Mostrar _MENU_ registros",
-                    "sZeroRecords":  "No se encontraron resultados",
-                    "sEmptyTable":   "No hay datos disponibles en esta tabla",
-                    "sInfo":         "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
-                    "sInfoEmpty":    "Mostrando registros del 0 al 0 de un total de 0 registros",
-                    "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
-                    "sInfoPostFix":  "",
-                    "sSearch":       "Buscar:",
-                    "sUrl":          "",
-                    "sInfoThousands":  ".",
-                    "oPaginate": {
-                        "sFirst":    "Primero",
-                        "sLast":     "Último",
-                        "sNext":     "Siguiente",
-                        "sPrevious": "Anterior"
-                    },
-                    "oAria": {
-                        "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
-                        "sSortDescending": ": Activar para ordenar la columna de manera descendente"
-                    }
-                }
-            }); 
-        });
-    </script>
+<script src="{% static 'jQuery-3.7.0/jquery-3.7.0.js' %}"></script>  
+<script src="{% static 'DataTables-1.13.6/js/jquery.dataTables.js' %}"></script>
+<script src="{% static 'DataTables-1.13.6/js/dataTables.bootstrap5.js' %}"></script>
+
+<script>
+   $(document).ready(function () {
+    $('#dataTable').DataTable({
+        language: {
+            "sProcessing": "Procesando...",
+            "sLengthMenu": "Mostrar _MENU_ registros",
+            "sZeroRecords": "No se encontraron resultados",
+            "sEmptyTable": "No hay datos disponibles en esta tabla",
+            "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+            "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+            "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+            "sSearch": "Buscar:",
+            "oPaginate": {
+                "sFirst": "Primero",
+                "sLast": "Último",
+                "sNext": "Siguiente",
+                "sPrevious": "Anterior"}}});});
+</script>
 {% endblock javascript %}
+
 
 
 

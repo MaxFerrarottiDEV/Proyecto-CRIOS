@@ -54,7 +54,7 @@ Inscripciones - Consultas de datos de estudiantes
                 <a href="{% url 'modificar' estudiante.id_datinsc.dni %}" class="botonModificar">Modificar</a>
                 <a href="#" class="botonEliminar" data-dni="{{ estudiante.id_datinsc.dni }}">Eliminar</a>
                 <a href="https://drive.google.com/drive/u/0/folders/1ERdyQMWtkXRSG4yVZkh_lVUme2x0Jdwp" class="botonGuardar" target="_blank">Adjuntar Links</a>
-                <a href="{% url 'consultas' %}" class="botonAzul">Volver</a>
+                <a href="{% url 'consultas' %}" class="botonCancelar">Volver</a>
             </div>
 
             {% elif estudiantes %}
