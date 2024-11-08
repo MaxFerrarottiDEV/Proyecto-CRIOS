@@ -2,14 +2,11 @@
 {% block title %} 
 Inscripciones - Solicitudes de Preinscripción 
 {% endblock %}
-
 {% load static %}
 {% block content %}
-
 {% load crispy_forms_tags %}
-
 <div class="container mt-5">
-    <h2 style="text-align: center;">Lista de Solicitudes de Preinscripción</h2>
+    <h2 style="text-align: center;">SOLICITUDES DE PREINSCRIPCIÓN</h2>
 
     <!-- Mostrar mensajes si existen (de éxito o error) -->
     {% if messages %}
@@ -20,44 +17,47 @@ Inscripciones - Solicitudes de Preinscripción
         {% endfor %}
     {% endif %}
 
-    <!-- Botón para añadir una solicitud -->
-    <div class="d-flex justify-content-end mb-3">
-        <!-- Botón que abre el modal -->
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#agregarSolicitudModal">
+    <!-- Botones para obtener registros y añadir una solicitud -->
+    <div class="d-flex justify-content mb-3">
+        <!-- Botón que abre el modal para añadir una solicitud -->
+        <button type="button" class="botonAgregarSolicitud" data-bs-toggle="modal" data-bs-target="#agregarSolicitudModal">
+            <i class="fa-solid fa-plus"></i>
             Añadir una solicitud
         </button>
+        <!-- Botón para obtener registros de Drive -->
+        <button type="button" class="botonObtener" onclick="obtenerRegistrosDrive()">
+            <i class="fa-solid fa-arrows-rotate"></i>
+            Obtener solicitudes de GoogleForms
+        </button>
     </div>
-
-    <!-- Tabla de solicitudes -->
-    <table class="table table-striped">
+    <table id="dataTable" class="table table-striped table-bordered table-hover">
         <thead>
             <tr>
-                <th>Nombres</th>
-                <th>Apellido</th>
-                <th>DNI</th>
-                <th colspan="3" style="text-align: center; ">Acciones</th>
+                <th style="color: white;background-color:#005187;">Apellido y nombre</th>
+                <th style="color: white;background-color:#005187;">DNI</th>
+                <th style="color: white;background-color:#005187;">Email</th>
+                <th style="color: white;background-color:#005187;" class="text-center">Acciones</th>
             </tr>
         </thead>
         <tbody>
             {% for solicitud in solicitudes %}
             <tr>
-                <td>{{ solicitud.nombre }}</td>
-                <td>{{ solicitud.apellido }}</td>
+                <td>{{ solicitud.apellido }}  {{ solicitud.nombre }}</td>
                 <td>{{ solicitud.dni }}</td>
-                <td><a href="{% url 'confirmar_solicitud' solicitud.id_datinsc %}" class="btn btn-success">Confirmar</a></td>
-                <td><a href="{% url 'editar_solicitud' solicitud.id_datinsc %}"  class="btn btn-primary">Editar</a></td>
-                <td><a href="{% url 'eliminar_solicitud' solicitud.id_datinsc %}" class="btn btn-danger">Eliminar</a></td>
+                <td>{{ solicitud.email }}</td>
+                <td  style="width: 1px; white-space: nowrap;">
+                    <a href="{% url 'confirmar_solicitud' solicitud.id_datinsc %}" class="botonDescargar"><i class="fa-solid fa-plus"></i><i class="fa-solid fa-user"></i></i>Confirmar</a>
+                    <a href="{% url 'editar_solicitud' solicitud.id_datinsc %}"  class="botonModificar"><i class="fa-solid fa-user-pen"></i>Editar</a>
+                    <a href="{% url 'eliminar_solicitud' solicitud.id_datinsc %}" class="botonEliminar"><i class="fa-solid fa-minus"><i class="fa-solid fa-user"></i></i></i>Eliminar</a>
+                </td>
             </tr>
             {% empty %}
-            <tr>
-                <td colspan="4">No hay solicitudes disponibles</td>
-            </tr>
             {% endfor %}
         </tbody>
     </table>
 </div>
 
-<!-- Modal para agregar solicitud -->
+
 <div class="modal fade" id="agregarSolicitudModal" tabindex="-1" aria-labelledby="agregarSolicitudModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -82,12 +82,9 @@ Inscripciones - Solicitudes de Preinscripción
                             {{ form.telefono_fijo|as_crispy_field }}
                             {{ form.celular_nro|as_crispy_field }}
                             {{ form.email|as_crispy_field }}
-
-                            <!-- Estado Civil -->
                             {{ form.estado_civil|as_crispy_field }}
                             <a href="#" class="text-primary" style="text-decoration: underline;" onclick="borrarSeleccion('estado_civil')">Borrar selección</a>
                         </div>
-
                         <!-- Columna 2 -->
                         <div class="col-md-6">
                             <!-- ¿Tiene Hijos? -->
@@ -100,11 +97,9 @@ Inscripciones - Solicitudes de Preinscripción
                             {{ form.titulo|as_crispy_field }}
                             {{ form.otro_titulo|as_crispy_field }}
                             {{ form.anio_egreso|as_crispy_field }}
-
                             <!-- ¿Tuvo otro ingreso a nivel superior? -->
                             {{ form.preg_1|as_crispy_field }}
                             <a href="#" class="text-primary" style="text-decoration: underline;" onclick="borrarSeleccion('preg_1')">Borrar selección</a>
-
                             <!-- ¿Completó esos estudios? -->
                             {{ form.preg_2|as_crispy_field }}
                         </div>
@@ -116,13 +111,42 @@ Inscripciones - Solicitudes de Preinscripción
         </div>
     </div>
 </div>
-
-
 {% endblock content %}
 
 {% block javascript %}
-<!-- Script para ocultar el mensaje después de 5 segundos -->
-<script>
+
+    <script src="{% static 'jQuery-3.7.0/jquery-3.7.0.js' %}"></script>  
+    <script src="{% static 'DataTables-1.13.6/js/jquery.dataTables.js' %}"></script>
+    <script src="{% static 'DataTables-1.13.6/js/dataTables.bootstrap5.js' %}"></script>
+    <script>
+        $(document).ready(function () {
+            $('#dataTable').DataTable({
+                language: {
+                    "sProcessing":   "Procesando...",
+                    "sLengthMenu":   "Mostrar _MENU_ registros",
+                    "sZeroRecords":  "No se encontraron resultados",
+                    "sEmptyTable":   "No hay datos disponibles en esta tabla",
+                    "sInfo":         "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                    "sInfoEmpty":    "Mostrando registros del 0 al 0 de un total de 0 registros",
+                    "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+                    "sInfoPostFix":  "",
+                    "sSearch":       "Buscar:",
+                    "sUrl":          "",
+                    "sInfoThousands":  ".",
+                    "oPaginate": {
+                        "sFirst":    "Primero",
+                        "sLast":     "Último",
+                        "sNext":     "Siguiente",
+                        "sPrevious": "Anterior"
+                    },
+                    "oAria": {
+                        "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+                        "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                    }
+                }
+            }); 
+        });
+
     // Seleccionar todos los elementos de alerta (flash messages)
     const alerts = document.querySelectorAll('.alert');
 
@@ -145,5 +169,11 @@ Inscripciones - Solicitudes de Preinscripción
         });
     }
 </script>
-
+<script type="text/javascript">
+    function obtenerRegistrosDrive() {
+        // Aquí puedes agregar el código JavaScript para obtener los registros de Google Drive.
+        // Por ejemplo, hacer una llamada AJAX o redirigir a una vista que maneje esta funcionalidad.
+        alert("Obteniendo registros de Drive...");
+    }
+</script>
 {% endblock javascript %}

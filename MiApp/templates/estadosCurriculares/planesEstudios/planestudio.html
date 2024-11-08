@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}Planes de Estudio{% endblock %}
+{% block content %}
+<div class="container mt-5">
+    <h2 style="text-align: center;">PLANES DE ESTUDIO</h2>
+    <table class="table table-striped table-bordered mt-3">
+        <thead>
+            <tr>
+                <th>ID Plan de Estudio</th>
+                <th>ID Carrera</th>
+                <th>Descripción</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for plan in planes %}
+            <tr>
+                <td>{{ plan.id_planestudio }}</td>
+                <td>{{ plan.id_carrera }}</td>
+                <td>{{ plan.descripcion }}</td>
+                
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="3" style="text-align: center;">Aun no hay planes de estudio agregados.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

@@ -1,5 +1,4 @@
 {% extends 'base.html' %}
-{% block title %} Profesorado CRIOS - Modificar{% endblock %}
 {% load static %} 
 {% block content %} 
     <div class="container mt-5">
@@ -31,10 +30,24 @@
                 <label for="domicilio" class="form-label">Domicilio</label>
                 <input type="text" class="form-control" id="domicilio" name="domicilio" value="{{ estudiante.domicilio }}" required>
             </div>
-            <button type="submit" class="btn-btn-primary">Guardar Cambios</button>
+
+            <!-- Campo para Matricula -->
+            <div class="mb-3 form-check">
+                <input type="checkbox" class="form-check-input" id="matricula" name="matricula" 
+                    {% if estudiante.matricula %} checked {% endif %}>
+                <label class="form-check-label" for="matricula">Matrícula</label>
+            </div>
+
+            <!-- Campo para Legajo Físico -->
+            <div class="mb-3 form-check">
+                <input type="checkbox" class="form-check-input" id="legajo_fisico" name="legajo_fisico" 
+                    {% if estudiante.legajo_fisico %} checked {% endif %}>
+                <label class="form-check-label" for="legajo_fisico">Legajo Físico</label>
+            </div>
+
+            <button type="submit" class="botonGuardar">Guardar Cambios</button>
             <a href="{% url 'consultas' %}" class="botonCancelar">Cancelar</a>
         </form>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 {% endblock content %}
 
