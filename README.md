@@ -18,6 +18,8 @@ pip install django-crispy-forms
 
 pip install crispy-bootstrap5
 
+pip install reportlab
+
 3- Arrancar el servidor (opcional)
 
 py manage.py runserver
