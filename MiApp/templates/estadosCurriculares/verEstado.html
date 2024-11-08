@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% block title %} 
+Estados Curriculares - {{ estudiante.id_datinsc.apellido }} {{ estudiante.id_datinsc.nombre }}
+{% endblock %}
+{% load static %}
+{% block content %}
+<!-- Contenedor principal -->
+<div class="container mt-4">
+    <!-- Información del estudiante -->
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <label for="legajo" class="form-label">Legajo N</label>
+            <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-card-list"></i></span>
+                <input type="text" id="legajo" class="form-control" value="{{ estudiante.nro_legajo }}" readonly>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <label for="dni" class="form-label">DNI</label>
+            <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-file-earmark-person"></i></span>
+                <input type="text" id="dni" class="form-control" value="{{ estudiante.id_datinsc.dni }}" readonly>
+            </div>
+        </div>
+    </div> 
+
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <label for="apellidos" class="form-label">Apellidos</label>
+            <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
+                <input type="text" id="apellidos" class="form-control" value="{{ estudiante.id_datinsc.apellido }}" readonly>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <label for="nombres" class="form-label">Nombres</label>
+            <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-person-circle"></i></span>
+                <input type="text" id="nombres" class="form-control" value="{{ estudiante.id_datinsc.nombre }}" readonly>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabla de Notas -->
+    <h4 class="mt-4">Notas del Estudiante</h4>
+    <table id="dataTable" class="table table-striped table-bordered table-hover mt-3">
+        <thead class="table-dark">
+            <tr>
+                <th>Materia</th>
+                <th>Estado</th>
+                <th>Nota</th>
+                <th>Fecha</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for materia in estado_curricular %}
+            <tr>
+                <td>{{ materia.id_matxplan_estcur.id_materia.nombre }}</td>
+                <td>{{ materia.condicion_nota }}</td>  
+                <td>{{ materia.nota }}</td>
+                <td>{{ materia.fecha_finalizacion|date:"d/m/Y" }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4">No hay notas disponibles.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="{% url 'descargar_pdf' %}?dni={{ estudiante.id_datinsc.dni }}" class="botonDescargar mt-3">Descargar PDF</a>
+    <a href="{% url 'estados' %}" class="botonCancelar">Volver</a>
+</div>
+{% endblock content %}

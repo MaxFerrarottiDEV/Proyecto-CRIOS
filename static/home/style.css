@@ -143,3 +143,155 @@
     font-size: 3rem;
     font-weight: bold;
   }
+
+
+
+
+  /* Contenedor de tarjetas */
+.card-container {
+  display: flex;
+  justify-content: center; /* Alineación horizontal */
+  gap: 5px; /* Espacio entre tarjetas */
+  flex-wrap: wrap; /* Permite que las tarjetas se ajusten en filas en pantallas pequeñas */
+
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 9px;
+  border: 1px solid #ccc;
+  padding: 0.3rem;
+  
+}
+
+.card img {
+  height: 150px; /* Ajuste de la altura de las imágenes */
+  width: 100%;
+  object-fit: cover; /* Asegura que la imagen no se deforme */
+}
+
+.card-body {
+  padding: 15px; /* Espaciado interno en el cuerpo de la tarjeta */
+  flex-grow: 1;
+}
+.card-title {
+  font-size: 1.1rem;
+  margin-bottom: 10px;
+}
+.card-text {
+  font-size: 0.9rem; /* Tamaño de texto para mantenerlo dentro de la tarjeta */
+  margin-bottom: 15px;
+  text-align: justify;
+}
+
+
+
+.btn-primary {
+  width: 100%; /* Botón ocupa todo el ancho de la tarjeta */
+  padding: 8px;
+  font-size: 1rem;
+  border-radius: 5px;
+  margin-top: auto;
+}
+
+@media (max-width: 768px) {
+  .card-container {
+    flex-direction: column; /* Cambia las tarjetas a una columna en pantallas pequeñas */
+    align-items: center;
+  }
+}
+
+.botonCancelar,
+.botonEliminar {
+  color: #fff;
+  background-color: #ff0000;
+  border: none;
+  padding: 10px 16px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 18px;
+  margin: 5px;
+  transition: background-color 0.5s, color 0.5s;
+  border-radius: 18px;}
+.botonCancelar:hover,
+.botonEliminar:hover{
+  color: #fff;
+  transform: scale(1.1);
+  transition: transform 0.3s ease;}
+
+.botonSubirArchivo,
+.botonBuscar,
+.botonAgregarSolicitud,
+.botonGuardar,
+.botonGuardarSolicitud,
+.botonAzul,
+.botonObtener
+{color: #fff;
+background-color: #005187;
+border: none;
+padding: 10px 16px;
+text-align: center;
+text-decoration: none;
+display: inline-block;
+font-size: 18px;
+margin: 5px;
+transition: background-color 0.5s, color 0.5s;
+border-radius: 18px;}
+
+.botonObtener:hover,
+.botonSubirArchivo:hover,
+.botonAgregarSolicitud:hover,
+.botonGuardar:hover,
+.botonGuardarSolicitud:hover,
+.botonAzul:hover
+{transform: scale(1.1); 
+transition: transform 0.3s ease;}
+
+.botonModificar{
+color: rgb(0, 0, 0);
+background-color: #ffff00;
+border: none;
+padding: 10px 16px;
+text-align: center;
+text-decoration: none;
+display: inline-block;
+font-size: 18px;
+margin: 5px;
+transition: background-color 0.5s, color 0.5s;
+border-radius: 18px;}
+.botonModificar:hover{
+color: #000000;
+transform: scale(1.1);
+transition: transform 0.3s ease; }
+
+
+.botonDescargar{
+  color: #fff;
+  background-color: #28a745;
+  border: none;
+  padding: 10px 16px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 18px;
+  margin: 5px;
+  transition: background-color 0.5s, color 0.5s;
+  border-radius: 18px;}
+
+.botonDescargar:hover
+  {transform: scale(1.1); 
+  transition: transform 0.3s ease;}
+  
+
+.form-control{
+  border: 1px solid #005187;} 
+.custom-column-spacing {
+  margin-right: 30px; }  
+
+.modal-custom {
+  max-width: 80%;
+}

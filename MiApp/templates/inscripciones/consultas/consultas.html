@@ -1,4 +1,7 @@
 {% extends 'base.html' %}
+{% block title %}
+Inscripciones - Consultas de datos de estudiantes
+{% endblock %}
 {% load static %} 
 {% block content %} 
     <div class="container mt-4">
@@ -6,94 +9,79 @@
             <div class="input-group">
                 <input type="text" name="dni" class="form-control" 
                 placeholder="Ingrese el DNI del estudiante" required>
-                <button class="btn-custom" type="submit">Buscar</button>
+                <button class="botonBuscar" type="submit">Buscar</button>
             </div>
         </form>
+        {% if messages %}
+            <div class="alert-container">
+                {% for message in messages %}
+                    <div class="alert alert-success" role="alert">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
 
         <div class="table-container">
-            <h1 class="mb-4 text-center">Estudiantes</h1>
+            <h1 class="mb-4 text-center">ESTUDIANTES</h1>
             <hr>
 
-
             {% if estudiante %}
-            <table class="table table-striped table-bordered table-hover">
+            <table id="dataTable" class="table table-striped table-bordered table-hover">
                 <thead class="table-dark">
                     <tr>
-                        <th>ID</th>
-                        <th>DNI</th>
-                        <th>Nombre</th>
-                        <th>Apellido</th>
-                        <th>Teléfono</th>
-                        <th>Email</th>
-                        <th>Domicilio</th>
-                        <th>Legajo</th>
+                        <th style="color: white;background-color:#005187;">Nro Legajo</th>
+                        <th style="color: white;background-color:#005187;">Apellido y nombre</th>
+                        <th style="color: white;background-color:#005187;">DNI</th>
+                        <th style="color: white;background-color:#005187;">Email</th>
+                        <th style="color: white;background-color:#005187;">Teléfono</th>
+                        <th style="color: white;background-color:#005187;">Domicilio</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td>{{ estudiante.id_datinsc }}</td>
-                        <td>{{ estudiante.dni }}</td>
-                        <td>{{ estudiante.nombre }}</td>
-                        <td>{{ estudiante.apellido }}</td>
-                        <td>{{ estudiante.celular_nro }}</td>
-                        <td>{{ estudiante.email }}</td>
-                        <td>{{ estudiante.domicilio }}</td>
-                        <td>{{ estudiante.legajo_digital }}</td>
+                        <td>{{ estudiante.nro_legajo }}</td>
+                        <td>{{ estudiante.id_datinsc.apellido }}  {{ estudiante.id_datinsc.nombre}}</td>
+                        <td>{{ estudiante.id_datinsc.dni }}</td>
+                        <td>{{ estudiante.id_datinsc.email }}</td>
+                        <td>{{ estudiante.id_datinsc.celular_nro }}</td>
+                        <td>{{ estudiante.id_datinsc.domicilio }}</td>
                     </tr>
                 </tbody>     
             </table>
 
             <div class="action-buttons">
-                <a href="{% url 'modificar' estudiante.id_datinsc %}" class="botonModificar">Modificar</a>
-                <a href="#" class="botonEliminar" data-id="{{ estudiante.id_datinsc }}">Eliminar</a>
-
-
-
-            </div>
-            
-            <div class="container mt-4">
-                <form action="{% url 'adjuntar_archivo' %}" method="POST" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    <div class="mb-3">
-                        <label for="fileUpload" class="form-label">Adjuntar Legajo</label>
-                        <input type="file" class="form-control" id="fileUpload" name="fileUpload">
-                    </div>
-                    <button type="submit" class="btn-custom">Subir archivo</button>
-                </form>
+                <a href="{% url 'modificar' estudiante.id_datinsc.dni %}" class="botonModificar">Modificar</a>
+                <a href="#" class="botonEliminar" data-dni="{{ estudiante.id_datinsc.dni }}">Eliminar</a>
+                <a href="https://drive.google.com/drive/u/0/folders/1ERdyQMWtkXRSG4yVZkh_lVUme2x0Jdwp" class="botonGuardar" target="_blank">Adjuntar Links</a>
+                <a href="{% url 'consultas' %}" class="botonCancelar">Volver</a>
             </div>
 
-            
             {% elif estudiantes %}
-            <table class="table table-striped table-bordered table-hover">
+            <table id="dataTable" class="table table-striped table-bordered table-hover"> 
                 <thead class="table-dark">
                     <tr>
-                        <th>ID</th>
-                        <th>DNI</th>
-                        <th>Nombre</th>
-                        <th>Apellido</th>
-                        <th>Teléfono</th>
-                        <th>Email</th>
-                        <th>Domicilio</th>
-                        <th>Legajo</th>
+                        <th style="color: white;background-color:#005187;">Nro Legajo</th>
+                        <th style="color: white;background-color:#005187;">Apellido y nombre</th>
+                        <th style="color: white;background-color:#005187;">DNI</th>
+                        <th style="color: white;background-color:#005187;">Email</th>
+                        <th style="color: white;background-color:#005187;">Teléfono</th>
+                        <th style="color: white;background-color:#005187;">Domicilio</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for estudiante in estudiantes %}
                     <tr>
-                        <td>{{ estudiante.id_datinsc }}</td>
-                        <td>{{ estudiante.dni }}</td>
-                        <td>{{ estudiante.nombre }}</td>
-                        <td>{{ estudiante.apellido }}</td>
-                        <td>{{ estudiante.celular_nro }}</td>
-                        <td>{{ estudiante.email }}</td>
-                        <td>{{ estudiante.domicilio }}</td>
-                        <td>{{ estudiante.legajo_digital }}</td>
+                        <td>{{ estudiante.nro_legajo }}</td>
+                        <td>{{ estudiante.id_datinsc.apellido }}  {{ estudiante.id_datinsc.nombre}}</td>
+                        <td>{{ estudiante.id_datinsc.dni }}</td>
+                        <td>{{ estudiante.id_datinsc.email }}</td>
+                        <td>{{ estudiante.id_datinsc.celular_nro }}</td>
+                        <td>{{ estudiante.id_datinsc.domicilio }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>     
             </table>
-
-           
             {% else %}
                 <p>No se encontró ningún estudiante con ese DNI.</p>
             {% endif %}
@@ -101,38 +89,60 @@
     </div>
 {% endblock content %}
 {% block javascript %}
-    <script>
-        document.querySelectorAll('.botonEliminar').forEach(button => {
-            button.addEventListener('click', function(e) {
-                e.preventDefault();
-
-            const estudianteId = this.getAttribute('data-id');
-
-            if (confirm('¿Estás seguro de que deseas eliminar este estudiante?')) {
-                fetch("{% url 'eliminar_estudiante_ajax' %}", {
-                    method: "POST",
-                    headers: {
-                        "X-CSRFToken": "{{ csrf_token }}",
-                        "Content-Type": "application/x-www-form-urlencoded",
-                    },
-                    body: new URLSearchParams({
-                        'id': estudianteId,
-                    })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert(data.message);
-                
-                        const row = this.closest('tr');
-                        row.parentNode.removeChild(row);
-                    } else {
-                        alert("No se pudo eliminar el estudiante.");
-                    }
-                })
-                .catch(error => console.error('Error:', error));
+<script src="{% static 'jQuery-3.7.0/jquery-3.7.0.js' %}"></script>  
+<script src="{% static 'DataTables-1.13.6/js/jquery.dataTables.js' %}"></script>
+<script src="{% static 'DataTables-1.13.6/js/dataTables.bootstrap5.js' %}"></script>
+<script src="{% static 'bootbox/bootbox.all.min.js' %}"></script>
+<script>
+    $(document).ready(function () {
+        $('#dataTable').DataTable({
+            language: {
+                "sProcessing": "Procesando...",
+                "sLengthMenu": "Mostrar _MENU_ registros",
+                "sZeroRecords": "No se encontraron resultados",
+                "sEmptyTable": "No hay datos disponibles en esta tabla",
+                "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+                "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+                "sSearch": "Buscar:",
+                "oPaginate": {
+                    "sFirst": "Primero",
+                    "sLast": "Último",
+                    "sNext": "Siguiente",
+                    "sPrevious": "Anterior"
+                },
+                "oAria": {
+                    "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
+                    "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                }
             }
+        }); 
+        $('.botonEliminar').click(function (e) {
+            e.preventDefault();
+            var dni = $(this).data('dni');
+            bootbox.confirm({
+                message: "¿Estás seguro de que deseas eliminar este estudiante?",
+                buttons: {
+                    confirm: {
+                        label: 'Sí',
+                        className: 'btn-danger'
+                    },
+                    cancel: {
+                        label: 'No',
+                        className: 'btn-secondary'
+                    }
+                },
+                callback: function (result) {
+                    if (result) {
+                        window.location.href = '/eliminar/' + dni + '/';
+                    }
+                }
             });
         });
-    </script>
+
+        setTimeout(function () {
+            $('.alert').fadeOut('slow');
+        }, 3000);
+    });
+</script>
 {% endblock javascript %}

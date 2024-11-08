@@ -7,17 +7,19 @@
     {% load django_bootstrap5 %}
     {% bootstrap_css %}
     {% bootstrap_javascript %}
-    <title>Profesorado CRIOS - Pagina Principal</title>
+    <title>
+      {% block title %} {% endblock %}
+    </title>
     <link rel="icon" href="{% static 'icons/crios_logo.png' %}" type="image/x-icon">
     <link href="{% static 'home/style.css' %}" rel="stylesheet">
     <link href="{% static 'home/style-tipoInscripcion.css' %}" rel="stylesheet">
     <link href="{% static 'inscripciones/solicitudes/style.css'%}" rel="stylesheet">
     <link href="{% static 'DataTables-1.13.6/css/dataTables.bootstrap5.css' %}" rel="stylesheet">
     <link href="{% static 'inscripciones/consultas.css' %}" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet">
   </head>
   <body  class="d-flex flex-column min-vh-100">
     <!-- Navbar -->
@@ -36,11 +38,25 @@
             <li class="nav-item">
               <a class="nav-link nav-titulo" href="{% url 'home' %}">Pagina Principal</a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link nav-titulo" href="{% url 'build' %}">Examenes</a>
+            <li class="nav-item dropdown">
+              <a class="nav-link nav-titulo" href="{% url 'build' %}" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Exámenes
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="inscripcionesDropdown">
+                <li><a class="dropdown-item" href="{% url 'build' %}">Gestión de Mesas de Examen</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="{% url 'build' %}">Solicitudes a Mesas de Examen</a></li>
+              </ul>
           </li>
-          <li class="nav-item">
-              <a class="nav-link nav-titulo" href="{% url 'build' %}">Estados Curriculares</a>
+          <li class="nav-item dropdown">
+              <a class="nav-link nav-titulo" href="{% url 'build' %}" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Estados Curriculares
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="inscripcionesDropdown">
+                <li><a class="dropdown-item" href="{% url 'plan_estudio' %}">Gestión de Planes de Estudio</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="{% url 'estados' %}">Gestión de Estados Curriculares</a></li>
+              </ul>
           </li>
           <!-- Dropdown de INSCRIPCIONES -->
           <li class="nav-item dropdown">
@@ -48,13 +64,13 @@
                 Inscripciones
               </a>
             <ul class="dropdown-menu" aria-labelledby="inscripcionesDropdown">
-              <li><a class="dropdown-item" href="{% url 'lista_solicitudes' %}">Solicitudes de Inscripcion</a></li>
+              <li><a class="dropdown-item" href="{% url 'lista_solicitudes' %}">Solicitudes de Inscripción</a></li>
               <li><hr class="dropdown-divider"></li>
               <li><a class="dropdown-item" href="{% url 'consultas' %}">Consultas de Datos de Estudiantes</a></li>
             </ul>
           </li>
           <li class="nav-item">
-              <a class="nav-link nav-titulo" href="{% url 'build' %}">Cuotas</a>
+              <a class="nav-link nav-titulo" href="{% url 'build' %}"><i class="fa-solid fa-lock"></i>Cuotas</a>
           </li>
         </ul>
           <!-- Botón de Cerrar Sesión -->
@@ -91,7 +107,7 @@
         </a> |
         Portal educativo: 
         <a href="https://crios-sal.infd.edu.ar/sitio/" target="_blank">
-          <img src="{% static 'icons/escudoargentino_icon.png'%}" alt="Portal" width="1.80%" height="auto">
+          <img src="{% static 'icons/escudoargentino_icon.png'%}" alt="Portal" width="30px" height="auto">
         </a>
       </p>
     </footer>

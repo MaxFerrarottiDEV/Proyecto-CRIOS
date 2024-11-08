@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block title %} 
+Estados Curriculares - Agregar Nota
+{% endblock %}
+{% block content %}
+
+<div class="container mt-4">
+    <h1 class="mb-4 text-center">Agregar Nota </h1>
+    <h2 class="mb-4 text-center">Estudiante: {{ estudiante.id_datinsc.apellido }} {{ estudiante.id_datinsc.nombre }}</h2>
+    <form method="POST" action="{% url 'agregar_nota' dni=estudiante.id_datinsc.dni %}">
+        {% csrf_token %}
+        <input type="hidden" name="dni" value="{{ estudiante.id_datinsc.dni }}">
+        <div class="mb-3">
+            <label for="materia" class="form-label">Materia</label>
+            <select id="materia" name="materia" class="form-select" required>
+                <option value="" disabled selected>Seleccione una materia</option>
+                {% for materia in materias %}
+                    <option value="{{ materia.id }}">{{ materia.nombre }}</option>
+                {% empty %}
+                    <option value="">No hay materias disponibles</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="condicion" class="form-label">Condición Nota</label>
+            <select id="condicion" name="condicion" class="form-select" required>
+                <option value="">Seleccionar...</option>
+                <option value="Libre">Libre</option>
+                <option value="Regular">Regular</option>
+                <option value="Promocionado">Promocionado</option>
+            </select>
+        </div>
+        
+        <div class="mb-3">
+            <label for="nota" class="form-label">Nota</label>
+            <input type="number" id="nota" name="nota" class="form-control" required>
+        </div>
+        
+        <div class="mb-3">
+            <label for="fecha" class="form-label">Fecha de Finalización</label>
+            <input type="date" id="fecha" name="fecha" class="form-control" required>
+        </div>
+        
+        <button type="submit" class="botonGuardar">Guardar Nota</button>
+        <a href="{% url 'estados' %}" class="botonCancelar">Volver</a>
+    </form>
+</div>
+{% endblock %}
+
+
