@@ -99,7 +99,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'criosdb',
         'USER': 'root',
-        'PASSWORD': 'Samilove2016*',
+        'PASSWORD': 'juan1234',
         'HOST': 'localhost',
         'PORT': '3306'  
     }
