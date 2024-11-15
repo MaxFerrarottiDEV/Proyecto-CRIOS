@@ -28,9 +28,9 @@ STATIC_DIR = os.path.join(BASE_DIR,'static')
 SECRET_KEY = 'django-insecure-sbi45=(i6ddz!v@7$cq1pb#7-0znfk%)v3o56_5xvgxsdy=6%9'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv("DJANGO_DEBUG","False")=="True"
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS","app_a72a3f4f-4799-40da-84b1-609d17c51723").split(",")
 
 
 # Application definition
@@ -95,13 +95,14 @@ WSGI_APPLICATION = 'myproject.wsgi.application'
 # }
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'criosdb',
-        'USER': 'root',
-        'PASSWORD': 'Samilove2016*',
-        'HOST': 'localhost',
-        'PORT': '3306'  
+#    'default': {
+#        'ENGINE': 'django.db.backends.mysql',
+#        'NAME': 'criosdb',
+#        'USER': 'root',
+#        'PASSWORD': 'Samilove2016*',
+#        'HOST': 'localhost',
+#        'PORT': '3306'  
+    'default': dj_database_url.config(default=os.getenv("DATABASE_URL"))
     }
 }
 
