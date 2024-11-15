@@ -11,6 +11,8 @@ urlpatterns = [
 
     path('', views.home, name='home'),
 
+    path('cambiar_contraseña/', views.change_password, name='change_password'),
+
     path('register/', views.register, name='register'),
 
     path('login/', auth_views.LoginView.as_view(), name='login'),
@@ -42,6 +44,7 @@ urlpatterns = [
 
 
     # Modulo de estados Curriculares
+    
     #Gestión de Planes de Estudio:
     path('plan-estudio/', views.plan_estudio_view, name='plan_estudio'),
     #Gestión de Estados Curriculares:

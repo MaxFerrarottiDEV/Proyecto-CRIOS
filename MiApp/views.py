@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect ,get_object_or_404 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import update_session_auth_hash, logout
 from django.contrib import messages
 from .forms import PreinscripcionForm 
 from django.http import JsonResponse
@@ -37,6 +38,23 @@ def register(request):
 @login_required
 def home(request):
     return render(request,'home.html')
+
+@login_required
+def change_password(request):
+    if request.method == 'POST':
+        new_password1 = request.POST['new_password1']
+        new_password2 = request.POST['new_password2']
+        
+        if new_password1 == new_password2:
+            request.user.set_password(new_password1)
+            request.user.save()
+            logout(request)  # Cerrar la sesión del usuario
+            messages.success(request, "Contraseña cambiada exitosamente. Por favor, vuelve a iniciar sesión.")
+            return redirect('login')  # Redirigir al login
+        else:
+            messages.error(request, "Las contraseñas no coinciden.")
+    
+    return render(request, 'change_password.html')
 
 @login_required
 def tipo_inscripcion(request):
