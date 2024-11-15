@@ -4,10 +4,30 @@ from .forms import PreinscripcionForm , CustomRegisterForm
 from django.contrib import messages # type: ignore
 from .models import DatInsc, Estudiantes
 from datetime import date
+from django.shortcuts import render
+from django.contrib.auth import update_session_auth_hash, logout
 
+
+@login_required
+def change_password(request):
+    if request.method == 'POST':
+        new_password1 = request.POST['new_password1']
+        new_password2 = request.POST['new_password2']
+        
+        if new_password1 == new_password2:
+            request.user.set_password(new_password1)
+            request.user.save()
+            logout(request)  # Cerrar la sesión del usuario
+            messages.success(request, "Contraseña cambiada exitosamente. Por favor, vuelve a iniciar sesión.")
+            return redirect('login')  # Redirigir al login
+        else:
+            messages.error(request, "Las contraseñas no coinciden.")
+    
+    return render(request, 'change_password.html')
 
 def login(request):
     return render(request, 'login.html')
+
 
 def register_view(request):
     if request.method == 'POST':
@@ -186,3 +206,4 @@ def adjuntar_archivo(request):
 
 def build(request):
     return render(request, 'build.html')
+

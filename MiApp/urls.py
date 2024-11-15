@@ -29,4 +29,5 @@ urlpatterns = [
     path('inscripciones/consultas/modificar/<int:id>/', views.modificar, name='modificar'),
     path('upload/', views.adjuntar_archivo, name='adjuntar_archivo'),
     path('eliminar_estudiante_ajax/', views.eliminar_estudiante_ajax, name='eliminar_estudiante_ajax'),
+    path('cambiar_contraseña/', views.change_password, name='change_password'),
     ]
