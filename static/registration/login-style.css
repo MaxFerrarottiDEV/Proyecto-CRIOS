@@ -4,7 +4,7 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-image: url('/static/images/loginbackground.png') ;
+    background-image: url('/static/images/login/loginbackground.png') ;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
