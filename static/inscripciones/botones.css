@@ -10,12 +10,14 @@
   font-size: 18px;
   margin: 5px;
   transition: background-color 0.5s, color 0.5s;
-  border-radius: 18px;}
+  border-radius: 18px;
+}
 .botonCancelar:hover,
 .botonEliminar:hover{
   color: #fff;
   transform: scale(1.1);
-  transition: transform 0.3s ease;}
+  transition: transform 0.3s ease;
+}
 
 .botonAdjuntar,
 .botonBuscar,
@@ -23,45 +25,48 @@
 .botonGuardar,
 .botonGuardarSolicitud,
 .botonAzul,
-.botonObtener
-{color: #fff;
-background-color: #005187;
-border: none;
-padding: 10px 16px;
-text-align: center;
-text-decoration: none;
-display: inline-block;
-font-size: 18px;
-margin: 5px;
-transition: background-color 0.5s, color 0.5s;
-border-radius: 18px;}
-
+.botonObtener{
+  color: #fff;
+  background-color: #005187;
+  border: none;
+  padding: 10px 16px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 18px;
+  margin: 5px;
+  transition: background-color 0.5s, color 0.5s;
+  border-radius: 18px;
+}
 .botonAdjuntar:hover,
 .botonObtener:hover,
 .botonSubirArchivo:hover,
 .botonAgregarSolicitud:hover,
 .botonGuardar:hover,
 .botonGuardarSolicitud:hover,
-.botonAzul:hover
-{transform: scale(1.1); 
-transition: transform 0.3s ease;}
+.botonAzul:hover{
+  transform: scale(1.1); 
+  transition: transform 0.3s ease;
+}
 
 .botonModificar{
-color: rgb(0, 0, 0);
-background-color: #ffff00;
-border: none;
-padding: 10px 16px;
-text-align: center;
-text-decoration: none;
-display: inline-block;
-font-size: 18px;
-margin: 5px;
-transition: background-color 0.5s, color 0.5s;
-border-radius: 18px;}
+  color: rgb(0, 0, 0);
+  background-color: #ffff00;
+  border: none;
+  padding: 10px 16px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 18px;
+  margin: 5px;
+  transition: background-color 0.5s, color 0.5s;
+  border-radius: 18px;
+}
 .botonModificar:hover{
-color: #000000;
-transform: scale(1.1);
-transition: transform 0.3s ease; }
+  color: #000000;
+  transform: scale(1.1);
+  transition: transform 0.3s ease; 
+}
 
 .botonVer,
 .botonDescargar{
@@ -76,7 +81,6 @@ transition: transform 0.3s ease; }
   margin: 5px;
   transition: background-color 0.5s, color 0.5s;
   border-radius: 18px;}
-
 .botonVer:hover,
 .botonDescargar:hover
   {transform: scale(1.1); 
@@ -84,10 +88,11 @@ transition: transform 0.3s ease; }
   
 
 .form-control{
-  border: 1px solid #005187;} 
+  border: 1px solid #005187;
+} 
 .custom-column-spacing {
-  margin-right: 30px; }  
-
+  margin-right: 30px; 
+}  
 .modal-custom {
   max-width: 80%;
 }
