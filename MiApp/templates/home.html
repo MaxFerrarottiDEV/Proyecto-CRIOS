@@ -1,6 +1,9 @@
 {% extends 'base.html' %}
 {% block title %}Pagina Principal{% endblock %}
 {% load static %} 
+{% block head %} 
+<link href="{% static 'home/style.css' %}" rel="stylesheet">
+{% endblock %}
 {% block content %} 
     <!-- Contenido -->
     <b>
@@ -54,6 +57,7 @@
         </div>
       </div>
     </div>
+    <br><hr>
     <!-- Tarjetas de presentación -->
     <div id="modulo">
       <br>
@@ -92,10 +96,9 @@
         <img src="{% static 'images/formularioIns.png' %}" class="card-img-top" alt="formulario">
         <div class="card-body">
           <h5 class="card-title">Cuotas</h5>
-          <p class="card-text">Descripción...</p>
+          <p class="card-text">Permite realizar un seguimiento sobre el control de morosidad de cada estudiante y también permite abrir y cerrar caja.</p>
           <a href="{% url 'build' %}" class="btn btn-primary">Ir</a>
         </div>
       </div>
-    </div>
-    <br>
+    </div><br><br>
 {% endblock content %}

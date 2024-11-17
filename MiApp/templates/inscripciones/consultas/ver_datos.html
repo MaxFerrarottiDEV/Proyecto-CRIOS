@@ -1,0 +1,97 @@
+{% extends 'base.html' %} 
+{% block title %}
+{{ estudiante.id_datinsc.nombre }} {{ estudiante.id_datinsc.apellido }}
+{% endblock %}
+{% load static %}
+{% block head %}
+    <link href="{% static 'inscripciones/consultas/ver_datos.css' %}" rel="stylesheet">
+    <link href="{% static 'inscripciones/botones.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <!-- Botón Volver alineado a la izquierda -->
+        <a href="{% url 'consultas' %}" class="btn btn-info btn-sm mx-1 botonAdjuntar">Volver</a>
+    
+        <!-- Botones Modificar y Adjuntar alineados a la derecha -->
+        <div>
+            <a href="#" class="btn btn-warning btn-sm mx-1 botonModificar"><i class="fa-solid fa-file-pen"></i> Modificar datos</a>
+            <a href="#" class="btn btn-info btn-sm mx-1 botonAdjuntar"><i class="fa-solid fa-plus"></i> Adjuntar Legajo Digital</a>
+        </div>
+    </div>    
+    <h1 class="text-center">{{ estudiante.id_datinsc.nombre }} {{ estudiante.id_datinsc.apellido }}</h1>
+    <hr>
+
+    <!-- Datos Estudiantiles -->
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h4>Datos Estudiantiles</h4>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Número de Legajo:</strong> {{ estudiante.nro_legajo }}</p>
+                    <p><strong>Curso:</strong>
+                        {% if estudiante.anio_insc == 1 %}
+                            1er Año
+                        {% elif estudiante.anio_insc == 2 %}
+                            2do Año
+                        {% elif estudiante.anio_insc == 3 %}
+                            3er Año
+                        {% elif estudiante.anio_insc == 4 %}
+                            4to Año
+                        {% elif estudiante.anio_insc == 5 %}
+                            5to Año
+                        {% else %}
+                            No asignado
+                        {% endif %}
+                    </p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Legajo Digital:</strong> {{ estudiante.legajo_digital|default:"No disponible" }}</p>
+                    <p><strong>Fecha de Inscripción:</strong> {{ estudiante.insccarreras_set.first.fecha_insc }}</p>
+                    <p><strong>Carrera:</strong> {{ estudiante.insccarreras_set.first.id_carrera_ic.nombre }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Datos Personales -->
+    <div class="card">
+        <div class="card-header bg-secondary text-white">
+            <h4>Datos Personales</h4>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Nombre:</strong> {{ estudiante.id_datinsc.nombre }}</p>
+                    <p><strong>Apellido:</strong> {{ estudiante.id_datinsc.apellido }}</p>
+                    <p><strong>Fecha de Nacimiento:</strong> {{ estudiante.id_datinsc.fecha_nac }}</p>
+                    <p><strong>Provincia:</strong> {{ estudiante.id_datinsc.provincia }}</p>
+                    <p><strong>DNI:</strong> {{ estudiante.id_datinsc.dni }}</p>
+                    <p><strong>Edad:</strong> {{ estudiante.id_datinsc.edad }}</p>
+                    <p><strong>Domicilio:</strong> {{ estudiante.id_datinsc.domicilio }}</p>
+                    <p><strong>Teléfono Fijo:</strong> {{ estudiante.id_datinsc.telefono_fijo }}</p>
+                    <p><strong>Celular:</strong> {{ estudiante.id_datinsc.celular_nro }}</p>
+                    <p><strong>Email:</strong> {{ estudiante.id_datinsc.email }}</p>
+                    <p><strong>Estado Civil:</strong> {{ estudiante.id_datinsc.estado_civil }}</p>
+                </div>
+                <div class="col-md-6"> 
+                    <p><strong>¿Tiene hijos?:</strong> {{ estudiante.id_datinsc.hijos }}</p>
+                    <p><strong>Lugar de Trabajo:</strong> {{ estudiante.id_datinsc.lugar_trabajo }}</p>
+                    <p><strong>Teléfono de Emergencia:</strong> {{ estudiante.id_datinsc.tel_emergencia }}</p>
+                    <p><strong>Colegio de Egreso:</strong> {{ estudiante.id_datinsc.col_egreso }}</p>
+                    <p><strong>Título:</strong> {{ estudiante.id_datinsc.titulo }}</p>
+                    <p><strong>Otro Título:</strong> {{ estudiante.id_datinsc.otro_titulo }}</p>
+                    <p><strong>Año de Egreso:</strong> {{ estudiante.id_datinsc.anio_egreso }}</p>                   
+                    <p><strong>¿Tuvo otro ingreso a nivel Superior o universitario anterior a este?:</strong> {{ estudiante.id_datinsc.preg_1 }}</p>
+                    <p><strong>¿Cuál?:</strong>{{ estudiante.id_datinsc.resp_1 }}</p>
+                    <p><strong>¿Completo esos estudios?:</strong> {{ estudiante.id_datinsc.preg_2 }}</p>
+                    <p><strong>¿Es beneficiario de algún tipo de Beca/Ayuda Social? (Especifique):</strong> {{ estudiante.id_datinsc.resp_2 }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

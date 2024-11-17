@@ -34,11 +34,12 @@ urlpatterns = [
     path('inscripciones/tipoInscripcion/',views.tipo_inscripcion, name='tipo_inscripcion'),
     path('inscripciones/solicitudes/', views.lista_solicitudes, name='lista_solicitudes'),
     path('inscripciones/solicitudes/confirmar/<int:id_datinsc>/', views.confirmar_solicitud, name='confirmar_solicitud'),
-    path('inscripciones/solicitudes/editar/<id_datinsc>', views.editar_solicitud, name='editar_solicitud'),
-    path('inscripciones/solicitudes/eliminar/<id_datinsc>', views.eliminar_solicitud, name='eliminar_solicitud'),
+    path('inscripciones/solicitudes/editar/<int:id_datinsc>', views.editar_solicitud, name='editar_solicitud'),
+    path('inscripciones/solicitudes/eliminar/<int:id_datinsc>', views.eliminar_solicitud, name='eliminar_solicitud'),
 
     # Modulo de consultas
     path('inscripciones/consultas/', views.consultas, name='consultas'),
+    path('inscripciones/consultas/ver_datos/<int:id_estudiante_ic>/', views.ver_datos, name='ver_datos'),
     path('inscripciones/consultas/modificar/<str:dni>/', views.modificar, name='modificar'),
     path('eliminar/<int:dni>/', views.eliminar_estudiante, name='eliminar_estudiante'),
 

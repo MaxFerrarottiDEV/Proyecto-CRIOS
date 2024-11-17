@@ -153,7 +153,8 @@ class DatInsc(models.Model):
     preg_2 = models.CharField(db_column='Preg_2', max_length=200, blank=True, null=True)  # Field name made lowercase.
     matricula = models.BooleanField(db_column='Matricula', default=False)  # No permitimos NULL, default es False
     legajo_fisico = models.BooleanField(db_column='Legajo_Fisico', default=False)  # No permitimos NULL, default es False
-    
+    inscripto = models.BooleanField(db_column='Inscripto', default=False) # No permitimos NULL, default es False
+
     class Meta:
         managed = False
         db_table = 'dat_insc'

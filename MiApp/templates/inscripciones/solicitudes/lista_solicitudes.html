@@ -4,10 +4,13 @@ Inscripciones - Solicitudes de Preinscripción
 {% endblock %}
 {% load static %}
 {% block content %}
+{% block head %} 
+    <link href="{% static 'inscripciones/botones.css' %}" rel="stylesheet">
+{% endblock %}
 {% load crispy_forms_tags %}
 <div class="container mt-5">
     <h2 style="text-align: center;">SOLICITUDES DE PREINSCRIPCIÓN</h2>
-
+    <hr>
     <!-- Mostrar mensajes si existen (de éxito o error) -->
     {% if messages %}
         {% for message in messages %}
@@ -35,7 +38,8 @@ Inscripciones - Solicitudes de Preinscripción
             <tr>
                 <th style="color: white;background-color:#005187;">Apellido y nombre</th>
                 <th style="color: white;background-color:#005187;">DNI</th>
-                <th style="color: white;background-color:#005187;">Email</th>
+                <th style="color: white;background-color:#005187;">Nro de Celular</th>
+                <th style="color: white;background-color:#005187;">Correo Electronico</th>         
                 <th style="color: white;background-color:#005187;" class="text-center">Acciones</th>
             </tr>
         </thead>
@@ -44,7 +48,9 @@ Inscripciones - Solicitudes de Preinscripción
             <tr>
                 <td>{{ solicitud.apellido }}  {{ solicitud.nombre }}</td>
                 <td>{{ solicitud.dni }}</td>
+                <td>{{ solicitud.celular_nro }}</td>
                 <td>{{ solicitud.email }}</td>
+                
                 <td  style="width: 1px; white-space: nowrap;">
                     <a href="{% url 'confirmar_solicitud' solicitud.id_datinsc %}" class="botonDescargar"><i class="fa-solid fa-plus"></i><i class="fa-solid fa-user"></i></i>Confirmar</a>
                     <a href="{% url 'editar_solicitud' solicitud.id_datinsc %}"  class="botonModificar"><i class="fa-solid fa-user-pen"></i>Editar</a>

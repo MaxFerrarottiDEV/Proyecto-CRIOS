@@ -3,32 +3,73 @@
 Confirmar Solicitud
 {% endblock %}
 
-
 {% block content %}
 <div class="container mt-5">
-    <h2>Confirmar Solicitud</h2>
+    <h2 style="text-align: center;">Confirmar Solicitud</h2>
 
     <form method="POST" action="">
         {% csrf_token %}
-        <div class="form-check">
+
+        <!-- Seleccionar Carrera -->
+        <div class="mb-3">
+            <label for="carrera" class="form-label">Seleccionar Carrera:</label>
+            <select class="form-select" id="carrera" name="carrera" required>
+                <option value="" selected disabled>Seleccione una carrera</option>
+                {% for carrera in carreras %}
+                <option value="{{ carrera.id_carrera }}">{{ carrera.nombre }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Seleccionar Año de Inscripción -->
+        <div class="mb-3">
+            <label for="anio_insc" class="form-label">Año de Inscripción:</label>
+            <select class="form-select" id="anio_insc" name="anio_insc" required>
+                <option value="" selected disabled>Seleccione el año</option>
+                <option value="1">1er Año</option>
+                <option value="2">2do Año</option>
+                <option value="3">3er Año</option>
+                <option value="4">4to Año</option>
+                <option value="5">5to Año</option>
+            </select>
+        </div>
+
+        <!-- Número de Legajo (Opcional) -->
+        <div class="mb-3">
+            <label for="nro_legajo" class="form-label">Número de Legajo (Opcional):</label>
+            <input type="text" class="form-control" id="nro_legajo" name="nro_legajo" placeholder="Ingrese el número de legajo">
+        </div>
+
+        <!-- Pago de Matrícula -->
+        <div class="form-check mb-3">
             <input class="form-check-input" type="checkbox" id="matricula" name="matricula" value="True">
             <label class="form-check-label" for="matricula">
                 ¿Ya se ha realizado el pago de matrícula? (Si/No)
             </label>
         </div>
 
-        <div class="form-check">
+        <!-- Legajo Físico -->
+        <div class="form-check mb-3">
             <input class="form-check-input" type="checkbox" id="legajo_fisico" name="legajo_fisico" value="True">
             <label class="form-check-label" for="legajo_fisico">
                 ¿Ya posee un legajo físico? (Si/No)
             </label>
         </div>
 
-        <button type="submit" class="btn btn-primary mt-4" onclick="return confirm('¿Está seguro que desea confirmar la inscripción?')">Confirmar Inscripción</button>
+        <!-- Botón Confirmar -->
+        <button type="submit" class="btn btn-primary mt-4" onclick="return confirm('¿Está seguro que desea confirmar la inscripción?')">
+            Confirmar Inscripción
+        </button>
     </form>
 </div>
 {% endblock %}
 
 {% block javascript %}
-<!-- Aquí puedes agregar JavaScript si es necesario -->
-{% endblock javascript %}
+<script>
+    // Capturar automáticamente la fecha actual (opcional si quieres manipularla con JS)
+    document.addEventListener("DOMContentLoaded", function () {
+        const fechaActual = new Date().toISOString().split('T')[0];
+        console.log("Fecha actual: ", fechaActual);  // Solo para verificar en consola
+    });
+</script>
+{% endblock %}

@@ -12,11 +12,9 @@
     </title>
     <link rel="icon" href="{% static 'icons/crios_logo.png' %}" type="image/x-icon">
     <!-- Styles CSS -->
-    <link href="{% static 'home/style.css' %}" rel="stylesheet">
-    <link href="{% static 'home/style-tipoInscripcion.css' %}" rel="stylesheet">
-    <link href="{% static 'inscripciones/solicitudes/style.css'%}" rel="stylesheet">
+    <link href="{% static 'base/general.css' %}" rel="stylesheet">
     <link href="{% static 'DataTables-1.13.6/css/dataTables.bootstrap5.css' %}" rel="stylesheet">
-    <link href="{% static 'inscripciones/consultas.css' %}" rel="stylesheet">
+    {% block head %} {% endblock %}
     <!-- GoogleFonts - Rubik -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
