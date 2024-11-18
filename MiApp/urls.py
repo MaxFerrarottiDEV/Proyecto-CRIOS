@@ -30,25 +30,23 @@ urlpatterns = [
     path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(template_name='registration/password_reset/password_reset_confirm.html'), name='password_reset_confirm'),
     path('reset_password_complete/', auth_views.PasswordResetCompleteView.as_view(template_name='registration/password_reset/password_reset_complete.html'), name='password_reset_complete'),
     
-    # Modulo de solicitudes inscripciones
+    # Modulo de inscripciones - solicitudes 
     path('inscripciones/tipoInscripcion/',views.tipo_inscripcion, name='tipo_inscripcion'),
     path('inscripciones/solicitudes/', views.lista_solicitudes, name='lista_solicitudes'),
     path('inscripciones/solicitudes/confirmar/<int:id_datinsc>/', views.confirmar_solicitud, name='confirmar_solicitud'),
     path('inscripciones/solicitudes/editar/<int:id_datinsc>', views.editar_solicitud, name='editar_solicitud'),
     path('inscripciones/solicitudes/eliminar/<int:id_datinsc>', views.eliminar_solicitud, name='eliminar_solicitud'),
 
-    # Modulo de consultas
+    # Modulo de inscripciones - consultas
     path('inscripciones/consultas/', views.consultas, name='consultas'),
     path('inscripciones/consultas/ver_datos/<int:id_estudiante_ic>/', views.ver_datos, name='ver_datos'),
-    path('inscripciones/consultas/modificar/<str:dni>/', views.modificar, name='modificar'),
-    path('eliminar/<int:dni>/', views.eliminar_estudiante, name='eliminar_estudiante'),
+    path('inscripciones/consultas/modificar_datos/<int:id_estudiante>/', views.modificar_datos, name='modificar_datos'),
+    path('inscripciones/consultas/eliminar/<int:id_estudiante>/', views.eliminar_estudiante, name='eliminar_estudiante'),
 
-
-    # Modulo de estados Curriculares
-    
-    #Gestión de Planes de Estudio:
+    #Modulo de estados Curriculares - Gestión de Planes de Estudio:
     path('plan-estudio/', views.plan_estudio_view, name='plan_estudio'),
-    #Gestión de Estados Curriculares:
+
+    #Modulo de estados Curriculares - Gestión de Estados Curriculares:
     path('estadosCurriculares/estados', views.estados, name='estados'),
     path('estadosCurriculares/estados', views.agregarNota, name='agregarNota'),
     path('estadosCurriculares/agregar_nota/<str:dni>/', views.agregar_nota, name='agregar_nota'),

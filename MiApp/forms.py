@@ -82,7 +82,7 @@ class PreinscripcionForm(forms.ModelForm):
     ]
     nombre = forms.CharField(label='Nombre/s:',required=True,)
     apellido = forms.CharField(label='Apellido/s:',required=True,)
-    fecha_nac = forms.CharField(label='Fecha de Nacimiento:',widget=forms.DateInput(attrs={'type': 'date'}),required=True,)
+    fecha_nac = forms.CharField(label='Fecha de Nacimiento:',required=True,widget=forms.DateInput(attrs={'type': 'date'}),)
     provincia = forms.ChoiceField(label='Provincia:',choices=PROVINCIA_CHOICES,required=True,)
     dni = forms.CharField(label='DNI (Solo numeros):',max_length=10,required=True,)
     edad = forms.CharField(label='Edad:', max_length=2,required=True)
@@ -95,7 +95,7 @@ class PreinscripcionForm(forms.ModelForm):
     lugar_trabajo = forms.CharField(label='Lugar de Trabajo:', max_length=200, required=False,)
     tel_emergencia = forms.CharField(label='Teléfono de Emergencia:', max_length=12, required=True,)
     col_egreso = forms.CharField(label='Colegio que Egresó:', max_length=200,required=True,)
-    titulo = forms.CharField(label='Título:', max_length=200, required=False,)
+    titulo = forms.CharField(label='Título:', max_length=200, required=True,)
     otro_titulo = forms.CharField(label='Otros Títulos (Separar con coma):', max_length=200, required=False,)
     anio_egreso = forms.CharField(label='Año de Egreso:',max_length=4,required=True)
     preg_1 = forms.ChoiceField(label='¿Tuvo otro ingreso a nivel Superior o universitario anterior a este?:',choices=PREG_1_CHOICES, widget=forms.RadioSelect,required=False,)
@@ -111,11 +111,31 @@ class PreinscripcionForm(forms.ModelForm):
                   'col_egreso','titulo','otro_titulo','anio_egreso','preg_1','resp_1','resp_2','preg_2']
         exclude = ['matricula','legajo_fisico'] # Lista de campos del modelo a excluir del formulario
 
+    def clean_telefono_fijo(self):
+        telefono_fijo = self.cleaned_data.get('telefono_fijo')
+        if telefono_fijo in ['', None]:  # Si está vacío o es None
+            return 'No agregado'  # Devuelve None en lugar de una cadena vacía
+        return telefono_fijo
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if email in ['', None]:  # Si está vacío o es None
+            return 'No agregado'  # Devuelve None en lugar de una cadena vacía  
+        return email 
     def clean_hijos(self):
         hijos = self.cleaned_data.get('hijos')
         if hijos in ['', None]:  # Si está vacío o es None
             return None  # Devuelve None en lugar de una cadena vacía
         return hijos
+    def clean_lugar_trabajo(self):
+        lugar_trabajo = self.cleaned_data.get('lugar_trabajo')
+        if lugar_trabajo in ['', None]:  # Si está vacío o es None
+            return 'Sin responder'  # Devuelve None en lugar de una cadena vacía  
+        return lugar_trabajo   
+    def clean_otro_titulo(self):
+        otro_titulo = self.cleaned_data.get('otro_titulo')
+        if otro_titulo in ['', None]:  # Si está vacío o es None
+            return 'Sin responder'  # Devuelve None en lugar de una cadena vacía  
+        return otro_titulo   
     def clean_preg_1(self):
         preg_1 = self.cleaned_data.get('preg_1')
         if preg_1 in ['', None]:  # Si está vacío o es None
@@ -124,7 +144,7 @@ class PreinscripcionForm(forms.ModelForm):
     def clean_resp_1(self):
         resp_1 = self.cleaned_data.get('resp_1')
         if resp_1 in ['', None]:  # Si está vacío o es None
-            return None  # Devuelve None en lugar de una cadena vacía
+            return 'Sin responder'  # Devuelve 'Sin responder' en lugar de una cadena vacía
         return resp_1
     def clean_resp_2(self):
         resp_2 = self.cleaned_data.get('resp_2')
@@ -134,5 +154,5 @@ class PreinscripcionForm(forms.ModelForm):
     def clean_preg_2(self):
         preg_2 = self.cleaned_data.get('preg_2')
         if preg_2 in ['', None]:  # Si está vacío o es None
-            return None  # Devuelve None en lugar de una cadena vacía
+            return 'Sin responder'  # Devuelve 'Sin responder' en lugar de una cadena vacía
         return preg_2

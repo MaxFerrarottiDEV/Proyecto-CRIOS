@@ -1,6 +1,6 @@
 {% extends 'base.html' %} 
 {% block title %}
-{{ estudiante.id_datinsc.nombre }} {{ estudiante.id_datinsc.apellido }}
+    Estudiante - {{ estudiante.id_datinsc.nombre }} {{ estudiante.id_datinsc.apellido }}
 {% endblock %}
 {% load static %}
 {% block head %}
@@ -12,11 +12,16 @@
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <!-- Botón Volver alineado a la izquierda -->
-        <a href="{% url 'consultas' %}" class="btn btn-info btn-sm mx-1 botonAdjuntar">Volver</a>
-    
+        <a href="{% url 'consultas' %}" class="btn btn-info btn-sm mx-1 botonVolver"><i class="fa-solid fa-arrow-left"></i>Volver</a>
         <!-- Botones Modificar y Adjuntar alineados a la derecha -->
         <div>
-            <a href="#" class="btn btn-warning btn-sm mx-1 botonModificar"><i class="fa-solid fa-file-pen"></i> Modificar datos</a>
+            {% if estudiante.id_estudiante %}
+            <a href="{% url 'modificar_datos' estudiante.id_estudiante %}" class="btn btn-warning btn-sm mx-1 botonModificar">
+                <i class="fa-solid fa-file-pen"></i> Modificar datos
+            </a>
+            {% else %}
+            <p>No se puede modificar los datos del estudiante porque falta el ID.</p>
+            {% endif %}
             <a href="#" class="btn btn-info btn-sm mx-1 botonAdjuntar"><i class="fa-solid fa-plus"></i> Adjuntar Legajo Digital</a>
         </div>
     </div>    
@@ -47,11 +52,26 @@
                             No asignado
                         {% endif %}
                     </p>
+                    <p><strong>Inscripto por:</strong> {{ estudiante.insccarreras_set.first.id_empleado_ic.nombre }} {{ estudiante.insccarreras_set.first.id_empleado_ic.apellido }}</p>
+                    <p><strong>Pago de Matricula:</strong> 
+                        {% if estudiante.id_datinsc.matricula == 0 %}
+                            Pendiente
+                        {% elif estudiante.id_datinsc.matricula == 1 %}
+                            Realizado
+                        {% endif %} 
+                    </p>
+                    <p><strong>Posee un legajo físico:</strong> 
+                        {% if estudiante.id_datinsc.legajo_fisico == 0 %}
+                            No 
+                        {% elif estudiante.id_datinsc.legajo_fisico == 1 %}
+                            Si 
+                        {% endif %} 
+                    </p>
                 </div>
                 <div class="col-md-6">
                     <p><strong>Legajo Digital:</strong> {{ estudiante.legajo_digital|default:"No disponible" }}</p>
                     <p><strong>Fecha de Inscripción:</strong> {{ estudiante.insccarreras_set.first.fecha_insc }}</p>
-                    <p><strong>Carrera:</strong> {{ estudiante.insccarreras_set.first.id_carrera_ic.nombre }}</p>
+                    <p><strong>Carrera:</strong> {{ estudiante.insccarreras_set.first.id_carrera_ic.nombre }}</p>        
                 </div>
             </div>
         </div>
@@ -65,8 +85,8 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-md-6">
-                    <p><strong>Nombre:</strong> {{ estudiante.id_datinsc.nombre }}</p>
-                    <p><strong>Apellido:</strong> {{ estudiante.id_datinsc.apellido }}</p>
+                    <p><strong>Nombre/s:</strong> {{ estudiante.id_datinsc.nombre }}</p>
+                    <p><strong>Apellido/s:</strong> {{ estudiante.id_datinsc.apellido }}</p>
                     <p><strong>Fecha de Nacimiento:</strong> {{ estudiante.id_datinsc.fecha_nac }}</p>
                     <p><strong>Provincia:</strong> {{ estudiante.id_datinsc.provincia }}</p>
                     <p><strong>DNI:</strong> {{ estudiante.id_datinsc.dni }}</p>
@@ -76,19 +96,43 @@
                     <p><strong>Celular:</strong> {{ estudiante.id_datinsc.celular_nro }}</p>
                     <p><strong>Email:</strong> {{ estudiante.id_datinsc.email }}</p>
                     <p><strong>Estado Civil:</strong> {{ estudiante.id_datinsc.estado_civil }}</p>
+                    <p><strong>¿Tiene hijos?:</strong> 
+                        {% if estudiante.id_datinsc.hijos == 0 %}
+                            No
+                        {% elif estudiante.id_datinsc.hijos == 1 %}
+                            Si
+                        {% else %}
+                            Sin responder
+                        {% endif %}
+                    </p>
                 </div>
                 <div class="col-md-6"> 
-                    <p><strong>¿Tiene hijos?:</strong> {{ estudiante.id_datinsc.hijos }}</p>
                     <p><strong>Lugar de Trabajo:</strong> {{ estudiante.id_datinsc.lugar_trabajo }}</p>
                     <p><strong>Teléfono de Emergencia:</strong> {{ estudiante.id_datinsc.tel_emergencia }}</p>
                     <p><strong>Colegio de Egreso:</strong> {{ estudiante.id_datinsc.col_egreso }}</p>
                     <p><strong>Título:</strong> {{ estudiante.id_datinsc.titulo }}</p>
                     <p><strong>Otro Título:</strong> {{ estudiante.id_datinsc.otro_titulo }}</p>
                     <p><strong>Año de Egreso:</strong> {{ estudiante.id_datinsc.anio_egreso }}</p>                   
-                    <p><strong>¿Tuvo otro ingreso a nivel Superior o universitario anterior a este?:</strong> {{ estudiante.id_datinsc.preg_1 }}</p>
-                    <p><strong>¿Cuál?:</strong>{{ estudiante.id_datinsc.resp_1 }}</p>
+                    <p><strong>¿Tuvo otro ingreso a nivel Superior o universitario anterior a este?:</strong> 
+                        {% if estudiante.id_datinsc.preg_1 == 0 %}
+                            No
+                        {% elif estudiante.id_datinsc.preg_1 == 1 %}
+                            Si
+                        {% else %}
+                            Sin responder
+                        {% endif %}
+                    </p>
+                    <p><strong>¿Cuál?:</strong> {{ estudiante.id_datinsc.resp_1 }}</p>
                     <p><strong>¿Completo esos estudios?:</strong> {{ estudiante.id_datinsc.preg_2 }}</p>
-                    <p><strong>¿Es beneficiario de algún tipo de Beca/Ayuda Social? (Especifique):</strong> {{ estudiante.id_datinsc.resp_2 }}</p>
+                    <p><strong>¿Es beneficiario de algún tipo de Beca/Ayuda Social? (Especifique):</strong> 
+                        {% if estudiante.id_datinsc.resp_2 == 0 %}
+                            No
+                        {% elif estudiante.id_datinsc.resp_2 == 1 %}
+                            Si
+                        {% else %}
+                            Sin responder
+                        {% endif %}
+                    </p>
                 </div>
             </div>
         </div>

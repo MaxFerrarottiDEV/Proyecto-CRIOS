@@ -48,7 +48,11 @@ Inscripciones - Consultas de datos de estudiantes
                     <td>{{ estudiante.insccarreras_set.first.fecha_insc }}</td>
                     <td>
                         <a href="{% url 'ver_datos' estudiante.id_estudiante %}" class="btn btn-info btn-sm botonVer"><i class="fa-solid fa-eye"></i>Ver datos</a>
-                        <a href="#" class="btn btn-danger btn-sm botonEliminar"><i class="fa-solid fa-user-large-slash"></i>Dar de baja</a>                       
+                        <a href="#" 
+                            class="btn btn-danger btn-sm botonEliminar" 
+                            data-id_estudiante="{{ estudiante.id_estudiante }}">
+                            <i class="fa-solid fa-user-large-slash"></i> Dar de baja
+                        </a>
                     </td>
                 </tr>
                 {% endfor %}

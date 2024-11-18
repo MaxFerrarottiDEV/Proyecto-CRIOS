@@ -1,20 +1,25 @@
-from django.shortcuts import render, redirect ,get_object_or_404 
+from datetime import date
+
+from django.contrib import messages
+from django.contrib.auth import update_session_auth_hash, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth import update_session_auth_hash, logout
-from django.contrib import messages
-from .forms import PreinscripcionForm 
-from django.http import JsonResponse
-from .models import Carreras, DatInsc, EstadosCurriculares, Estudiantes, InscCarreras, Materias, MateriasxplanesEstudios, PlanesEstudios
-from datetime import date
+from django.db import transaction
+from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import render_to_string
-from django.http import HttpResponse
+from django.urls import reverse
+
 from io import BytesIO
-from reportlab.lib.pagesizes import letter # type: ignore
-from reportlab.pdfgen import canvas # type: ignore
-from reportlab.lib import colors # type: ignore
-from reportlab.lib.units import inch # type: ignore
-from reportlab.platypus import Table, TableStyle # type: ignore
+
+from reportlab.lib import colors
+from reportlab.lib.pagesizes import letter  # type: ignore
+from reportlab.lib.units import inch  # type: ignore
+from reportlab.pdfgen import canvas  # type: ignore
+from reportlab.platypus import Table, TableStyle  # type: ignore
+
+from .forms import PreinscripcionForm
+from .models import Carreras, DatInsc, EstadosCurriculares, Estudiantes, InscCarreras, Materias, MateriasxplanesEstudios, PlanesEstudios
 
 def login(request):
     return render(request, 'login.html')
@@ -217,31 +222,50 @@ def ver_datos(request, id_estudiante_ic):
 
     return render(request, 'inscripciones/consultas/ver_datos.html', context)
 
+
 @login_required
-def modificar(request, dni):
-    estudiante = get_object_or_404(DatInsc, dni=dni)
-    
+def modificar_datos(request, id_estudiante):
+    # Obtener el registro del estudiante por su ID
+    estudiante = get_object_or_404(Estudiantes, id_estudiante=id_estudiante)
+
+    # Acceder a los datos de la tabla DatInsc a través de la relación
+    dat_insc = estudiante.id_datinsc
+
+    # Si la solicitud es POST, procesar el formulario
     if request.method == 'POST':
-        estudiante.nombre = request.POST.get('nombre')
-        estudiante.apellido = request.POST.get('apellido')
-        estudiante.dni = request.POST.get('dni')
-        estudiante.celular_nro = request.POST.get('telefono')
-        estudiante.email = request.POST.get('email')
-        estudiante.domicilio = request.POST.get('domicilio')
-        estudiante.matricula = request.POST.get('matricula') == 'on'
-        estudiante.legajo_fisico = request.POST.get('legajo_fisico') == 'on'
-        estudiante.save()
-        messages.success(request, '¡Estudiante modificado exitosamente!')
-        return redirect('consultas')
-    return render(request, 'inscripciones/consultas/modificar.html', {'estudiante': estudiante})
+        form = PreinscripcionForm(request.POST, instance=dat_insc)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('ver_datos', args=[id_estudiante]))
+    else:
+        # Crear el formulario con los datos actuales
+        form = PreinscripcionForm(instance=dat_insc)
+
+    # Renderizar la plantilla con el formulario y los datos del estudiante
+    return render(request, 'inscripciones/consultas/modificar_datos.html', {
+        'form': form,
+        'estudiante': estudiante
+    })
 
 
 @login_required
-def eliminar_estudiante(request, dni):
-    estudiante = get_object_or_404(Estudiantes, id_datinsc__dni=dni)
-    estudiante.delete()
-    messages.success(request, 'El estudiante ha sido eliminado exitosamente.')
-    return redirect('consultas')
+@transaction.atomic
+def eliminar_estudiante(request, id_estudiante):
+    estudiante = get_object_or_404(Estudiantes, id_estudiante=id_estudiante)
+    try:
+        # Eliminar inscripciones vinculadas
+        InscCarreras.objects.filter(id_estudiante_ic=estudiante.id_estudiante).delete()
+        
+        # Eliminar datos personales
+        datinsc = estudiante.id_datinsc
+        estudiante.delete()
+        datinsc.delete()
+        
+        # Mensaje de éxito
+        request.session['message'] = "El estudiante ha sido eliminado con éxito."
+    except Exception as e:
+        request.session['error'] = f"Error al eliminar al estudiante: {str(e)}"
+    return redirect('consultas')  # Redirige a la página de consultas
 
 
 @login_required

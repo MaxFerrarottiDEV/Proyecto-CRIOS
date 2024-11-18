@@ -19,6 +19,7 @@
   transition: transform 0.3s ease;
 }
 
+.botonVolver,
 .botonAdjuntar,
 .botonBuscar,
 .botonAgregarSolicitud,
@@ -38,6 +39,7 @@
   transition: background-color 0.5s, color 0.5s;
   border-radius: 18px;
 }
+.botonVolver:hover,
 .botonAdjuntar:hover,
 .botonObtener:hover,
 .botonSubirArchivo:hover,
