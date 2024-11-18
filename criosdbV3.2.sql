@@ -346,7 +346,7 @@ CREATE TABLE `dat_insc` (
   `Legajo_Fisico` int DEFAULT '0',
   `Inscripto` int DEFAULT '0',
   PRIMARY KEY (`Id_DatInsc`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -355,7 +355,7 @@ CREATE TABLE `dat_insc` (
 
 LOCK TABLES `dat_insc` WRITE;
 /*!40000 ALTER TABLE `dat_insc` DISABLE KEYS */;
-INSERT INTO `dat_insc` VALUES (6,'Maximo Leon','Ferrarotti','2004-08-04','Salta','4969097450','32','Mi casa','','03876144010','maximo_ferrarotti@hotmail.com','Soltero/a',NULL,'','03876144010','Benita Campos','','','2022',NULL,NULL,NULL,NULL,1,0,1),(7,'Wilfredo','Rojas','2024-10-09','Salta','45863172','21','domicilio 2','','12453','','Soltero/a',NULL,'','68468386','colegio 2','','','2021',NULL,NULL,NULL,NULL,0,0,1),(9,'Exequiel','Martinez','2003-05-03','Salta','45863172','21','domicilio 2','','12453','','Soltero/a',NULL,'','5346467','colegio 2','','','2021',NULL,NULL,NULL,NULL,0,0,0),(10,'Juan','Amaya','2004-06-05','Salta','46636755','20','casa 3','','21255','','Soltero/a',NULL,'','643746','Escuela 2','','','2020',NULL,NULL,NULL,NULL,0,0,1);
+INSERT INTO `dat_insc` VALUES (6,'Maximo Leon','Ferrarotti','2004-08-04','Salta','4969097450','32','Mi casa','No agregado','03876144010','maximo_ferrarotti@hotmail.com','Soltero/a',2,'Sin responder','03876144010','Benita Campos','Titulo inventado','Sin responder','2022',2,'Sin responder',2,'Sin responder',1,0,1),(7,'Wilfredo','Rojas Trigori','2003-05-04','Salta','45863172','21','domicilio 2','No agregado','12453','No agregado','Soltero/a',NULL,'Sin responder','68468386','colegio 2','Titulo inventado','Sin responder','2021',NULL,'Sin responder',NULL,'Sin responder',0,1,1),(9,'Exequiel','Martinez','2004-02-22','Salta','45863172','21','domicilio 2','No agregado','12453','No agregado','Soltero/a',NULL,'Sin responder','5346467','colegio 2','Titulo inventado','Sin responder','2021',NULL,'Sin responder',NULL,'Sin responder',0,0,0),(10,'Juan','Amaya','2004-06-05','Salta','46636755','20','casa 3','No agregado','21255','No agregado','Soltero/a',2,'Sin responder','643746','Escuela 2','Titulo inventado','Sin responder','2020',2,'Sin responder',2,'Sin responder',1,1,1);
 /*!40000 ALTER TABLE `dat_insc` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -468,7 +468,7 @@ CREATE TABLE `django_session` (
 
 LOCK TABLES `django_session` WRITE;
 /*!40000 ALTER TABLE `django_session` DISABLE KEYS */;
-INSERT INTO `django_session` VALUES ('1g87p0cgim8k2uho5j82nqge7re17s9a','.eJxVjEEOwiAQRe_C2hDAgQGX7j0DYQaQqmmT0q6Md7dNutDte-__t4hpXVpce5njkMVFGHH6ZZT4WcZd5Eca75PkaVzmgeSeyMN2eZtyeV2P9u-gpd62NTEFMuhsriF7D2hcIdDEWmlGa7xKqMB6YLCBTYDsHQJW3Hg9hyA-X9eWNwI:1sww0w:zbhjeJAesCCmN-YYd8K_mE8xMIorsreaTZK0XuZJR3I','2024-10-19 04:03:30.321606'),('769hladeooryhsyqtxsqyrog9jxpyzbh','.eJxVjEEOwiAQRe_C2hDAgQGX7j0DYQaQqmmT0q6Md7dNutDte-__t4hpXVpce5njkMVFGHH6ZZT4WcZd5Eca75PkaVzmgeSeyMN2eZtyeV2P9u-gpd62NTEFMuhsriF7D2hcIdDEWmlGa7xKqMB6YLCBTYDsHQJW3Hg9hyA-X9eWNwI:1swZKr:InpaomdsPyrstF8Si7fhDvqpUDY2geuRfQ2R9sgwwSI','2024-10-18 03:50:33.812603'),('f6ngk3v3uspmh2cxqcp59utt6jllojp9','.eJxVjEEOwiAQRe_C2hDAgQGX7j0DYQaQqmmT0q6Md7dNutDte-__t4hpXVpce5njkMVFGHH6ZZT4WcZd5Eca75PkaVzmgeSeyMN2eZtyeV2P9u-gpd62NTEFMuhsriF7D2hcIdDEWmlGa7xKqMB6YLCBTYDsHQJW3Hg9hyA-X9eWNwI:1slYae:d0rmJfWJMWKIMSkmdh8j_hyqbpgApXl1rxE3p7Jo5EY','2024-09-17 18:49:20.427478'),('gmpvgjs3c9ohozz81bbhdo9awqxdel2q','.eJxVjEEOwiAQRe_C2hDAgQGX7j0DYQaQqmmT0q6Md7dNutDte-__t4hpXVpce5njkMVFGHH6ZZT4WcZd5Eca75PkaVzmgeSeyMN2eZtyeV2P9u-gpd62NTEFMuhsriF7D2hcIdDEWmlGa7xKqMB6YLCBTYDsHQJW3Hg9hyA-X9eWNwI:1sk6e9:FeFZLcZvQj47swIffpi8DiO3EJDTACtvDUuPQrNQXU8','2024-09-13 18:46:57.569887'),('hiz7e8qs9ybnznpdpr8e3plz67wtrftt','.eJxVjEEOwiAQRe_C2hDAgQGX7j0DYQaQqmmT0q6Md7dNutDte-__t4hpXVpce5njkMVFGHH6ZZT4WcZd5Eca75PkaVzmgeSeyMN2eZtyeV2P9u-gpd62NTEFMuhsriF7D2hcIdDEWmlGa7xKqMB6YLCBTYDsHQJW3Hg9hyA-X9eWNwI:1t3Kw3:7RgP5BckjyBdxrGKmPs0SwdPQeFD2tBTT87CBTlh8h8','2024-11-05 19:52:55.056672'),('hr460xs5vsmysgc3siwvvkb2ghvdku94','.eJxVjEEOwiAQRe_C2hDAgQGX7j0DYQaQqmmT0q6Md7dNutDte-__t4hpXVpce5njkMVFGHH6ZZT4WcZd5Eca75PkaVzmgeSeyMN2eZtyeV2P9u-gpd62NTEFMuhsriF7D2hcIdDEWmlGa7xKqMB6YLCBTYDsHQJW3Hg9hyA-X9eWNwI:1tCYYK:g8BXEV2DYI01Zui-CiMgYKyGazTs_jiFuLjdJIkJ60U','2024-12-01 06:14:32.446010'),('lciihhf99s5j51iya9fio7zrl9yq3suu','.eJxVjEEOwiAQRe_C2hDAgQGX7j0DYQaQqmmT0q6Md7dNutDte-__t4hpXVpce5njkMVFGHH6ZZT4WcZd5Eca75PkaVzmgeSeyMN2eZtyeV2P9u-gpd62NTEFMuhsriF7D2hcIdDEWmlGa7xKqMB6YLCBTYDsHQJW3Hg9hyA-X9eWNwI:1sjj7J:YZ1dQrAFZaVOpwHQWU3HP4v1rIuTttynXf2edlipVb4','2024-09-12 17:39:29.328110'),('rv8t21c7j3kr5xgbn4aqzcoaemxltb6v','.eJxVjEEOwiAQRe_C2hDAgQGX7j0DYQaQqmmT0q6Md7dNutDte-__t4hpXVpce5njkMVFGHH6ZZT4WcZd5Eca75PkaVzmgeSeyMN2eZtyeV2P9u-gpd62NTEFMuhsriF7D2hcIdDEWmlGa7xKqMB6YLCBTYDsHQJW3Hg9hyA-X9eWNwI:1t974k:bMPO8qfbXqxk8y8yACFPaUsDzuSPQhSQlztJoXQTT7E','2024-11-21 18:17:46.069258'),('sik4hnf8pu3b7y8nbc5h8ysz5urqnae9','.eJxVjEEOwiAQRe_C2hDAgQGX7j0DYQaQqmmT0q6Md7dNutDte-__t4hpXVpce5njkMVFGHH6ZZT4WcZd5Eca75PkaVzmgeSeyMN2eZtyeV2P9u-gpd62NTEFMuhsriF7D2hcIdDEWmlGa7xKqMB6YLCBTYDsHQJW3Hg9hyA-X9eWNwI:1sx5kS:8OPCM-D2p-pKdEkLO_LjNq4xRVLDcdS95Glt4GwWWks','2024-10-19 14:27:08.275591'),('y2nwgv2p6km9xyn8w5vr8ewnwit2asel','.eJxVjEEOwiAQRe_C2hDAgQGX7j0DYQaQqmmT0q6Md7dNutDte-__t4hpXVpce5njkMVFGHH6ZZT4WcZd5Eca75PkaVzmgeSeyMN2eZtyeV2P9u-gpd62NTEFMuhsriF7D2hcIdDEWmlGa7xKqMB6YLCBTYDsHQJW3Hg9hyA-X9eWNwI:1syCwb:KvGVvnnIGDvqZRbriDdYbwSc3aGoZFgatkr5W5ghqrk','2024-10-22 16:20:17.546325');
+INSERT INTO `django_session` VALUES ('1g87p0cgim8k2uho5j82nqge7re17s9a','.eJxVjEEOwiAQRe_C2hDAgQGX7j0DYQaQqmmT0q6Md7dNutDte-__t4hpXVpce5njkMVFGHH6ZZT4WcZd5Eca75PkaVzmgeSeyMN2eZtyeV2P9u-gpd62NTEFMuhsriF7D2hcIdDEWmlGa7xKqMB6YLCBTYDsHQJW3Hg9hyA-X9eWNwI:1sww0w:zbhjeJAesCCmN-YYd8K_mE8xMIorsreaTZK0XuZJR3I','2024-10-19 04:03:30.321606'),('769hladeooryhsyqtxsqyrog9jxpyzbh','.eJxVjEEOwiAQRe_C2hDAgQGX7j0DYQaQqmmT0q6Md7dNutDte-__t4hpXVpce5njkMVFGHH6ZZT4WcZd5Eca75PkaVzmgeSeyMN2eZtyeV2P9u-gpd62NTEFMuhsriF7D2hcIdDEWmlGa7xKqMB6YLCBTYDsHQJW3Hg9hyA-X9eWNwI:1swZKr:InpaomdsPyrstF8Si7fhDvqpUDY2geuRfQ2R9sgwwSI','2024-10-18 03:50:33.812603'),('f6ngk3v3uspmh2cxqcp59utt6jllojp9','.eJxVjEEOwiAQRe_C2hDAgQGX7j0DYQaQqmmT0q6Md7dNutDte-__t4hpXVpce5njkMVFGHH6ZZT4WcZd5Eca75PkaVzmgeSeyMN2eZtyeV2P9u-gpd62NTEFMuhsriF7D2hcIdDEWmlGa7xKqMB6YLCBTYDsHQJW3Hg9hyA-X9eWNwI:1slYae:d0rmJfWJMWKIMSkmdh8j_hyqbpgApXl1rxE3p7Jo5EY','2024-09-17 18:49:20.427478'),('gmpvgjs3c9ohozz81bbhdo9awqxdel2q','.eJxVjEEOwiAQRe_C2hDAgQGX7j0DYQaQqmmT0q6Md7dNutDte-__t4hpXVpce5njkMVFGHH6ZZT4WcZd5Eca75PkaVzmgeSeyMN2eZtyeV2P9u-gpd62NTEFMuhsriF7D2hcIdDEWmlGa7xKqMB6YLCBTYDsHQJW3Hg9hyA-X9eWNwI:1sk6e9:FeFZLcZvQj47swIffpi8DiO3EJDTACtvDUuPQrNQXU8','2024-09-13 18:46:57.569887'),('hiz7e8qs9ybnznpdpr8e3plz67wtrftt','.eJxVjEEOwiAQRe_C2hDAgQGX7j0DYQaQqmmT0q6Md7dNutDte-__t4hpXVpce5njkMVFGHH6ZZT4WcZd5Eca75PkaVzmgeSeyMN2eZtyeV2P9u-gpd62NTEFMuhsriF7D2hcIdDEWmlGa7xKqMB6YLCBTYDsHQJW3Hg9hyA-X9eWNwI:1t3Kw3:7RgP5BckjyBdxrGKmPs0SwdPQeFD2tBTT87CBTlh8h8','2024-11-05 19:52:55.056672'),('hr460xs5vsmysgc3siwvvkb2ghvdku94','.eJxVjt8KwiAYxV9FvA5x5qZ2GXTZGwTjU781a1OYDoLo3XOwi7o7nD8_zpv2sJaxXzMuffD0RAU9_HoW3BPjFvgHxHtiLsWyBMu2CtvTzK7J43Teu3-AEfJY19ZZY4XqWj8Yr7VUokMrG-sa3jjVCs1Bcdlq6WRrnDDS605JNajqD0djKnTGnOGOFXaZCOay-gCxIBmB5OATwSnMIUJV9SO5rZyjeYWSGP18ASlCS6c:1tCnpy:DX5Z75-_EFkcRUBocouPw3t1sDIfm9sVdAA1fYG6WW4','2024-12-01 22:33:46.468413'),('lciihhf99s5j51iya9fio7zrl9yq3suu','.eJxVjEEOwiAQRe_C2hDAgQGX7j0DYQaQqmmT0q6Md7dNutDte-__t4hpXVpce5njkMVFGHH6ZZT4WcZd5Eca75PkaVzmgeSeyMN2eZtyeV2P9u-gpd62NTEFMuhsriF7D2hcIdDEWmlGa7xKqMB6YLCBTYDsHQJW3Hg9hyA-X9eWNwI:1sjj7J:YZ1dQrAFZaVOpwHQWU3HP4v1rIuTttynXf2edlipVb4','2024-09-12 17:39:29.328110'),('rv8t21c7j3kr5xgbn4aqzcoaemxltb6v','.eJxVjEEOwiAQRe_C2hDAgQGX7j0DYQaQqmmT0q6Md7dNutDte-__t4hpXVpce5njkMVFGHH6ZZT4WcZd5Eca75PkaVzmgeSeyMN2eZtyeV2P9u-gpd62NTEFMuhsriF7D2hcIdDEWmlGa7xKqMB6YLCBTYDsHQJW3Hg9hyA-X9eWNwI:1t974k:bMPO8qfbXqxk8y8yACFPaUsDzuSPQhSQlztJoXQTT7E','2024-11-21 18:17:46.069258'),('sik4hnf8pu3b7y8nbc5h8ysz5urqnae9','.eJxVjEEOwiAQRe_C2hDAgQGX7j0DYQaQqmmT0q6Md7dNutDte-__t4hpXVpce5njkMVFGHH6ZZT4WcZd5Eca75PkaVzmgeSeyMN2eZtyeV2P9u-gpd62NTEFMuhsriF7D2hcIdDEWmlGa7xKqMB6YLCBTYDsHQJW3Hg9hyA-X9eWNwI:1sx5kS:8OPCM-D2p-pKdEkLO_LjNq4xRVLDcdS95Glt4GwWWks','2024-10-19 14:27:08.275591'),('y2nwgv2p6km9xyn8w5vr8ewnwit2asel','.eJxVjEEOwiAQRe_C2hDAgQGX7j0DYQaQqmmT0q6Md7dNutDte-__t4hpXVpce5njkMVFGHH6ZZT4WcZd5Eca75PkaVzmgeSeyMN2eZtyeV2P9u-gpd62NTEFMuhsriF7D2hcIdDEWmlGa7xKqMB6YLCBTYDsHQJW3Hg9hyA-X9eWNwI:1syCwb:KvGVvnnIGDvqZRbriDdYbwSc3aGoZFgatkr5W5ghqrk','2024-10-22 16:20:17.546325');
 /*!40000 ALTER TABLE `django_session` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -487,7 +487,7 @@ CREATE TABLE `empleados` (
   `Telefono` varchar(12) NOT NULL,
   `Email` varchar(45) NOT NULL,
   PRIMARY KEY (`Id_Empleado`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -496,6 +496,7 @@ CREATE TABLE `empleados` (
 
 LOCK TABLES `empleados` WRITE;
 /*!40000 ALTER TABLE `empleados` DISABLE KEYS */;
+INSERT INTO `empleados` VALUES (1,'Claudia','Jerez',44363896,'3876455223','claudiajerez@gmail.com');
 /*!40000 ALTER TABLE `empleados` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -573,7 +574,7 @@ CREATE TABLE `estudiantes` (
   PRIMARY KEY (`Id_Estudiante`),
   KEY `Id_DatInsc_idx` (`Id_DatInsc`),
   CONSTRAINT `Id_DatInsc` FOREIGN KEY (`Id_DatInsc`) REFERENCES `dat_insc` (`Id_DatInsc`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -606,7 +607,7 @@ CREATE TABLE `insc_carreras` (
   CONSTRAINT `Id_Carrera_IC` FOREIGN KEY (`Id_Carrera_IC`) REFERENCES `carreras` (`Id_Carrera`) ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT `Id_Empleado_IC` FOREIGN KEY (`Id_Empleado_IC`) REFERENCES `empleados` (`Id_Empleado`) ON UPDATE CASCADE,
   CONSTRAINT `Id_Estudiante_IC` FOREIGN KEY (`Id_Estudiante_IC`) REFERENCES `estudiantes` (`Id_Estudiante`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -615,7 +616,7 @@ CREATE TABLE `insc_carreras` (
 
 LOCK TABLES `insc_carreras` WRITE;
 /*!40000 ALTER TABLE `insc_carreras` DISABLE KEYS */;
-INSERT INTO `insc_carreras` VALUES (1,5,1,NULL,'2024-11-16'),(3,6,1,NULL,'2024-11-16'),(4,7,1,NULL,'2024-11-16');
+INSERT INTO `insc_carreras` VALUES (1,5,1,1,'2024-11-16'),(3,6,1,1,'2024-11-16'),(4,7,1,1,'2024-11-16');
 /*!40000 ALTER TABLE `insc_carreras` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -834,4 +835,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-11-17  3:41:18
+-- Dump completed on 2024-11-18  3:21:49
