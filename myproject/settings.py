@@ -95,14 +95,14 @@ WSGI_APPLICATION = 'myproject.wsgi.application'
 # }
 
 DATABASES = {
-#    'default': {
-#        'ENGINE': 'django.db.backends.mysql',
-#        'NAME': 'criosdb',
-#        'USER': 'root',
-#        'PASSWORD': 'Samilove2016*',
-#        'HOST': 'localhost',
-#        'PORT': '3306'  
-    'default': dj_database_url.config(default=os.getenv("DATABASE_URL"))
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'criosdb',
+        'USER': 'root',
+        'PASSWORD': 'Samilove2016*',
+        'HOST': 'localhost',
+        'PORT': '3306'  
+    #'default': dj_database_url.config(default=os.getenv("DATABASE_URL"))
     }
 }
 
