@@ -5,6 +5,7 @@ from django.contrib.auth import update_session_auth_hash, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.db import transaction
+from django.db.models import Q
 from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import render_to_string
@@ -173,8 +174,9 @@ def eliminar_solicitud(request, id_datinsc):
 
 @login_required
 def consultas(request):
-    # Obtener el parámetro de búsqueda (DNI) si está presente
-    dni = request.GET.get('dni')  
+    # Obtener parámetros de búsqueda y filtro
+    dni = request.GET.get('dni')
+    curso = request.GET.get('curso')  # Filtro por curso
 
     if dni:
         # Buscar el estudiante por su DNI en DatInsc
@@ -189,13 +191,21 @@ def consultas(request):
         else:
             context = {'error': 'No se encontró un estudiante con este DNI en DatInsc.'}
     else:
-        # Obtener todos los estudiantes y sus datos relacionados
-        lista_estudiantes = (
+        # Obtener todos los estudiantes, filtrados y ordenados
+        estudiantes = (
             Estudiantes.objects
             .select_related('id_datinsc')  # Cargar datos relacionados con DatInsc
-            .all()
+            .order_by('id_datinsc__apellido', 'id_datinsc__nombre')  # Ordenar por apellido y nombre
         )
-        context = {'estudiantes': lista_estudiantes}
+        
+        if curso:
+            # Filtrar por curso si se seleccionó uno
+            estudiantes = estudiantes.filter(anio_insc=curso)
+        
+        context = {
+            'estudiantes': estudiantes,
+            'curso_seleccionado': curso  # Pasar el curso seleccionado al template
+        }
 
     return render(request, 'inscripciones/consultas/consultas.html', context)
 
@@ -221,6 +231,17 @@ def ver_datos(request, id_estudiante_ic):
     }
 
     return render(request, 'inscripciones/consultas/ver_datos.html', context)
+
+
+@login_required
+def guardar_legajo_digital(request, id_estudiante):
+    if request.method == 'POST':
+        enlace = request.POST.get('legajo_digital')
+        estudiante = get_object_or_404(Estudiantes, id_estudiante=id_estudiante)
+        estudiante.legajo_digital = enlace
+        estudiante.save()
+        messages.success(request, "Se ha guardado el enlace correctamente.")
+    return redirect('ver_datos', id_estudiante_ic=estudiante.id_estudiante)
 
 
 @login_required

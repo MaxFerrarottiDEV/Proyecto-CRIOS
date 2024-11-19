@@ -53,9 +53,9 @@ Inscripciones - Solicitudes de Preinscripción
                 <td>{{ solicitud.email }}</td>
                 
                 <td  style="width: 1px; white-space: nowrap;">
-                    <a href="{% url 'confirmar_solicitud' solicitud.id_datinsc %}" class="botonDescargar"><i class="fa-solid fa-plus"></i><i class="fa-solid fa-user"></i></i>Confirmar</a>
-                    <a href="{% url 'editar_solicitud' solicitud.id_datinsc %}"  class="botonModificar"><i class="fa-solid fa-user-pen"></i>Editar</a>
-                    <a href="{% url 'eliminar_solicitud' solicitud.id_datinsc %}" class="botonEliminar"><i class="fa-solid fa-minus"><i class="fa-solid fa-user"></i></i></i>Eliminar</a>
+                    <a href="{% url 'confirmar_solicitud' solicitud.id_datinsc %}" class="botonDescargar"><i class="fa-solid fa-plus"></i><i class="fa-solid fa-user"></i></i> Confirmar</a>
+                    <a href="{% url 'editar_solicitud' solicitud.id_datinsc %}"  class="botonModificar"><i class="fa-solid fa-user-pen"></i> Editar</a>
+                    <a href="{% url 'eliminar_solicitud' solicitud.id_datinsc %}" class="botonEliminar"><i class="fa-solid fa-minus"><i class="fa-solid fa-user"></i></i></i> Eliminar</a>
                 </td>
             </tr>
             {% empty %}
