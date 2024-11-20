@@ -57,13 +57,13 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'MiApp.middleware.session_expiry.SessionExpiryMiddleware',
 ]
 
 ROOT_URLCONF = 'myproject.urls'
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
-
 
 TEMPLATES = [
     {
@@ -146,3 +146,7 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = "maximo.ferrarotti1@gmail.com"  # No cambiar de email
 EMAIL_HOST_PASSWORD = "javq hksc afwz oxgz" # Contraseña de aplicación
 DEFAULT_FROM_EMAIL = "maximo.ferrarotti1@gmail.com" 
+
+# settings.py
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # Cerrar sesión al cerrar el navegador.
+SESSION_COOKIE_AGE = 3600  # Tiempo en segundos (1 hora).

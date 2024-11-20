@@ -1,9 +1,9 @@
 from datetime import date
 
 from django.contrib import messages
-from django.contrib.auth import update_session_auth_hash, logout
+from django.contrib.auth import update_session_auth_hash, logout, login as auth_login
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.db import transaction
 from django.db.models import Q
 from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
@@ -22,8 +22,27 @@ from reportlab.platypus import Table, TableStyle  # type: ignore
 from .forms import PreinscripcionForm
 from .models import Carreras, DatInsc, EstadosCurriculares, Estudiantes, InscCarreras, Materias, MateriasxplanesEstudios, PlanesEstudios
 
-def login(request):
-    return render(request, 'login.html')
+def login_view(request):
+    if request.user.is_authenticated:
+        return redirect('home')  # Cambia 'home' al nombre de tu URL para la página principal.
+    
+    if request.method == 'POST':
+        form = AuthenticationForm(data=request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            auth_login(request, user)
+            return redirect('home')  # Cambia 'home' si es necesario.
+    else:
+        form = AuthenticationForm()
+
+    return render(request, 'registration/login.html', {'form': form})
+
+
+def logout_view(request):
+    request.session['has_logged_out'] = True
+    logout(request)
+    return redirect('login')
+
 
 def register(request):
     if request.method == 'POST':
@@ -48,16 +67,26 @@ def home(request):
 @login_required
 def change_password(request):
     if request.method == 'POST':
+        # Obtener las contraseñas ingresadas
         new_password1 = request.POST['new_password1']
         new_password2 = request.POST['new_password2']
         
+        # Verificar si las contraseñas coinciden
         if new_password1 == new_password2:
+            # Establecer la nueva contraseña
             request.user.set_password(new_password1)
             request.user.save()
-            logout(request)  # Cerrar la sesión del usuario
+            
+            # Cerrar la sesión del usuario
+            logout(request)
+            
+            # Mensaje de éxito
             messages.success(request, "Contraseña cambiada exitosamente. Por favor, vuelve a iniciar sesión.")
-            return redirect('login')  # Redirigir al login
+            
+            # Redirigir al login
+            return redirect('login')  # Redirigir al login tras cambio de contraseña
         else:
+            # Mensaje de error si las contraseñas no coinciden
             messages.error(request, "Las contraseñas no coinciden.")
     
     return render(request, 'change_password.html')

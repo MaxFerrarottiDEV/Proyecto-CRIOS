@@ -88,7 +88,12 @@
                     </li>
                     <li><hr class="dropdown-divider"></li>
                     <li>
-                        <a class="dropdown-item" href="{% url 'login' %}"><i class="fa-solid fa-right-from-bracket"></i> Cerrar Sesión</a>
+                        <form method="POST" action="{% url 'logout' %}" style="display: inline;">
+                          {% csrf_token %}
+                          <button type="submit" class="dropdown-item">
+                              <i class="fa-solid fa-right-from-bracket"></i> Cerrar Sesión
+                          </button>
+                      </form> 
                     </li>
                 </ul>
             </li>
