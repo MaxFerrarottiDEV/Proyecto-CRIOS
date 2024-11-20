@@ -18,4 +18,8 @@ pip install django-crispy-forms
 
 pip install crispy-bootstrap5
 
+pip install reportlab
+
+pip install pillow
+
 ____________________________________________
