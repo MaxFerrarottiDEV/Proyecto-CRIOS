@@ -216,7 +216,8 @@ class Empleados(models.Model):
     class Meta:
         managed = False
         db_table = 'empleados'
-
+    def __str__(self):
+        return f"{self.nombre} {self.apellido}"
 
 class EstadosCuotas(models.Model):
     id_estadocuota = models.AutoField(db_column='Id_EstadoCuota', primary_key=True)  # Field name made lowercase.

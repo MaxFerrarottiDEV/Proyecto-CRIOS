@@ -36,7 +36,8 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item">
-              <a class="nav-link nav-titulo" href="{% url 'home' %}"><i class="fa-solid fa-house"></i> Pagina Principal</a>
+              <a class="nav-link nav-titulo" href="{% url 'home' %}">
+                <i class="fa-solid fa-house"></i> Pagina Principal</a>
             </li>
             <!-- Dropdown de EXAMENES -->
             <li class="nav-item dropdown">
@@ -73,7 +74,14 @@
             </li>
             <!-- Dropdown de CUOTAS -->
             <li class="nav-item">
-              <a class="nav-link nav-titulo" href="{% url 'build' %}"><i class="fa-solid fa-lock"></i> Cuotas</a>
+              <a class="nav-link nav-titulo" href="{% url 'build' %}">
+                <i class="fa-solid fa-lock"></i> Cuotas</a>
+            </li>
+            <!-- ------------------------------------------------------------------------------------------------- -->
+            <!-- Dropdown de EMPLEADOS -->
+            <li class="nav-item">
+              <a class="nav-link nav-titulo" href="{% url 'lista_empleados' %}">
+                <i class="fa-solid fa-lock"></i> Empleados</a>
             </li>
           </ul>
           <!-- Menú desplegable para perfil del usuario -->

@@ -22,6 +22,9 @@ from reportlab.platypus import Table, TableStyle  # type: ignore
 from .forms import PreinscripcionForm
 from .models import Carreras, DatInsc, EstadosCurriculares, Estudiantes, InscCarreras, Materias, MateriasxplanesEstudios, PlanesEstudios
 
+def lista_empleados(request):
+    return render(request, 'empleados/lista_empleados.html')
+
 def login(request):
     return render(request, 'login.html')
 

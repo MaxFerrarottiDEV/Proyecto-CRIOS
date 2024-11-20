@@ -36,6 +36,9 @@ urlpatterns = [
     path('inscripciones/solicitudes/confirmar/<int:id_datinsc>/', views.confirmar_solicitud, name='confirmar_solicitud'),
     path('inscripciones/solicitudes/editar/<int:id_datinsc>', views.editar_solicitud, name='editar_solicitud'),
     path('inscripciones/solicitudes/eliminar/<int:id_datinsc>', views.eliminar_solicitud, name='eliminar_solicitud'),
+    #Modulo de empleados
+    path('lista_empleados/', views.lista_empleados, name='lista_empleados'),
+    
 
     # Modulo de inscripciones - consultas
     path('inscripciones/consultas/', views.consultas, name='consultas'),
