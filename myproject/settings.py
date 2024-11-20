@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'django_bootstrap5',
     'crispy_forms',
     'crispy_bootstrap5', 
+    'reportlab',
 ]
 
 MIDDLEWARE = [
@@ -142,6 +143,6 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = "maximo.ferrarotti1@gmail.com"  # Reemplaza con tu dirección de correo
-EMAIL_HOST_PASSWORD = "javq hksc afwz oxgz" # Contraseña de aplicacion de tu correo
+EMAIL_HOST_USER = "maximo.ferrarotti1@gmail.com"  # No cambiar de email
+EMAIL_HOST_PASSWORD = "javq hksc afwz oxgz" # Contraseña de aplicación
 DEFAULT_FROM_EMAIL = "maximo.ferrarotti1@gmail.com" 

@@ -1,0 +1,39 @@
+/* Restaura los estilos por defecto de las cards */
+.card {
+    width: 100%; /* Por defecto, las cards ocupan todo el ancho disponible dentro de su contenedor */
+    margin-bottom: 1rem; /* Espaciado entre cards */
+    padding: 1rem; /* Espaciado interno */
+    border: 1px solid #dee2e6; /* Borde estándar de Bootstrap */
+    border-radius: 0.25rem; /* Bordes redondeados */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra estándar */
+    background-color: #fff; /* Fondo blanco */
+}
+
+/* Restaura el encabezado de las cards */
+.card-header {
+    padding: 0.75rem 1.25rem;
+    margin-bottom: 0;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+    font-weight: bold;
+}
+
+/* Restaura el cuerpo de las cards */
+.card-body {
+    padding: 1.25rem;
+    font-size: 1rem; /* Tamaño estándar del texto */
+    color: #212529;
+}
+
+/* Opcional: Ajusta el texto para que no se desborde */
+.card-body p {
+    margin-bottom: 0.5rem; /* Espaciado entre párrafos */
+    word-wrap: break-word;
+}
+
+/* Opcional: Si quieres que las cards ocupen el ancho completo en dispositivos pequeños */
+@media (max-width: 768px) {
+    .card {
+        width: 100%;
+    }
+}

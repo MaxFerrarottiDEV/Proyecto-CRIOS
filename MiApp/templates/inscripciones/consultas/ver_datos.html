@@ -1,0 +1,213 @@
+{% extends 'base.html' %} 
+{% block title %}
+    Estudiante - {{ estudiante.id_datinsc.nombre }} {{ estudiante.id_datinsc.apellido }}
+{% endblock %}
+{% load static %}
+{% block head %}
+    <link href="{% static 'inscripciones/consultas/ver_datos.css' %}" rel="stylesheet">
+    <link href="{% static 'inscripciones/botones.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <!-- Botón Volver alineado a la izquierda -->
+        <a href="{% url 'consultas' %}" class="btn btn-info btn-sm mx-1 botonVolver"><i class="fa-solid fa-arrow-left"></i> Volver</a>
+        <!-- Botones Modificar y Adjuntar alineados a la derecha -->
+        <div>
+            {% if estudiante.id_estudiante %}
+            <a href="{% url 'modificar_datos' estudiante.id_estudiante %}" class="btn btn-warning btn-sm mx-1 botonModificar">
+                <i class="fa-solid fa-file-pen"></i> Modificar datos
+            </a>
+            {% else %}
+            <p>No se puede modificar los datos del estudiante porque falta el ID.</p>
+            {% endif %}
+            <button type="button" class="btn btn-info btn-sm mx-1 botonAdjuntar" data-bs-toggle="modal" data-bs-target="#adjuntarLegajoModal">
+                <i class="fa-solid fa-plus"></i> Adjuntar Legajo Digital
+            </button>
+        </div>
+    </div>
+    {% if messages %}
+    <div id="successMessage" class="alert alert-success">
+        {% for message in messages %}
+            {{ message }}
+        {% endfor %}
+    </div>
+    {% endif %}
+    <h1 class="text-center">{{ estudiante.id_datinsc.nombre }} {{ estudiante.id_datinsc.apellido }}</h1>
+    <hr>
+
+    <!-- Datos Estudiantiles -->
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h4>Datos Estudiantiles</h4>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Número de Legajo:</strong> {{ estudiante.nro_legajo }}</p>
+                    <p><strong>Curso:</strong>
+                        {% if estudiante.anio_insc == 1 %}
+                            1er Año
+                        {% elif estudiante.anio_insc == 2 %}
+                            2do Año
+                        {% elif estudiante.anio_insc == 3 %}
+                            3er Año
+                        {% elif estudiante.anio_insc == 4 %}
+                            4to Año
+                        {% elif estudiante.anio_insc == 5 %}
+                            5to Año
+                        {% else %}
+                            No asignado
+                        {% endif %}
+                    </p>
+                    <p><strong>Inscripto por:</strong> {{ estudiante.insccarreras_set.first.id_empleado_ic.nombre }} {{ estudiante.insccarreras_set.first.id_empleado_ic.apellido }}</p>
+                    <p><strong>Pago de Matricula:</strong> 
+                        {% if estudiante.id_datinsc.matricula == 0 %}
+                            Pendiente
+                        {% elif estudiante.id_datinsc.matricula == 1 %}
+                            Realizado
+                        {% endif %} 
+                    </p>
+                    <p><strong>Posee un legajo físico:</strong> 
+                        {% if estudiante.id_datinsc.legajo_fisico == 0 %}
+                            No 
+                        {% elif estudiante.id_datinsc.legajo_fisico == 1 %}
+                            Si 
+                        {% endif %} 
+                    </p>
+                </div>
+                <div class="col-md-6">
+                    <p>
+                        <strong>Legajo Digital:</strong> 
+                        {% if estudiante.legajo_digital %}
+                            <a href="{{ estudiante.legajo_digital }}" target="_blank">{{ estudiante.legajo_digital }}</a>
+                        {% else %}
+                            No disponible
+                        {% endif %}
+                    </p>                    
+                    <p><strong>Fecha de Inscripción:</strong> {{ estudiante.insccarreras_set.first.fecha_insc }}</p>
+                    <p><strong>Carrera:</strong> {{ estudiante.insccarreras_set.first.id_carrera_ic.nombre }}</p>        
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Datos Personales -->
+    <div class="card">
+        <div class="card-header bg-secondary text-white">
+            <h4>Datos Personales</h4>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Nombre/s:</strong> {{ estudiante.id_datinsc.nombre }}</p>
+                    <p><strong>Apellido/s:</strong> {{ estudiante.id_datinsc.apellido }}</p>
+                    <p><strong>Fecha de Nacimiento:</strong> {{ estudiante.id_datinsc.fecha_nac }}</p>
+                    <p><strong>Provincia:</strong> {{ estudiante.id_datinsc.provincia }}</p>
+                    <p><strong>DNI:</strong> {{ estudiante.id_datinsc.dni }}</p>
+                    <p><strong>Edad:</strong> {{ estudiante.id_datinsc.edad }}</p>
+                    <p><strong>Domicilio:</strong> {{ estudiante.id_datinsc.domicilio }}</p>
+                    <p><strong>Teléfono Fijo:</strong> {{ estudiante.id_datinsc.telefono_fijo }}</p>
+                    <p><strong>Celular:</strong> {{ estudiante.id_datinsc.celular_nro }}</p>
+                    <p><strong>Email:</strong> {{ estudiante.id_datinsc.email }}</p>
+                    <p><strong>Estado Civil:</strong> {{ estudiante.id_datinsc.estado_civil }}</p>
+                    <p><strong>¿Tiene hijos?:</strong> 
+                        {% if estudiante.id_datinsc.hijos == 0 %}
+                            No
+                        {% elif estudiante.id_datinsc.hijos == 1 %}
+                            Si
+                        {% else %}
+                            Sin responder
+                        {% endif %}
+                    </p>
+                </div>
+                <div class="col-md-6"> 
+                    <p><strong>Lugar de Trabajo:</strong> {{ estudiante.id_datinsc.lugar_trabajo }}</p>
+                    <p><strong>Teléfono de Emergencia:</strong> {{ estudiante.id_datinsc.tel_emergencia }}</p>
+                    <p><strong>Colegio de Egreso:</strong> {{ estudiante.id_datinsc.col_egreso }}</p>
+                    <p><strong>Título:</strong> {{ estudiante.id_datinsc.titulo }}</p>
+                    <p><strong>Otro Título:</strong> {{ estudiante.id_datinsc.otro_titulo }}</p>
+                    <p><strong>Año de Egreso:</strong> {{ estudiante.id_datinsc.anio_egreso }}</p>                   
+                    <p><strong>¿Tuvo otro ingreso a nivel Superior o universitario anterior a este?:</strong> 
+                        {% if estudiante.id_datinsc.preg_1 == 0 %}
+                            No
+                        {% elif estudiante.id_datinsc.preg_1 == 1 %}
+                            Si
+                        {% else %}
+                            Sin responder
+                        {% endif %}
+                    </p>
+                    <p><strong>¿Cuál?:</strong> {{ estudiante.id_datinsc.resp_1 }}</p>
+                    <p><strong>¿Completo esos estudios?:</strong> {{ estudiante.id_datinsc.preg_2 }}</p>
+                    <p><strong>¿Es beneficiario de algún tipo de Beca/Ayuda Social? (Especifique):</strong> 
+                        {% if estudiante.id_datinsc.resp_2 == 0 %}
+                            No
+                        {% elif estudiante.id_datinsc.resp_2 == 1 %}
+                            Si
+                        {% else %}
+                            Sin responder
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="adjuntarLegajoModal" tabindex="-1" aria-labelledby="adjuntarLegajoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <form method="post" action="{% url 'guardar_legajo_digital' estudiante.id_estudiante %}">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title" id="adjuntarLegajoModalLabel">Adjuntar Legajo Digital</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <ol>
+                        <li>Acceda al siguiente enlace: <a href="https://drive.google.com/drive/u/1/folders/1ERdyQMWtkXRSG4yVZkh_lVUme2x0Jdwp" target="_blank">Acceder al Drive</a></li>
+                        <li>Localice y abra la carpeta correspondiente al DNI y Apellido del estudiante.</li>
+                        <li>
+                            Copie el enlace de la carpeta (consulte la imagen adjunta para más detalles):<br>
+                            <img src="{% static 'images/consultas/Legajo.png' %}" alt="Instrucciones" class="img-fluid">
+                        </li>
+                        <li>
+                            Pegue el enlace copiado en el campo correspondiente:
+                            <div class="input-group mb-3">
+                                <span class="input-group-text"><i class="fa-solid fa-link"></i></span>
+                                <input type="text" class="form-control" id="enlaceLegajo" name="legajo_digital" placeholder="Pegue el enlace aquí">
+                                <button type="button" class="btn btn-outline-secondary" onclick="pegarEnlace()">
+                                    <i class="fa-regular fa-paste"></i> Pegar
+                                </button>
+                            </div>                            
+                        </li>
+                    </ol>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-info btn-sm botonVer"><i class="fa-solid fa-floppy-disk"></i> Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascript %}
+<script>
+    function pegarEnlace() {
+        navigator.clipboard.readText().then(text => {
+            document.getElementById('enlaceLegajo').value = text;
+        }).catch(err => {
+            alert('No se pudo acceder al portapapeles. Intente nuevamente.');
+        });
+    }
+    setTimeout(() => {
+            const msg = document.getElementById('successMessage');
+            if (msg) {
+                msg.style.display = 'none';
+            }
+        }, 3000); // 3 segundos
+</script>
+{% endblock %}

@@ -1,0 +1,79 @@
+/* estilo del fondo en general*/
+body {
+    background-color: #def0ff;
+    font-family: "Rubik", sans-serif;
+  }
+
+/* estilo de los botones del encabezado*/
+  .nav-titulo {
+    position: relative;
+    display: inline-block;
+    
+}
+.nav-titulo:hover {
+    color: #c71c4d;
+}
+
+.nav-titulo::after {
+    content: "";
+    display: block;
+    height: 5%;
+    background: transparent;
+    transition: background 0.5s ease; /*ease hace la transicion sea lenta*/
+    width: 100%;
+    position: absolute;
+    left: 0;
+    bottom: -5%;
+}
+
+.nav-titulo:hover::after {
+    background: #c71c4d;
+}
+
+/* Navbar style */
+.navbar {
+  background-color: #005187; /* Fondo claro */
+  border-bottom: 2px solid #dee2e6; /* Borde inferior */
+}
+.navbar-brand {
+  font-weight: bold;
+  font-size: 20px;
+}
+.nav-link {
+  color: #ffffff; /* Color del texto */
+  font-size: 16px;
+  padding-right: 20px;
+}
+.nav-link:hover {
+  color: #3162aa; /* Color al pasar el ratón */
+}
+.nav-item .active {
+  color: white;
+}
+/* Estilo especial para el botón de cerrar sesión */
+.logout-button {
+  background-color: #dc3545; /* Botón de cerrar sesión con estilo */
+  color: #fff;
+  border-radius: 5px;
+  padding: 5px 15px;
+  margin-left: 10px;
+}
+.logout-button:hover {
+  background-color: #c82333; /* Color del botón al pasar el ratón */
+}
+
+footer {
+  background-color: #005187; /* Color de fondo del footer */
+  padding: 15px;
+  border-top: 2px solid #dee2e6; /* Borde superior */
+  position: relative;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+  
+}
+.footer-text {
+  margin: 0;
+  color: #fff;
+  font-size: 16px;
+}

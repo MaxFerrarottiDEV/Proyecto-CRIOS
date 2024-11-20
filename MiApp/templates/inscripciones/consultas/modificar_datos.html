@@ -1,33 +1,64 @@
 {% extends 'base.html' %}
-{% block title %} 
-Editar Solicitud
+{% block title %}
+Modificar Datos - {{ estudiante.id_datinsc.nombre }} {{ estudiante.id_datinsc.apellido }}
 {% endblock %}
 {% load static %}
 {% block head %}
+    <link href="{% static 'inscripciones/consultas/modificar_datos.css' %}" rel="stylesheet">
     <link href="{% static 'inscripciones/botones.css' %}" rel="stylesheet">
-    <link href="{% static 'inscripciones/solicitudes/fixformulario.css' %}" rel="stylesheet">
 {% endblock %}
-
 {% load crispy_forms_tags %}
-{% block content %}
 
-<div class="container mt-5">
-    <a href="{% url 'lista_solicitudes' %}" class="btn btn-info btn-sm mx-1 botonVolver"><i class="fa-solid fa-arrow-left"></i> Volver</a>
-    <h1 class="text-center">Modificar Datos de Solicitud</h1>
+{% block content %}
+<div class="container mt-4">
+    <a href="{% url 'ver_datos' estudiante.id_estudiante %}" class="btn btn-info btn-sm mx-1 botonVolver"><i class="fa-solid fa-arrow-left"></i> Volver</a>
+    <h1 class="text-center">Modificar datos de {{ estudiante.id_datinsc.nombre }} {{ estudiante.id_datinsc.apellido }}</h1>
     <hr>
 
-    <!-- Mostrar mensajes si existen (de éxito o error) -->
-    {% if messages %}
-        {% for message in messages %}
-            <div class="alert alert-{{ message.tags }}">
-                {{ message }}
-            </div>
-        {% endfor %}
-    {% endif %}
-
-    <!-- Formulario de edición de solicitud -->
-    <form method="post" action="" autocomplete="off">
+    <form method="post" action="{% url 'modificar_datos' estudiante.id_estudiante %}">
         {% csrf_token %}
+        
+        <!-- Datos Estudiantiles -->
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h4>Datos Estudiantiles</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="nro_legajo" class="form-label">Número de Legajo:</label>
+                            <input type="text" class="form-control" id="nro_legajo" name="nro_legajo" value="{{ estudiante.nro_legajo }}">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="anio_insc" class="form-label">Año de Inscripción:</label>
+                            <select class="form-select" id="anio_insc" name="anio_insc">
+                                <option value="1" {% if estudiante.anio_insc == 1 %}selected{% endif %}>1er Año</option>
+                                <option value="2" {% if estudiante.anio_insc == 2 %}selected{% endif %}>2do Año</option>
+                                <option value="3" {% if estudiante.anio_insc == 3 %}selected{% endif %}>3er Año</option>
+                                <option value="4" {% if estudiante.anio_insc == 4 %}selected{% endif %}>4to Año</option>
+                                <option value="5" {% if estudiante.anio_insc == 5 %}selected{% endif %}>5to Año</option>
+                            </select>
+                        </div>
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="matricula" name="matricula" value="True" {% if estudiante.id_datinsc.matricula %}checked{% endif %}>
+                            <label class="form-check-label" for="matricula">
+                                ¿Ya se ha realizado el pago de matrícula? (Marcar para un "Si" o sino dejar vacio para un "No")
+                            </label>
+                        </div>
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="legajo_fisico" name="legajo_fisico" value="True" {% if estudiante.id_datinsc.legajo_fisico %}checked{% endif %}>
+                            <label class="form-check-label" for="legajo_fisico">
+                                ¿Posee un legajo físico? (Marcar para un "Si" o sino dejar vacio para un "No")
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Datos Personales -->
         <div class="card">
             <div class="card-header bg-secondary text-white">
                 <h4>Datos Personales</h4>
@@ -78,16 +109,13 @@ Editar Solicitud
                 </div>
             </div>
         </div>
-
-        <!-- Botón de guardar cambios -->
         <div class="d-flex justify-content-end">
             <button type="submit" class="btn btn-info btn-sm botonVer"><i class="fa-solid fa-floppy-disk"></i> Guardar Cambios</button>
         </div>
         <br>
     </form>
 </div>
-
-{% endblock content %}
+{% endblock %}
 
 {% block javascript %}
 <script type="text/javascript">

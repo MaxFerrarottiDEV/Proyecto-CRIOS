@@ -1,6 +1,9 @@
 {% extends 'base.html' %}
 {% block title %}Pagina Principal{% endblock %}
 {% load static %} 
+{% block head %} 
+<link href="{% static 'home/style.css' %}" rel="stylesheet">
+{% endblock %}
 {% block content %} 
     <!-- Contenido -->
     <b>
@@ -15,13 +18,13 @@
           <div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel">
             <div class="carousel-inner">
               <div class="carousel-item active">
-                <img src="{% static 'images/Carrusel_1.jpg' %}" class="d-block w-100" alt="img-demo1">
+                <img src="{% static 'images/home/Carrusel_1.jpg' %}" class="d-block w-100" alt="img-demo1">
               </div>
               <div class="carousel-item">
-                <img src="{% static 'images/Carrusel_2.jpg' %}" class="d-block w-100" alt="img-demo2">
+                <img src="{% static 'images/home/Carrusel_2.jpg' %}" class="d-block w-100" alt="img-demo2">
               </div>
               <div class="carousel-item">
-                <img src="{% static 'images/Carrusel_3.jpg' %}" class="d-block w-100" alt="img-demo3">
+                <img src="{% static 'images/home/Carrusel_3.jpg' %}" class="d-block w-100" alt="img-demo3">
               </div>
             </div>
             <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev">
@@ -54,15 +57,16 @@
         </div>
       </div>
     </div>
+    <br><hr>
     <!-- Tarjetas de presentación -->
     <div id="modulo">
       <br>
-      <h2>Módulos</h2>
+      <h2>FUNCIONALIDADES</h2>
     </div> 
     <div class="card-container mt-5">
       <!-- Tarjeta 1 -->
       <div class="card" style="width: 17.5rem; height: 25rem;">
-        <img src="{% static 'images/formularioIns.png' %}" class="card-img-top" alt="formulario">
+        <img src="{% static 'images/home/Solicitudes.jpg' %}" class="card-img-top" alt="formulario">
         <div class="card-body">
           <h5 class="card-title">Inscripciones</h5>
           <p class="card-text">Permite gestionar solicitudes de inscripción de nuevos candidatos y revisar o actualizar la información de los estudiantes ya registrados.</p>
@@ -71,30 +75,30 @@
       </div>
       <!-- Tarjeta 2 -->
       <div class="card" style="width: 17.5rem; height: 25rem;">
-        <img src="{% static 'images/formularioIns.png' %}" class="card-img-top" alt="formulario">
+        <img src="{% static 'images/home/EstCur.jpg' %}" class="card-img-top" alt="formulario">
         <div class="card-body">
           <h5 class="card-title">Estados Curriculares</h5>
-          <p class="card-text">Descripción...</p>
+          <p class="card-text">Gestiona y visualiza la información académica de los estudiantes, crea planes de estudio, asigna materias y define un plan como "actual".</p>
           <a href="{% url 'build' %}" class="btn btn-primary">Ir</a>
         </div>
       </div>
       <!-- Tarjeta 3 -->
       <div class="card" style="width: 17.5rem; height: 25rem;">
-        <img src="{% static 'images/formularioIns.png' %}" class="card-img-top" alt="formulario">
+        <img src="{% static 'images/home/formularioIns.png' %}" class="card-img-top" alt="formulario">
         <div class="card-body">
           <h5 class="card-title">Exámenes</h5>
-          <p class="card-text">Descripción...</p>
+          <p class="card-text">Permite gestionar fechas de mesas de exámenes, consultar estudiantes inscriptos y evaluar requisitos para inscripciones.</p>
           <a href="{% url 'build' %}" class="btn btn-primary">Ir</a>
         </div>
       </div>
       <!-- Tarjeta 4 -->
       <div class="card" style="width: 17.5rem; height: 25rem;">
-        <img src="{% static 'images/formularioIns.png' %}" class="card-img-top" alt="formulario">
+        <img src="{% static 'images/home/formularioIns.png' %}" class="card-img-top" alt="formulario">
         <div class="card-body">
           <h5 class="card-title">Cuotas</h5>
-          <p class="card-text">Descripción...</p>
+          <p class="card-text">Permite realizar un seguimiento sobre el control de morosidad de cada estudiante y también permite abrir y cerrar caja.</p>
           <a href="{% url 'build' %}" class="btn btn-primary">Ir</a>
         </div>
       </div>
-    </div>
+    </div><br><br>
 {% endblock content %}

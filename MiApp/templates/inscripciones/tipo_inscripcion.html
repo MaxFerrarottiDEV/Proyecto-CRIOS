@@ -2,12 +2,16 @@
 {% block title %}
 Inscripciones
 {% endblock %}
-{% load static %} 
+{% load static %}
+{% block head %} 
+  <link href="{% static 'inscripciones/style-tipoInscripcion.css' %}" rel="stylesheet">
+{% endblock %} 
 
 {% block content %} 
-  <div class="d-flex justify-content-center">
+  <h2 class="mb-4 text-center">INSCRIPCIONES - FUNCIONALIDADES</h2>
+  <div class="d-flex justify-content-center" style="background-color: #4d82b4">
     <div class="card card-size-large mx-2"> 
-      <img src="..." class="card-img-top" alt="...">
+      <img src="{% static 'images/tipo_inscripcion/Solicitudes.JPG' %}" class="card-img-top" alt="...">
       <div class="card-body">
         <h5 class="card-title">Solicitudes</h5>
         <p class="card-text">Permite gestionar inscripciones de candidatos mediante un formulario integrado en la plataforma. Una vez completada la solicitud, esta se registra automáticamente 
@@ -17,7 +21,7 @@ Inscripciones
     </div>
 
     <div class="card card-size-large mx-2">
-      <img src="..." class="card-img-top" alt="...">
+      <img src="{% static 'images/tipo_inscripcion/Consultas.JPG' %}" class="card-img-top" alt="...">
       <div class="card-body">
         <h5 class="card-title">Consultas</h5>
         <p class="card-text">Proporciona una tabla con el listado completo de los estudiantes inscritos en el profesorado. Además, permite adjuntar un legajo digital, modificar la información 
@@ -26,5 +30,4 @@ Inscripciones
       </div>
     </div>    
   </div>
-
 {% endblock content %}

@@ -116,7 +116,7 @@ CREATE TABLE `auth_user` (
   `date_joined` datetime(6) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -125,7 +125,7 @@ CREATE TABLE `auth_user` (
 
 LOCK TABLES `auth_user` WRITE;
 /*!40000 ALTER TABLE `auth_user` DISABLE KEYS */;
-INSERT INTO `auth_user` VALUES (2,'pbkdf2_sha256$870000$R7a2adOd5v3qJGE76hbm0u$XvHrURD24jSy8DnBkNSctZuvmpHYmZeJEQ7l5qzHJi4=','2024-10-08 16:20:17.540500',1,'maxim','','','maximo_ferrarotti@hotmail.com',1,1,'2024-08-29 17:38:46.693918');
+INSERT INTO `auth_user` VALUES (2,'pbkdf2_sha256$870000$R7a2adOd5v3qJGE76hbm0u$XvHrURD24jSy8DnBkNSctZuvmpHYmZeJEQ7l5qzHJi4=','2024-11-17 06:14:32.435954',1,'maxim','','','maximo_ferrarotti@hotmail.com',1,1,'2024-08-29 17:38:46.693918'),(11,'pbkdf2_sha256$870000$I7o51Ju3sv2Nj1RnvYraLM$yu1UM2dNr6x9qQ2lvbeCqaytMX5sCq0oJIdzMKNh8UE=','2024-10-17 19:46:03.626301',0,'willy','','','rojaswilfredo754@gmail.com',0,1,'2024-10-17 19:19:03.448166'),(12,'pbkdf2_sha256$870000$IeAx80besEcAG16yjdztUY$bqb3MQyR/qzpp1llOBiCBZtsSN4AbCSycZKj/7e/f0Y=',NULL,0,'maxim2','','','maximo.ferrarotti1@gmail.com',0,1,'2024-10-17 19:46:53.568664'),(14,'pbkdf2_sha256$870000$5hrg7hxvZO1fDyxu03K3nl$9Fl6Wt65INfgQHwFQc+33pM+ifiURO+rx9ZrK8Xs9U4=','2024-10-18 17:48:35.537450',0,'maximo','','','maximo.ferrarotti@gmail.com',0,1,'2024-10-18 17:43:44.326435');
 /*!40000 ALTER TABLE `auth_user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -196,7 +196,7 @@ CREATE TABLE `campos_estudios` (
   `Id_CampoEstudio` int NOT NULL AUTO_INCREMENT,
   `Nombre` varchar(200) NOT NULL,
   PRIMARY KEY (`Id_CampoEstudio`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -205,6 +205,7 @@ CREATE TABLE `campos_estudios` (
 
 LOCK TABLES `campos_estudios` WRITE;
 /*!40000 ALTER TABLE `campos_estudios` DISABLE KEYS */;
+INSERT INTO `campos_estudios` VALUES (1,'Formación General'),(2,'Formación Específica'),(3,'Formación Profesional de Personas');
 /*!40000 ALTER TABLE `campos_estudios` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -220,7 +221,7 @@ CREATE TABLE `carreras` (
   `Nombre` varchar(200) NOT NULL,
   `Descripcion` varchar(200) DEFAULT 'No agregada',
   PRIMARY KEY (`Id_Carrera`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -229,6 +230,7 @@ CREATE TABLE `carreras` (
 
 LOCK TABLES `carreras` WRITE;
 /*!40000 ALTER TABLE `carreras` DISABLE KEYS */;
+INSERT INTO `carreras` VALUES (1,'CRIOS - PROFESORADO DE EDUCACIÓN ESPECIAL CON ORIENTACIÓN EN SORDOS E HIPOACÚSICOS','Compuesto por Materias, Talleres, Trabajo Campo y Seminario-Taller');
 /*!40000 ALTER TABLE `carreras` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -342,8 +344,9 @@ CREATE TABLE `dat_insc` (
   `Preg_2` varchar(200) DEFAULT 'Sin responder',
   `Matricula` int DEFAULT '0',
   `Legajo_Fisico` int DEFAULT '0',
+  `Inscripto` int DEFAULT '0',
   PRIMARY KEY (`Id_DatInsc`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -352,6 +355,7 @@ CREATE TABLE `dat_insc` (
 
 LOCK TABLES `dat_insc` WRITE;
 /*!40000 ALTER TABLE `dat_insc` DISABLE KEYS */;
+INSERT INTO `dat_insc` VALUES (6,'Maximo Leon','Ferrarotti','2004-08-04','Salta','4969097450','32','Mi casa','No agregado','03876144010','maximo_ferrarotti@hotmail.com','Soltero/a',2,'Sin responder','03876144010','Benita Campos','Titulo inventado','Sin responder','2022',2,'Sin responder',2,'Sin responder',1,0,1),(7,'Wilfredo','Rojas Trigori','2003-05-04','Salta','45863172','21','domicilio 2','No agregado','12453','No agregado','Soltero/a',NULL,'Sin responder','68468386','colegio 2','Titulo inventado','Sin responder','2021',NULL,'Sin responder',NULL,'Sin responder',0,1,1),(9,'Exequiel','Martinez','2004-02-22','Salta','45863172','21','domicilio 2','No agregado','12453','No agregado','Soltero/a',NULL,'Sin responder','5346467','colegio 2','Titulo inventado','Sin responder','2021',NULL,'Sin responder',NULL,'Sin responder',0,0,0),(10,'Juan','Amaya','2004-06-05','Salta','46636755','20','casa 3','No agregado','21255','No agregado','Soltero/a',2,'Sin responder','643746','Escuela 2','Titulo inventado','Sin responder','2020',2,'Sin responder',2,'Sin responder',1,1,1);
 /*!40000 ALTER TABLE `dat_insc` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -377,7 +381,7 @@ CREATE TABLE `django_admin_log` (
   CONSTRAINT `django_admin_log_content_type_id_c4bce8eb_fk_django_co` FOREIGN KEY (`content_type_id`) REFERENCES `django_content_type` (`id`),
   CONSTRAINT `django_admin_log_user_id_c564eba6_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`),
   CONSTRAINT `django_admin_log_chk_1` CHECK ((`action_flag` >= 0))
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -386,7 +390,7 @@ CREATE TABLE `django_admin_log` (
 
 LOCK TABLES `django_admin_log` WRITE;
 /*!40000 ALTER TABLE `django_admin_log` DISABLE KEYS */;
-INSERT INTO `django_admin_log` VALUES (1,'2024-09-26 06:15:07.963881','5','carlos',3,'',4,2),(2,'2024-09-26 06:15:07.964881','4','juan',3,'',4,2),(3,'2024-09-26 06:15:07.964881','3','pedro',3,'',4,2),(4,'2024-09-26 06:15:07.964881','1','tilin',3,'',4,2),(5,'2024-09-26 06:15:07.964881','6','user',3,'',4,2);
+INSERT INTO `django_admin_log` VALUES (1,'2024-09-26 06:15:07.963881','5','carlos',3,'',4,2),(2,'2024-09-26 06:15:07.964881','4','juan',3,'',4,2),(3,'2024-09-26 06:15:07.964881','3','pedro',3,'',4,2),(4,'2024-09-26 06:15:07.964881','1','tilin',3,'',4,2),(5,'2024-09-26 06:15:07.964881','6','user',3,'',4,2),(6,'2024-10-17 19:12:38.808145','9','willy',3,'',4,2),(7,'2024-10-17 19:12:38.808145','8','juan',3,'',4,2),(8,'2024-10-17 19:18:44.282186','10','willy',3,'',4,2),(9,'2024-10-17 19:20:59.111027','7','useradmin',3,'',4,2),(10,'2024-10-18 04:38:09.703741','13','exequiel',1,'[{\"added\": {}}]',4,2),(11,'2024-10-18 04:48:10.356674','13','exequiel',3,'',4,2);
 /*!40000 ALTER TABLE `django_admin_log` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -464,7 +468,7 @@ CREATE TABLE `django_session` (
 
 LOCK TABLES `django_session` WRITE;
 /*!40000 ALTER TABLE `django_session` DISABLE KEYS */;
-INSERT INTO `django_session` VALUES ('1g87p0cgim8k2uho5j82nqge7re17s9a','.eJxVjEEOwiAQRe_C2hDAgQGX7j0DYQaQqmmT0q6Md7dNutDte-__t4hpXVpce5njkMVFGHH6ZZT4WcZd5Eca75PkaVzmgeSeyMN2eZtyeV2P9u-gpd62NTEFMuhsriF7D2hcIdDEWmlGa7xKqMB6YLCBTYDsHQJW3Hg9hyA-X9eWNwI:1sww0w:zbhjeJAesCCmN-YYd8K_mE8xMIorsreaTZK0XuZJR3I','2024-10-19 04:03:30.321606'),('769hladeooryhsyqtxsqyrog9jxpyzbh','.eJxVjEEOwiAQRe_C2hDAgQGX7j0DYQaQqmmT0q6Md7dNutDte-__t4hpXVpce5njkMVFGHH6ZZT4WcZd5Eca75PkaVzmgeSeyMN2eZtyeV2P9u-gpd62NTEFMuhsriF7D2hcIdDEWmlGa7xKqMB6YLCBTYDsHQJW3Hg9hyA-X9eWNwI:1swZKr:InpaomdsPyrstF8Si7fhDvqpUDY2geuRfQ2R9sgwwSI','2024-10-18 03:50:33.812603'),('f6ngk3v3uspmh2cxqcp59utt6jllojp9','.eJxVjEEOwiAQRe_C2hDAgQGX7j0DYQaQqmmT0q6Md7dNutDte-__t4hpXVpce5njkMVFGHH6ZZT4WcZd5Eca75PkaVzmgeSeyMN2eZtyeV2P9u-gpd62NTEFMuhsriF7D2hcIdDEWmlGa7xKqMB6YLCBTYDsHQJW3Hg9hyA-X9eWNwI:1slYae:d0rmJfWJMWKIMSkmdh8j_hyqbpgApXl1rxE3p7Jo5EY','2024-09-17 18:49:20.427478'),('gmpvgjs3c9ohozz81bbhdo9awqxdel2q','.eJxVjEEOwiAQRe_C2hDAgQGX7j0DYQaQqmmT0q6Md7dNutDte-__t4hpXVpce5njkMVFGHH6ZZT4WcZd5Eca75PkaVzmgeSeyMN2eZtyeV2P9u-gpd62NTEFMuhsriF7D2hcIdDEWmlGa7xKqMB6YLCBTYDsHQJW3Hg9hyA-X9eWNwI:1sk6e9:FeFZLcZvQj47swIffpi8DiO3EJDTACtvDUuPQrNQXU8','2024-09-13 18:46:57.569887'),('it0i5h2rapn8hwz8drdr6swvmguyrj7a','.eJxVjEEOwiAQRe_C2hDAgQGX7j0DYQaQqmmT0q6Md7dNutDte-__t4hpXVpce5njkMVFGHH6ZZT4WcZd5Eca75PkaVzmgeSeyMN2eZtyeV2P9u-gpd62NTEFMuhsriF7D2hcIdDEWmlGa7xKqMB6YLCBTYDsHQJW3Hg9hyA-X9eWNwI:1sx6Vd:4N-kJhEAGN2qgmnsI8H8eYx4eju6stngfkYVSbUnPyU','2024-10-19 15:15:53.564760'),('lciihhf99s5j51iya9fio7zrl9yq3suu','.eJxVjEEOwiAQRe_C2hDAgQGX7j0DYQaQqmmT0q6Md7dNutDte-__t4hpXVpce5njkMVFGHH6ZZT4WcZd5Eca75PkaVzmgeSeyMN2eZtyeV2P9u-gpd62NTEFMuhsriF7D2hcIdDEWmlGa7xKqMB6YLCBTYDsHQJW3Hg9hyA-X9eWNwI:1sjj7J:YZ1dQrAFZaVOpwHQWU3HP4v1rIuTttynXf2edlipVb4','2024-09-12 17:39:29.328110'),('sik4hnf8pu3b7y8nbc5h8ysz5urqnae9','.eJxVjEEOwiAQRe_C2hDAgQGX7j0DYQaQqmmT0q6Md7dNutDte-__t4hpXVpce5njkMVFGHH6ZZT4WcZd5Eca75PkaVzmgeSeyMN2eZtyeV2P9u-gpd62NTEFMuhsriF7D2hcIdDEWmlGa7xKqMB6YLCBTYDsHQJW3Hg9hyA-X9eWNwI:1sx5kS:8OPCM-D2p-pKdEkLO_LjNq4xRVLDcdS95Glt4GwWWks','2024-10-19 14:27:08.275591'),('y2nwgv2p6km9xyn8w5vr8ewnwit2asel','.eJxVjEEOwiAQRe_C2hDAgQGX7j0DYQaQqmmT0q6Md7dNutDte-__t4hpXVpce5njkMVFGHH6ZZT4WcZd5Eca75PkaVzmgeSeyMN2eZtyeV2P9u-gpd62NTEFMuhsriF7D2hcIdDEWmlGa7xKqMB6YLCBTYDsHQJW3Hg9hyA-X9eWNwI:1syCwb:KvGVvnnIGDvqZRbriDdYbwSc3aGoZFgatkr5W5ghqrk','2024-10-22 16:20:17.546325');
+INSERT INTO `django_session` VALUES ('1g87p0cgim8k2uho5j82nqge7re17s9a','.eJxVjEEOwiAQRe_C2hDAgQGX7j0DYQaQqmmT0q6Md7dNutDte-__t4hpXVpce5njkMVFGHH6ZZT4WcZd5Eca75PkaVzmgeSeyMN2eZtyeV2P9u-gpd62NTEFMuhsriF7D2hcIdDEWmlGa7xKqMB6YLCBTYDsHQJW3Hg9hyA-X9eWNwI:1sww0w:zbhjeJAesCCmN-YYd8K_mE8xMIorsreaTZK0XuZJR3I','2024-10-19 04:03:30.321606'),('769hladeooryhsyqtxsqyrog9jxpyzbh','.eJxVjEEOwiAQRe_C2hDAgQGX7j0DYQaQqmmT0q6Md7dNutDte-__t4hpXVpce5njkMVFGHH6ZZT4WcZd5Eca75PkaVzmgeSeyMN2eZtyeV2P9u-gpd62NTEFMuhsriF7D2hcIdDEWmlGa7xKqMB6YLCBTYDsHQJW3Hg9hyA-X9eWNwI:1swZKr:InpaomdsPyrstF8Si7fhDvqpUDY2geuRfQ2R9sgwwSI','2024-10-18 03:50:33.812603'),('f6ngk3v3uspmh2cxqcp59utt6jllojp9','.eJxVjEEOwiAQRe_C2hDAgQGX7j0DYQaQqmmT0q6Md7dNutDte-__t4hpXVpce5njkMVFGHH6ZZT4WcZd5Eca75PkaVzmgeSeyMN2eZtyeV2P9u-gpd62NTEFMuhsriF7D2hcIdDEWmlGa7xKqMB6YLCBTYDsHQJW3Hg9hyA-X9eWNwI:1slYae:d0rmJfWJMWKIMSkmdh8j_hyqbpgApXl1rxE3p7Jo5EY','2024-09-17 18:49:20.427478'),('gmpvgjs3c9ohozz81bbhdo9awqxdel2q','.eJxVjEEOwiAQRe_C2hDAgQGX7j0DYQaQqmmT0q6Md7dNutDte-__t4hpXVpce5njkMVFGHH6ZZT4WcZd5Eca75PkaVzmgeSeyMN2eZtyeV2P9u-gpd62NTEFMuhsriF7D2hcIdDEWmlGa7xKqMB6YLCBTYDsHQJW3Hg9hyA-X9eWNwI:1sk6e9:FeFZLcZvQj47swIffpi8DiO3EJDTACtvDUuPQrNQXU8','2024-09-13 18:46:57.569887'),('hiz7e8qs9ybnznpdpr8e3plz67wtrftt','.eJxVjEEOwiAQRe_C2hDAgQGX7j0DYQaQqmmT0q6Md7dNutDte-__t4hpXVpce5njkMVFGHH6ZZT4WcZd5Eca75PkaVzmgeSeyMN2eZtyeV2P9u-gpd62NTEFMuhsriF7D2hcIdDEWmlGa7xKqMB6YLCBTYDsHQJW3Hg9hyA-X9eWNwI:1t3Kw3:7RgP5BckjyBdxrGKmPs0SwdPQeFD2tBTT87CBTlh8h8','2024-11-05 19:52:55.056672'),('hr460xs5vsmysgc3siwvvkb2ghvdku94','.eJxVjt8KwiAYxV9FvA5x5qZ2GXTZGwTjU781a1OYDoLo3XOwi7o7nD8_zpv2sJaxXzMuffD0RAU9_HoW3BPjFvgHxHtiLsWyBMu2CtvTzK7J43Teu3-AEfJY19ZZY4XqWj8Yr7VUokMrG-sa3jjVCs1Bcdlq6WRrnDDS605JNajqD0djKnTGnOGOFXaZCOay-gCxIBmB5OATwSnMIUJV9SO5rZyjeYWSGP18ASlCS6c:1tCnpy:DX5Z75-_EFkcRUBocouPw3t1sDIfm9sVdAA1fYG6WW4','2024-12-01 22:33:46.468413'),('lciihhf99s5j51iya9fio7zrl9yq3suu','.eJxVjEEOwiAQRe_C2hDAgQGX7j0DYQaQqmmT0q6Md7dNutDte-__t4hpXVpce5njkMVFGHH6ZZT4WcZd5Eca75PkaVzmgeSeyMN2eZtyeV2P9u-gpd62NTEFMuhsriF7D2hcIdDEWmlGa7xKqMB6YLCBTYDsHQJW3Hg9hyA-X9eWNwI:1sjj7J:YZ1dQrAFZaVOpwHQWU3HP4v1rIuTttynXf2edlipVb4','2024-09-12 17:39:29.328110'),('rv8t21c7j3kr5xgbn4aqzcoaemxltb6v','.eJxVjEEOwiAQRe_C2hDAgQGX7j0DYQaQqmmT0q6Md7dNutDte-__t4hpXVpce5njkMVFGHH6ZZT4WcZd5Eca75PkaVzmgeSeyMN2eZtyeV2P9u-gpd62NTEFMuhsriF7D2hcIdDEWmlGa7xKqMB6YLCBTYDsHQJW3Hg9hyA-X9eWNwI:1t974k:bMPO8qfbXqxk8y8yACFPaUsDzuSPQhSQlztJoXQTT7E','2024-11-21 18:17:46.069258'),('sik4hnf8pu3b7y8nbc5h8ysz5urqnae9','.eJxVjEEOwiAQRe_C2hDAgQGX7j0DYQaQqmmT0q6Md7dNutDte-__t4hpXVpce5njkMVFGHH6ZZT4WcZd5Eca75PkaVzmgeSeyMN2eZtyeV2P9u-gpd62NTEFMuhsriF7D2hcIdDEWmlGa7xKqMB6YLCBTYDsHQJW3Hg9hyA-X9eWNwI:1sx5kS:8OPCM-D2p-pKdEkLO_LjNq4xRVLDcdS95Glt4GwWWks','2024-10-19 14:27:08.275591'),('y2nwgv2p6km9xyn8w5vr8ewnwit2asel','.eJxVjEEOwiAQRe_C2hDAgQGX7j0DYQaQqmmT0q6Md7dNutDte-__t4hpXVpce5njkMVFGHH6ZZT4WcZd5Eca75PkaVzmgeSeyMN2eZtyeV2P9u-gpd62NTEFMuhsriF7D2hcIdDEWmlGa7xKqMB6YLCBTYDsHQJW3Hg9hyA-X9eWNwI:1syCwb:KvGVvnnIGDvqZRbriDdYbwSc3aGoZFgatkr5W5ghqrk','2024-10-22 16:20:17.546325');
 /*!40000 ALTER TABLE `django_session` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -483,7 +487,7 @@ CREATE TABLE `empleados` (
   `Telefono` varchar(12) NOT NULL,
   `Email` varchar(45) NOT NULL,
   PRIMARY KEY (`Id_Empleado`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -492,6 +496,7 @@ CREATE TABLE `empleados` (
 
 LOCK TABLES `empleados` WRITE;
 /*!40000 ALTER TABLE `empleados` DISABLE KEYS */;
+INSERT INTO `empleados` VALUES (1,'Claudia','Jerez',44363896,'3876455223','claudiajerez@gmail.com');
 /*!40000 ALTER TABLE `empleados` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -532,7 +537,7 @@ CREATE TABLE `estados_curriculares` (
   `Id_EstadoCurricular` int NOT NULL AUTO_INCREMENT,
   `Id_MatXPlan_EstCur` int DEFAULT NULL,
   `Id_Estudiante_EstCur` int DEFAULT NULL,
-  `Condicion_Nota` tinyint DEFAULT NULL,
+  `Condicion_Nota` varchar(45) DEFAULT NULL,
   `Nota` int DEFAULT NULL,
   `Fecha_Finalizacion` date NOT NULL,
   `Folio` varchar(45) DEFAULT 'Sin especificar',
@@ -563,13 +568,13 @@ DROP TABLE IF EXISTS `estudiantes`;
 CREATE TABLE `estudiantes` (
   `Id_Estudiante` int NOT NULL AUTO_INCREMENT,
   `Id_DatInsc` int DEFAULT NULL,
-  `Fecha_Insc_Est` date NOT NULL,
+  `Anio_Insc` tinyint NOT NULL,
   `Nro_Legajo` varchar(45) DEFAULT 'No especificado',
   `Legajo_Digital` varchar(200) DEFAULT 'No adjuntado',
   PRIMARY KEY (`Id_Estudiante`),
   KEY `Id_DatInsc_idx` (`Id_DatInsc`),
   CONSTRAINT `Id_DatInsc` FOREIGN KEY (`Id_DatInsc`) REFERENCES `dat_insc` (`Id_DatInsc`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -578,6 +583,7 @@ CREATE TABLE `estudiantes` (
 
 LOCK TABLES `estudiantes` WRITE;
 /*!40000 ALTER TABLE `estudiantes` DISABLE KEYS */;
+INSERT INTO `estudiantes` VALUES (5,10,2,'F52952',NULL),(6,6,2,'F52954',NULL),(7,7,3,'F45892',NULL);
 /*!40000 ALTER TABLE `estudiantes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -591,17 +597,17 @@ DROP TABLE IF EXISTS `insc_carreras`;
 CREATE TABLE `insc_carreras` (
   `Id_InscCarrera` int NOT NULL AUTO_INCREMENT,
   `Id_Estudiante_IC` int DEFAULT NULL,
-  `Id_PlanEstudio_IC` int DEFAULT NULL,
-  `Fecha_Insc` date NOT NULL,
+  `Id_Carrera_IC` int DEFAULT NULL,
   `Id_Empleado_IC` int DEFAULT NULL,
+  `Fecha_Insc` date NOT NULL,
   PRIMARY KEY (`Id_InscCarrera`),
-  KEY `Id_PlanEstudio_IC_idx` (`Id_PlanEstudio_IC`),
   KEY `Id_Empleado_idx` (`Id_Empleado_IC`),
-  KEY `Id_Estudiante_IC_idx` (`Id_Estudiante_IC`),
-  CONSTRAINT `Id_Empleado` FOREIGN KEY (`Id_Empleado_IC`) REFERENCES `empleados` (`Id_Empleado`) ON UPDATE CASCADE,
-  CONSTRAINT `Id_Estudiante_IC` FOREIGN KEY (`Id_Estudiante_IC`) REFERENCES `estudiantes` (`Id_Estudiante`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `Id_PlanEstudio_IC` FOREIGN KEY (`Id_PlanEstudio_IC`) REFERENCES `planes_estudios` (`Id_PlanEstudio`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  KEY `Id_Carrera_IC_idx` (`Id_Estudiante_IC`),
+  KEY `Id_Carrera_IC_idx1` (`Id_Carrera_IC`),
+  CONSTRAINT `Id_Carrera_IC` FOREIGN KEY (`Id_Carrera_IC`) REFERENCES `carreras` (`Id_Carrera`) ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT `Id_Empleado_IC` FOREIGN KEY (`Id_Empleado_IC`) REFERENCES `empleados` (`Id_Empleado`) ON UPDATE CASCADE,
+  CONSTRAINT `Id_Estudiante_IC` FOREIGN KEY (`Id_Estudiante_IC`) REFERENCES `estudiantes` (`Id_Estudiante`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -610,6 +616,7 @@ CREATE TABLE `insc_carreras` (
 
 LOCK TABLES `insc_carreras` WRITE;
 /*!40000 ALTER TABLE `insc_carreras` DISABLE KEYS */;
+INSERT INTO `insc_carreras` VALUES (1,5,1,1,'2024-11-16'),(3,6,1,1,'2024-11-16'),(4,7,1,1,'2024-11-16');
 /*!40000 ALTER TABLE `insc_carreras` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -622,20 +629,19 @@ DROP TABLE IF EXISTS `insc_examenes`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `insc_examenes` (
   `Id_InscExamen` int NOT NULL AUTO_INCREMENT,
+  `Id_MesaExamen` int DEFAULT NULL,
   `Id_Estudiante_IE` int DEFAULT NULL,
-  `Id_MatXPlan_IE` int DEFAULT NULL,
   `Id_EstadoCuota_IE` int DEFAULT NULL,
-  `Fecha_Examen` date NOT NULL DEFAULT '1900-01-01',
   `Id_Empleado_IE` int DEFAULT NULL,
   PRIMARY KEY (`Id_InscExamen`),
   KEY `Id_Estudiante_IE_idx` (`Id_Estudiante_IE`),
-  KEY `Id_MatXPlan_IE_idx` (`Id_MatXPlan_IE`),
   KEY `Id_EstadoCuota_IE_idx` (`Id_EstadoCuota_IE`),
   KEY `Id_Empleado_IE_idx` (`Id_Empleado_IE`),
+  KEY `Id_MesaExamen_idx` (`Id_MesaExamen`),
   CONSTRAINT `Id_Empleado_IE` FOREIGN KEY (`Id_Empleado_IE`) REFERENCES `empleados` (`Id_Empleado`) ON UPDATE CASCADE,
   CONSTRAINT `Id_EstadoCuota_IE` FOREIGN KEY (`Id_EstadoCuota_IE`) REFERENCES `estados_cuotas` (`Id_EstadoCuota`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `Id_Estudiante_IE` FOREIGN KEY (`Id_Estudiante_IE`) REFERENCES `estudiantes` (`Id_Estudiante`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `Id_MatXPlan_IE` FOREIGN KEY (`Id_MatXPlan_IE`) REFERENCES `materiasxplanes_estudios` (`Id_MatXPlan`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `Id_MesaExamen` FOREIGN KEY (`Id_MesaExamen`) REFERENCES `mesas_examenes` (`Id_MesaExamen`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -664,7 +670,7 @@ CREATE TABLE `materias` (
   PRIMARY KEY (`Id_Materia`),
   KEY `Id_Unidad_idx` (`Id_Unidad`),
   CONSTRAINT `Id_Unidad` FOREIGN KEY (`Id_Unidad`) REFERENCES `tipos_unidades` (`Id_Unidad`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -673,6 +679,7 @@ CREATE TABLE `materias` (
 
 LOCK TABLES `materias` WRITE;
 /*!40000 ALTER TABLE `materias` DISABLE KEYS */;
+INSERT INTO `materias` VALUES (1,'Pedagogia',1,0,0),(2,'Lectura y Escritura Académica',2,0,0),(3,'Didáctica General',1,0,0),(4,'Historia Argentina y Latinoamericana',1,0,0),(5,'Educacion Especial: Perspectiva y Estado Actual',1,0,0),(6,'Bases Neuropsicobiológicas del Aprendizaje',1,0,0),(7,'Sujeto de la Educación Especial',1,0,0),(8,'Comunicación y Lenguaje',1,0,0),(9,'Expresión Dramática y Comunicación',1,0,0),(10,'Práctica Doc I - Contexto, Comunidad y Escuela',3,0,0),(11,'Métodos y Técnicas de Indagación',2,0,0),(12,'Instituciones Educativas',4,0,0),(13,'Lengua de señas I',2,0,0);
 /*!40000 ALTER TABLE `materias` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -686,8 +693,9 @@ DROP TABLE IF EXISTS `materiasxplanes_estudios`;
 CREATE TABLE `materiasxplanes_estudios` (
   `Id_MatXPlan` int NOT NULL AUTO_INCREMENT,
   `Id_PlanEstudio` int DEFAULT NULL,
-  `Id_Materia` int DEFAULT NULL,
   `Id_CampoEstudio` int DEFAULT NULL,
+  `Id_Materia` int DEFAULT NULL,
+  `Anio_Materia` tinyint NOT NULL,
   PRIMARY KEY (`Id_MatXPlan`),
   KEY `Id_PlanEstudio_idx` (`Id_PlanEstudio`),
   KEY `Id_Materia_idx` (`Id_Materia`),
@@ -695,7 +703,7 @@ CREATE TABLE `materiasxplanes_estudios` (
   CONSTRAINT `Id_CampoEstudio` FOREIGN KEY (`Id_CampoEstudio`) REFERENCES `campos_estudios` (`Id_CampoEstudio`) ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT `Id_Materia` FOREIGN KEY (`Id_Materia`) REFERENCES `materias` (`Id_Materia`) ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT `Id_PlanEstudio` FOREIGN KEY (`Id_PlanEstudio`) REFERENCES `planes_estudios` (`Id_PlanEstudio`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -704,7 +712,35 @@ CREATE TABLE `materiasxplanes_estudios` (
 
 LOCK TABLES `materiasxplanes_estudios` WRITE;
 /*!40000 ALTER TABLE `materiasxplanes_estudios` DISABLE KEYS */;
+INSERT INTO `materiasxplanes_estudios` VALUES (1,1,1,1,0),(2,1,1,2,0),(3,1,1,3,0),(4,1,1,4,0),(5,1,2,5,0),(6,1,2,6,0),(7,1,2,7,0),(8,1,2,8,0),(9,1,2,9,0),(10,1,3,10,0),(11,1,3,11,0),(12,1,3,12,0),(13,1,2,13,0);
 /*!40000 ALTER TABLE `materiasxplanes_estudios` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `mesas_examenes`
+--
+
+DROP TABLE IF EXISTS `mesas_examenes`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `mesas_examenes` (
+  `Id_MesaExamen` int NOT NULL,
+  `Id_MatXPlan_ME` int DEFAULT NULL,
+  `Fecha_Examen` date NOT NULL DEFAULT '1900-01-01',
+  `Hora_Examen` time DEFAULT NULL,
+  PRIMARY KEY (`Id_MesaExamen`),
+  KEY `ID_idx` (`Id_MatXPlan_ME`),
+  CONSTRAINT `Id_MatXPlan_ME` FOREIGN KEY (`Id_MatXPlan_ME`) REFERENCES `materiasxplanes_estudios` (`Id_MatXPlan`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `mesas_examenes`
+--
+
+LOCK TABLES `mesas_examenes` WRITE;
+/*!40000 ALTER TABLE `mesas_examenes` DISABLE KEYS */;
+/*!40000 ALTER TABLE `mesas_examenes` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -748,11 +784,12 @@ DROP TABLE IF EXISTS `planes_estudios`;
 CREATE TABLE `planes_estudios` (
   `Id_PlanEstudio` int NOT NULL AUTO_INCREMENT,
   `Id_Carrera` int DEFAULT NULL,
+  `Anio_Plan` year NOT NULL,
   `Descripcion` varchar(200) DEFAULT 'No agregada',
   PRIMARY KEY (`Id_PlanEstudio`),
   KEY `Id_Carrera_idx` (`Id_Carrera`),
   CONSTRAINT `Id_Carrera` FOREIGN KEY (`Id_Carrera`) REFERENCES `carreras` (`Id_Carrera`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -761,6 +798,7 @@ CREATE TABLE `planes_estudios` (
 
 LOCK TABLES `planes_estudios` WRITE;
 /*!40000 ALTER TABLE `planes_estudios` DISABLE KEYS */;
+INSERT INTO `planes_estudios` VALUES (1,1,0000,'Plan de Estudio 2022');
 /*!40000 ALTER TABLE `planes_estudios` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -775,7 +813,7 @@ CREATE TABLE `tipos_unidades` (
   `Id_Unidad` int NOT NULL AUTO_INCREMENT,
   `Tipo` varchar(200) NOT NULL,
   PRIMARY KEY (`Id_Unidad`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -784,6 +822,7 @@ CREATE TABLE `tipos_unidades` (
 
 LOCK TABLES `tipos_unidades` WRITE;
 /*!40000 ALTER TABLE `tipos_unidades` DISABLE KEYS */;
+INSERT INTO `tipos_unidades` VALUES (1,'Materia'),(2,'Taller'),(3,'Trabajo Campo'),(4,'Seminario -Taller');
 /*!40000 ALTER TABLE `tipos_unidades` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -796,4 +835,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-10-08 16:53:51
+-- Dump completed on 2024-11-18  3:21:49
