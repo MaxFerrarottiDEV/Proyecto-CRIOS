@@ -20,7 +20,7 @@ from reportlab.pdfgen import canvas  # type: ignore
 from reportlab.platypus import Table, TableStyle  # type: ignore
 
 from .forms import PreinscripcionForm
-from .models import Carreras, DatInsc, EstadosCurriculares, Estudiantes, InscCarreras, Materias, MateriasxplanesEstudios, PlanesEstudios
+from .models import Carreras, DatInsc, EstadosCurriculares, Estudiantes, InscCarreras, Materias, MateriasxplanesEstudios, PlanesEstudios, TiposUnidades
 
 def login_view(request):
     if request.user.is_authenticated:
@@ -326,7 +326,116 @@ def build(request):
 @login_required
 def plan_estudio_view(request):
     planes = PlanesEstudios.objects.all()
-    return render(request, 'estadosCurriculares/planesEstudios/planestudio.html', {'planes': planes})
+    carreras = Carreras.objects.all()
+    return render(request, 'estadosCurriculares/planesEstudios/planestudio.html', {'planes': planes, 'carreras': carreras})
+
+
+@login_required
+def agregar_plan(request):
+    if request.method == 'POST':
+        anio_plan = request.POST.get('anio_plan')
+        id_carrera = request.POST.get('id_carrera')
+        descripcion = request.POST.get('descripcion')
+
+        # Asignar valor por defecto si descripción está vacía
+        if not descripcion:
+            descripcion = "No agregada"
+
+        try:
+            carrera = Carreras.objects.get(id_carrera=id_carrera)
+            nuevo_plan = PlanesEstudios.objects.create(
+                anio_plan=anio_plan,
+                id_carrera=carrera,
+                descripcion=descripcion
+            )
+            nuevo_plan.save()
+            messages.success(request, "Plan de estudio agregado con éxito. No se olvide de agregar la materias en el boton 'Administrar Plan'")
+        except Carreras.DoesNotExist:
+            messages.error(request, "La carrera seleccionada no existe.")
+        return redirect('plan_estudio')
+
+    return render(request, 'plan_estudio')
+
+
+@login_required
+def eliminar_plan(request, id_planestudio):
+    try:
+        plan = PlanesEstudios.objects.get(id_planestudio=id_planestudio)
+        plan.delete()
+        messages.success(request, "Plan de estudio eliminado con éxito.")
+    except PlanesEstudios.DoesNotExist:
+        messages.error(request, "El plan de estudio no existe.")
+    return redirect('plan_estudio')
+
+
+@login_required
+def materias_view(request):
+    materias = Materias.objects.all()
+    tipos_unidades = TiposUnidades.objects.all()  # Obtener todos los tipos de unidades
+    return render(request, 'estadosCurriculares/planesEstudios/materias.html', {
+        'materias': materias,
+        'tipos_unidades': tipos_unidades
+    })
+
+
+@login_required
+def agregar_materia(request):
+    if request.method == 'POST':
+        nombre = request.POST['nombre']
+        id_unidad = request.POST['id_unidad']
+        cuatrimestral_anual = request.POST['cuatrimestral_anual']
+            # Manejar el valor del checkbox
+        correlatividad = request.POST.get('correlatividad', request.POST.get('correlatividad_hidden'))
+
+        Materias.objects.create(
+            nombre=nombre,
+            id_unidad_id=id_unidad,
+            cuatrimestral_anual=cuatrimestral_anual,
+            correlatividad=correlatividad,
+        )
+
+        messages.success(request, 'Materia agregada exitosamente.')
+        return redirect('materia')  # Redirigir a la lista de materias
+    return redirect('materia')
+
+
+
+@login_required
+def editar_materia(request):
+    if request.method == 'POST':
+        id_materia = request.POST.get('id_materia')
+        nombre = request.POST.get('nombre')
+        id_unidad = request.POST.get('id_unidad')
+        cuatrimestral_anual = request.POST.get('cuatrimestral_anual')
+        correlatividad = request.POST.get('correlatividad', request.POST.get('correlatividad_hidden'))
+
+        # Obtener la materia que se va a editar
+        materia = get_object_or_404(Materias, id_materia=id_materia)
+        
+        # Asignar los valores a la materia
+        materia.nombre = nombre
+
+        # Obtener la instancia de TiposUnidades correspondiente al id_unidad
+        if id_unidad:
+            materia.id_unidad = get_object_or_404(TiposUnidades, id_unidad=id_unidad)
+        
+        # Asignar cuatrimestral_anual y correlatividad
+        materia.cuatrimestral_anual = cuatrimestral_anual
+        materia.correlatividad = correlatividad
+
+        # Guardar los cambios
+        materia.save()
+
+        messages.success(request, "Materia actualizada con éxito.")
+        return redirect('materia')
+    
+    
+@login_required
+def eliminar_materia(request, id_materia):
+    materia = get_object_or_404(Materias, id_materia=id_materia)
+    materia.delete()
+    messages.success(request, "La materia se ha eliminado correctamente.")
+    return redirect('materia')  # Asegúrate de usar el nombre correcto de la vista
 
 
 @login_required

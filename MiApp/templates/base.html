@@ -66,7 +66,7 @@
                 <i class="fa-solid fa-address-card"></i> Inscripciones
               </a>
               <ul class="dropdown-menu" aria-labelledby="inscripcionesDropdown">
-                <li><a class="dropdown-item" href="{% url 'lista_solicitudes' %}">Solicitudes de Inscripción</a></li>
+                <li><a class="dropdown-item" href="{% url 'lista_solicitudes' %}">Solicitudes de Preinscripción</a></li>
                 <li><hr class="dropdown-divider"></li>
                 <li><a class="dropdown-item" href="{% url 'consultas' %}">Consultas de Datos de Estudiantes</a></li>
               </ul>
@@ -150,15 +150,6 @@
             </div>
         </div>
     </div>
-
-    {% if messages %}
-    <div class="messages">
-        {% for message in messages %}
-            <div class="alert {{ message.tags }}">{{ message }}</div>
-        {% endfor %}
-    </div>
-    {% endif %}
-    
     {% block javascript %}
     {% endblock javascript %}
     <script src="{% static 'jQuery-3.7.0/jquery-3.7.0.js' %}"></script>  

@@ -3,12 +3,13 @@
 Inscripciones - Solicitudes de Preinscripción 
 {% endblock %}
 {% load static %}
-{% block content %}
 {% block head %} 
     <link href="{% static 'inscripciones/botones.css' %}" rel="stylesheet">
     <link href="{% static 'inscripciones/solicitudes/fixformulario.css' %}" rel="stylesheet">
 {% endblock %}
+
 {% load crispy_forms_tags %}
+{% block content %}
 <div class="container mt-5">
     <h2 style="text-align: center;">SOLICITUDES DE PREINSCRIPCIÓN</h2>
     <hr>
@@ -34,34 +35,36 @@ Inscripciones - Solicitudes de Preinscripción
             Obtener solicitudes de GoogleForms
         </button>
     </div>
-    <table id="dataTable" class="table table-striped table-bordered table-hover">
-        <thead>
-            <tr>
-                <th style="color: white;background-color:#005187;">Apellido y nombre</th>
-                <th style="color: white;background-color:#005187;">DNI</th>
-                <th style="color: white;background-color:#005187;">Nro de Celular</th>
-                <th style="color: white;background-color:#005187;">Correo Electronico</th>         
-                <th style="color: white;background-color:#005187;" class="text-center">Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for solicitud in solicitudes %}
-            <tr>
-                <td>{{ solicitud.apellido }}  {{ solicitud.nombre }}</td>
-                <td>{{ solicitud.dni }}</td>
-                <td>{{ solicitud.celular_nro }}</td>
-                <td>{{ solicitud.email }}</td>
-                
-                <td  style="width: 1px; white-space: nowrap;">
-                    <a href="{% url 'confirmar_solicitud' solicitud.id_datinsc %}" class="botonDescargar"><i class="fa-solid fa-plus"></i><i class="fa-solid fa-user"></i></i> Confirmar</a>
-                    <a href="{% url 'editar_solicitud' solicitud.id_datinsc %}"  class="botonModificar"><i class="fa-solid fa-user-pen"></i> Editar</a>
-                    <a href="{% url 'eliminar_solicitud' solicitud.id_datinsc %}" class="botonEliminar"><i class="fa-solid fa-minus"><i class="fa-solid fa-user"></i></i></i> Eliminar</a>
-                </td>
-            </tr>
-            {% empty %}
-            {% endfor %}
-        </tbody>
-    </table>
+    <div class="table-responsive">
+        <table id="dataTable" class="table table-striped table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th style="color: white;background-color:#005187;">Apellido y nombre</th>
+                    <th style="color: white;background-color:#005187;">DNI</th>
+                    <th style="color: white;background-color:#005187;">Nro de Celular</th>
+                    <th style="color: white;background-color:#005187;">Correo Electronico</th>         
+                    <th style="color: white;background-color:#005187;" class="text-center">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for solicitud in solicitudes %}
+                <tr>
+                    <td>{{ solicitud.apellido }}  {{ solicitud.nombre }}</td>
+                    <td>{{ solicitud.dni }}</td>
+                    <td>{{ solicitud.celular_nro }}</td>
+                    <td>{{ solicitud.email }}</td>
+                    
+                    <td  style="width: 1px; white-space: nowrap;">
+                        <a href="{% url 'confirmar_solicitud' solicitud.id_datinsc %}" class="botonDescargar"><i class="fa-solid fa-plus"></i><i class="fa-solid fa-user"></i></i> Confirmar</a>
+                        <a href="{% url 'editar_solicitud' solicitud.id_datinsc %}"  class="botonModificar"><i class="fa-solid fa-user-pen"></i> Editar</a>
+                        <a href="{% url 'eliminar_solicitud' solicitud.id_datinsc %}" class="botonEliminar"><i class="fa-solid fa-minus"><i class="fa-solid fa-user"></i></i></i> Eliminar</a>
+                    </td>
+                </tr>
+                {% empty %}
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
 
 

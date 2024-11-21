@@ -1,24 +1,61 @@
 {% extends 'base.html' %}
-{% block title %}Planes de Estudio{% endblock %}
+{% block title %}
+Planes de Estudio
+{% endblock %}
+{% load static %}
+{% block head %} 
+    <link href="{% static 'planesEstudios/planestudio.css' %}" rel="stylesheet">
+    <link href="{% static 'inscripciones/botones.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% load crispy_forms_tags %}
 {% block content %}
 <div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <button type="button" class="botonAgregarSolicitud" data-bs-toggle="modal" data-bs-target="#agregarPlanModal">
+            <i class="fa-solid fa-plus"></i>
+            Agregar un nuevo plan
+        </button>
+        <div>
+            <a href="{% url 'materia' %}" class="btn btn-info btn-sm mx-1 botonVolver">Ir a materias <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+    </div>
+
     <h2 style="text-align: center;">PLANES DE ESTUDIO</h2>
-    <table class="table table-striped table-bordered mt-3">
+    <hr>
+    {% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} fade-out">
+            {{ message }}
+        </div>
+    {% endfor %}
+    {% endif %}
+    <table id="dataTable" class="table table-striped table-bordered table-hover">
         <thead>
             <tr>
-                <th>ID Plan de Estudio</th>
-                <th>ID Carrera</th>
-                <th>Descripción</th>
-                <th>Acciones</th>
+                <th style="color: white;background-color:#005187;">Año del Plan</th>
+                <th style="color: white;background-color:#005187;">Carrera</th>                     
+                <th style="color: white;background-color:#005187;">Plan Actual</th>
+                <th style="color: white;background-color:#005187;">Acciones</th>
             </tr>
         </thead>
         <tbody>
             {% for plan in planes %}
             <tr>
-                <td>{{ plan.id_planestudio }}</td>
-                <td>{{ plan.id_carrera }}</td>
-                <td>{{ plan.descripcion }}</td>
-                
+                <td>{{ plan.anio_plan }}</td>
+                <td>{{ plan.id_carrera.nombre }}</td>    
+                <td>
+                    <i class="fa-solid fa-circle-check" style="color: #63E6BE;"></i>
+                    <i class="fa-solid fa-circle-xmark" style="color: #e5155e;"></i>
+                </td>
+                <td>
+                    <a href="#" class="btn btn-info btn-sm botonVer"><i class="fa-solid fa-screwdriver-wrench"></i></i> Administrar</a>
+                    <button 
+                    class="btn btn-danger btn-sm botonEliminar"
+                    data-id_planestudio="{{ plan.id_planestudio }}">
+                    <i class="fa-solid fa-trash-can"></i> Eliminar
+                    </button>
+                </td>            
             </tr>
             {% empty %}
             <tr>
@@ -26,6 +63,104 @@
             </tr>
             {% endfor %}
         </tbody>
-    </table>
+    </table> 
 </div>
+<div class="modal fade" id="agregarPlanModal" tabindex="-1" aria-labelledby="agregarPlanModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form id="formAgregarPlan" method="POST" action="{% url 'agregar_plan' %}">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalAgregarPlanLabel">Agregar Nuevo Plan de Estudio</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Año del plan de estudio -->
+                    <div class="mb-3">
+                        <label for="anioPlan" class="form-label">Año del Plan de Estudio:</label>
+                        <input type="number" class="form-control" id="anioPlan" name="anio_plan" min="1900" max="2100" required>
+                    </div>
+
+                    <!-- Seleccionar la carrera -->
+                    <div class="mb-3">
+                        <label for="carrera" class="form-label">Seleccionar la Carrera:</label>
+                        <select class="form-select" id="carrera" name="id_carrera" required>
+                            {% for carrera in carreras %}
+                                <option value="{{ carrera.id_carrera }}">{{ carrera.nombre }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <!-- Descripción -->
+                    <div class="mb-3">
+                        <label for="descripcion" class="form-label">Descripción: (Opcional)</label>
+                        <textarea class="form-control" id="descripcion" name="descripcion" rows="3"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Guardar Plan de Estudio</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 {% endblock %}
+
+{% block javascript %}
+<script src="{% static 'jQuery-3.7.0/jquery-3.7.0.js' %}"></script>  
+<script src="{% static 'DataTables-1.13.6/js/jquery.dataTables.js' %}"></script>
+<script src="{% static 'DataTables-1.13.6/js/dataTables.bootstrap5.js' %}"></script>
+<script src="{% static 'bootbox/bootbox.all.min.js' %}"></script>
+<script>
+    $(document).ready(function () {
+        $('#dataTable').DataTable({
+            language: {
+                "sProcessing": "Procesando...",
+                "sLengthMenu": "Mostrar _MENU_ registros",
+                "sZeroRecords": "No se encontraron resultados",
+                "sEmptyTable": "No hay datos disponibles en esta tabla",
+                "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+                "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+                "sSearch": "Buscar:",
+                "oPaginate": {
+                    "sFirst": "Primero",
+                    "sLast": "Último",
+                    "sNext": "Siguiente",
+                    "sPrevious": "Anterior"
+                },
+                "oAria": {
+                    "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
+                    "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                }
+            }
+        }); 
+        $('#dataTable tbody').on('click', '.botonEliminar', function (e) {
+        e.preventDefault();
+        var id_planestudio = $(this).data('id_planestudio');
+        bootbox.confirm({
+            message: "¿Está seguro de que desea eliminar este plan de estudio?",
+            buttons: {
+                confirm: {
+                    label: 'Sí',
+                    className: 'btn-danger'
+                },
+                cancel: {
+                    label: 'No',
+                    className: 'btn-secondary'
+                }
+            },
+            callback: function (result) {
+                if (result) {
+                    window.location.href = 'eliminar_plan/' + id_planestudio + '/';
+                }
+            }
+        });
+    });
+
+        setTimeout(function () {
+            $('.alert').fadeOut('slow');
+        }, 6000);
+    });
+</script>
+{% endblock javascript %}
