@@ -3,91 +3,81 @@
 Inscripciones - Consultas de datos de estudiantes
 {% endblock %}
 {% load static %} 
+{% block head %} 
+    <link href="{% static 'inscripciones/botones.css' %}" rel="stylesheet">
+{% endblock %}
 {% block content %} 
-    <div class="container mt-4">
-        <form method="GET" action="{% url 'consultas' %}" class="mb-4">
-            <div class="input-group">
-                <input type="text" name="dni" class="form-control" 
-                placeholder="Ingrese el DNI del estudiante" required>
-                <button class="botonBuscar" type="submit">Buscar</button>
-            </div>
-        </form>
-        {% if messages %}
-            <div class="alert-container">
-                {% for message in messages %}
-                    <div class="alert alert-success" role="alert">
-                        {{ message }}
-                    </div>
-                {% endfor %}
-            </div>
-        {% endif %}
-
-        <div class="table-container">
-            <h1 class="mb-4 text-center">Estudiantes</h1>
-            <hr>
-
-            {% if estudiante %}
-            <table id="dataTable" class="table table-striped table-bordered table-hover">
-                <thead class="table-dark">
-                    <tr>
-                        <th style="color: white;background-color:#005187;">Nro Legajo</th>
-                        <th style="color: white;background-color:#005187;">Apellido y nombre</th>
-                        <th style="color: white;background-color:#005187;">DNI</th>
-                        <th style="color: white;background-color:#005187;">Email</th>
-                        <th style="color: white;background-color:#005187;">Teléfono</th>
-                        <th style="color: white;background-color:#005187;">Domicilio</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>{{ estudiante.nro_legajo }}</td>
-                        <td>{{ estudiante.id_datinsc.apellido }}  {{ estudiante.id_datinsc.nombre}}</td>
-                        <td>{{ estudiante.id_datinsc.dni }}</td>
-                        <td>{{ estudiante.id_datinsc.email }}</td>
-                        <td>{{ estudiante.id_datinsc.celular_nro }}</td>
-                        <td>{{ estudiante.id_datinsc.domicilio }}</td>
-                    </tr>
-                </tbody>     
-            </table>
-
-            <div class="action-buttons">
-                <a href="{% url 'modificar' estudiante.id_datinsc.dni %}" class="botonModificar">Modificar</a>
-                <a href="#" class="botonEliminar" data-dni="{{ estudiante.id_datinsc.dni }}">Eliminar</a>
-                <a href="https://drive.google.com/drive/u/0/folders/1ERdyQMWtkXRSG4yVZkh_lVUme2x0Jdwp" class="botonGuardar" target="_blank">Adjuntar Links</a>
-                <a href="{% url 'consultas' %}" class="botonCancelar">Volver</a>
-            </div>
-
-            {% elif estudiantes %}
-            <table id="dataTable" class="table table-striped table-bordered table-hover"> 
-                <thead class="table-dark">
-                    <tr>
-                        <th style="color: white;background-color:#005187;">Nro Legajo</th>
-                        <th style="color: white;background-color:#005187;">Apellido y nombre</th>
-                        <th style="color: white;background-color:#005187;">DNI</th>
-                        <th style="color: white;background-color:#005187;">Email</th>
-                        <th style="color: white;background-color:#005187;">Teléfono</th>
-                        <th style="color: white;background-color:#005187;">Domicilio</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for estudiante in estudiantes %}
-                    <tr>
-                        <td>{{ estudiante.nro_legajo }}</td>
-                        <td>{{ estudiante.id_datinsc.apellido }}  {{ estudiante.id_datinsc.nombre}}</td>
-                        <td>{{ estudiante.id_datinsc.dni }}</td>
-                        <td>{{ estudiante.id_datinsc.email }}</td>
-                        <td>{{ estudiante.id_datinsc.celular_nro }}</td>
-                        <td>{{ estudiante.id_datinsc.domicilio }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>     
-            </table>
-            {% else %}
-                <p>No se encontró ningún estudiante con ese DNI.</p>
-            {% endif %}
+<div class="container mt-4">
+    <div class="table-container">
+        <h1 class="mb-4 text-center">ESTUDIANTES</h1>
+        <hr>
+        <!-- Formulario de filtro -->
+        <div class="mb-4">
+            <form method="GET" action="{% url 'consultas' %}">
+                <label for="filtroCurso" class="form-label">Filtrar por curso:</label>
+                <select id="filtroCurso" name="curso" class="form-select" onchange="this.form.submit()">
+                    <option value="" {% if not request.GET.curso %}selected{% endif %}>Todos los años</option>
+                    <option value="1" {% if request.GET.curso == "1" %}selected{% endif %}>1er Año</option>
+                    <option value="2" {% if request.GET.curso == "2" %}selected{% endif %}>2do Año</option>
+                    <option value="3" {% if request.GET.curso == "3" %}selected{% endif %}>3er Año</option>
+                    <option value="4" {% if request.GET.curso == "4" %}selected{% endif %}>4to Año</option>
+                    <option value="5" {% if request.GET.curso == "5" %}selected{% endif %}>5to Año</option>
+                </select>
+            </form>
         </div>
+        {% if estudiantes %}
+        <table id="dataTable" class="table table-striped table-bordered table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th style="color: white;background-color:#005187;">Apellidos y Nombres</th>
+                    <th style="color: white;background-color:#005187;">Nro Legajo</th>
+                    <th style="color: white;background-color:#005187;">Curso</th>
+                    <th style="color: white;background-color:#005187;">DNI</th>         
+                    <th style="color: white;background-color:#005187;">Fecha de Inscripción</th>
+                    <th style="color: white;background-color:#005187;">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for estudiante in estudiantes %}
+                <tr>
+                    <td>{{ estudiante.id_datinsc.apellido }} {{ estudiante.id_datinsc.nombre }}</td>
+                    <td>{{ estudiante.nro_legajo }}</td>
+                    <td>
+                        {% if estudiante.anio_insc == 1 %}
+                            1er Año
+                        {% elif estudiante.anio_insc == 2 %}
+                            2do Año
+                        {% elif estudiante.anio_insc == 3 %}
+                            3er Año
+                        {% elif estudiante.anio_insc == 4 %}
+                            4to Año
+                        {% elif estudiante.anio_insc == 5 %}
+                            5to Año
+                        {% else %}
+                            Sin asignar
+                        {% endif %}
+                    </td>  
+                    <td>{{ estudiante.id_datinsc.dni }}</td>                
+                    <td>{{ estudiante.insccarreras_set.first.fecha_insc }}</td>
+                    <td>
+                        <a href="{% url 'ver_datos' estudiante.id_estudiante %}" class="btn btn-info btn-sm botonVer"><i class="fa-solid fa-eye"></i> Ver datos</a>
+                        <a href="#" 
+                            class="btn btn-danger btn-sm botonEliminar" 
+                            data-id_estudiante="{{ estudiante.id_estudiante }}">
+                            <i class="fa-solid fa-user-large-slash"></i> Dar de baja
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>No se encontró ningún estudiante.</p>
+        {% endif %}
     </div>
+</div>
 {% endblock content %}
+
 {% block javascript %}
 <script src="{% static 'jQuery-3.7.0/jquery-3.7.0.js' %}"></script>  
 <script src="{% static 'DataTables-1.13.6/js/jquery.dataTables.js' %}"></script>
@@ -117,11 +107,12 @@ Inscripciones - Consultas de datos de estudiantes
                 }
             }
         }); 
+
         $('.botonEliminar').click(function (e) {
             e.preventDefault();
-            var dni = $(this).data('dni');
+            var id_estudiante = $(this).data('id_estudiante');
             bootbox.confirm({
-                message: "¿Estás seguro de que deseas eliminar este estudiante?",
+                message: "¿Esta seguro de que desea dar de baja a este estudiante?",
                 buttons: {
                     confirm: {
                         label: 'Sí',
@@ -134,7 +125,7 @@ Inscripciones - Consultas de datos de estudiantes
                 },
                 callback: function (result) {
                     if (result) {
-                        window.location.href = '/eliminar/' + dni + '/';
+                        window.location.href = '/eliminar/' + id_estudiante + '/';
                     }
                 }
             });
@@ -146,5 +137,3 @@ Inscripciones - Consultas de datos de estudiantes
     });
 </script>
 {% endblock javascript %}
-
-

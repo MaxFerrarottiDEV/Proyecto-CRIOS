@@ -20,3 +20,5 @@ pip install crispy-bootstrap5
 
 pip install xhtml2pdf
 
+py manage.py runserver
+

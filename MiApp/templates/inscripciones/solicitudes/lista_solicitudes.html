@@ -4,10 +4,14 @@ Inscripciones - Solicitudes de Preinscripción
 {% endblock %}
 {% load static %}
 {% block content %}
+{% block head %} 
+    <link href="{% static 'inscripciones/botones.css' %}" rel="stylesheet">
+    <link href="{% static 'inscripciones/solicitudes/fixformulario.css' %}" rel="stylesheet">
+{% endblock %}
 {% load crispy_forms_tags %}
 <div class="container mt-5">
-    <h2 style="text-align: center;">Lista de Solicitudes de Preinscripción</h2>
-
+    <h2 style="text-align: center;">SOLICITUDES DE PREINSCRIPCIÓN</h2>
+    <hr>
     <!-- Mostrar mensajes si existen (de éxito o error) -->
     {% if messages %}
         {% for message in messages %}
@@ -17,11 +21,17 @@ Inscripciones - Solicitudes de Preinscripción
         {% endfor %}
     {% endif %}
 
-    <!-- Botón para añadir una solicitud -->
-    <div class="d-flex justify-content-end mb-3">
-        <!-- Botón que abre el modal -->
+    <!-- Botones para obtener registros y añadir una solicitud -->
+    <div class="d-flex justify-content mb-3">
+        <!-- Botón que abre el modal para añadir una solicitud -->
         <button type="button" class="botonAgregarSolicitud" data-bs-toggle="modal" data-bs-target="#agregarSolicitudModal">
+            <i class="fa-solid fa-plus"></i>
             Añadir una solicitud
+        </button>
+        <!-- Botón para obtener registros de Drive -->
+        <button type="button" class="botonObtener" onclick="obtenerRegistrosDrive()">
+            <i class="fa-solid fa-arrows-rotate"></i>
+            Obtener solicitudes de GoogleForms
         </button>
     </div>
     <table id="dataTable" class="table table-striped table-bordered table-hover">
@@ -29,7 +39,8 @@ Inscripciones - Solicitudes de Preinscripción
             <tr>
                 <th style="color: white;background-color:#005187;">Apellido y nombre</th>
                 <th style="color: white;background-color:#005187;">DNI</th>
-                <th style="color: white;background-color:#005187;">Gmail</th>
+                <th style="color: white;background-color:#005187;">Nro de Celular</th>
+                <th style="color: white;background-color:#005187;">Correo Electronico</th>         
                 <th style="color: white;background-color:#005187;" class="text-center">Acciones</th>
             </tr>
         </thead>
@@ -38,11 +49,13 @@ Inscripciones - Solicitudes de Preinscripción
             <tr>
                 <td>{{ solicitud.apellido }}  {{ solicitud.nombre }}</td>
                 <td>{{ solicitud.dni }}</td>
+                <td>{{ solicitud.celular_nro }}</td>
                 <td>{{ solicitud.email }}</td>
+                
                 <td  style="width: 1px; white-space: nowrap;">
-                    <a href="{% url 'confirmar_solicitud' solicitud.id_datinsc %}" class="botonDescargar">Confirmar</a>
-                    <a href="{% url 'editar_solicitud' solicitud.id_datinsc %}"  class="botonModificar">Editar</a>
-                    <a href="{% url 'eliminar_solicitud' solicitud.id_datinsc %}" class="botonEliminar">Eliminar</a>
+                    <a href="{% url 'confirmar_solicitud' solicitud.id_datinsc %}" class="botonDescargar"><i class="fa-solid fa-plus"></i><i class="fa-solid fa-user"></i></i> Confirmar</a>
+                    <a href="{% url 'editar_solicitud' solicitud.id_datinsc %}"  class="botonModificar"><i class="fa-solid fa-user-pen"></i> Editar</a>
+                    <a href="{% url 'eliminar_solicitud' solicitud.id_datinsc %}" class="botonEliminar"><i class="fa-solid fa-minus"><i class="fa-solid fa-user"></i></i></i> Eliminar</a>
                 </td>
             </tr>
             {% empty %}
@@ -76,28 +89,34 @@ Inscripciones - Solicitudes de Preinscripción
                             {{ form.telefono_fijo|as_crispy_field }}
                             {{ form.celular_nro|as_crispy_field }}
                             {{ form.email|as_crispy_field }}
+
                             {{ form.estado_civil|as_crispy_field }}
                             <a href="#" class="text-primary" style="text-decoration: underline;" onclick="borrarSeleccion('estado_civil')">Borrar selección</a>
+                            
                         </div>
-
                         <!-- Columna 2 -->
                         <div class="col-md-6">
                             <!-- ¿Tiene Hijos? -->
-                            {{ form.hijos|as_crispy_field }}
-                            <a href="#" class="text-primary" style="text-decoration: underline;" onclick="borrarSeleccion('hijos')">Borrar selección</a>
-
+                            <div class="espaciado">
+                                {{ form.hijos|as_crispy_field }}
+                                <a href="#" class="text-primary" style="text-decoration: underline;" onclick="borrarSeleccion('hijos')">Borrar selección</a>
+                            </div>
                             {{ form.lugar_trabajo|as_crispy_field }}
                             {{ form.tel_emergencia|as_crispy_field }}
                             {{ form.col_egreso|as_crispy_field }}
                             {{ form.titulo|as_crispy_field }}
                             {{ form.otro_titulo|as_crispy_field }}
                             {{ form.anio_egreso|as_crispy_field }}
-
                             <!-- ¿Tuvo otro ingreso a nivel superior? -->
-                            {{ form.preg_1|as_crispy_field }}
-                            <a href="#" class="text-primary" style="text-decoration: underline;" onclick="borrarSeleccion('preg_1')">Borrar selección</a>
-
-                            <!-- ¿Completó esos estudios? -->
+                            <div class="espaciado">
+                                {{ form.preg_1|as_crispy_field }}
+                                <a href="#" class="text-primary" style="text-decoration: underline;" onclick="borrarSeleccion('preg_1')">Borrar selección</a>
+                            </div>
+                            {{ form.resp_1|as_crispy_field }}
+                            <div class="espaciado">
+                                {{ form.resp_2|as_crispy_field }}
+                                <a href="#" class="text-primary" style="text-decoration: underline;" onclick="borrarSeleccion('resp_2')">Borrar selección</a>
+                            </div>
                             {{ form.preg_2|as_crispy_field }}
                         </div>
                     </div>
@@ -108,8 +127,6 @@ Inscripciones - Solicitudes de Preinscripción
         </div>
     </div>
 </div>
-
-
 {% endblock content %}
 
 {% block javascript %}
@@ -168,5 +185,11 @@ Inscripciones - Solicitudes de Preinscripción
         });
     }
 </script>
-
+<script type="text/javascript">
+    function obtenerRegistrosDrive() {
+        // Aquí puedes agregar el código JavaScript para obtener los registros de Google Drive.
+        // Por ejemplo, hacer una llamada AJAX o redirigir a una vista que maneje esta funcionalidad.
+        alert("Obteniendo registros de Drive...");
+    }
+</script>
 {% endblock javascript %}

@@ -151,61 +151,14 @@ class DatInsc(models.Model):
     resp_1 = models.CharField(db_column='Resp_1', max_length=200, blank=True, null=True)  # Field name made lowercase.
     resp_2 = models.IntegerField(db_column='Resp_2', blank=True, null=True)  # Field name made lowercase.
     preg_2 = models.CharField(db_column='Preg_2', max_length=200, blank=True, null=True)  # Field name made lowercase.
-    matricula = models.BooleanField(db_column='Matricula',default="False")  # Field name made lowercase.
-    legajo_fisico = models.BooleanField(db_column='Legajo_Fisico',default="False")  # Field name made lowercase.
-    
+    matricula = models.BooleanField(db_column='Matricula', default=False)  # No permitimos NULL, default es False
+    legajo_fisico = models.BooleanField(db_column='Legajo_Fisico', default=False)  # No permitimos NULL, default es False
+    inscripto = models.BooleanField(db_column='Inscripto', default=False) # No permitimos NULL, default es False
+
     class Meta:
         managed = False
         db_table = 'dat_insc'
-        
-class Estudiantes(models.Model):
-    id_estudiante = models.AutoField(db_column='Id_Estudiante', primary_key=True)  # Field name made lowercase.
-    id_datinsc = models.ForeignKey(DatInsc, models.DO_NOTHING, db_column='Id_DatInsc', blank=True, null=True)  # Field name made lowercase.
-    fecha_insc_est = models.DateField(db_column='Fecha_Insc_Est')  # Field name made lowercase.
-    nro_legajo = models.CharField(db_column='Nro_Legajo', max_length=45, blank=True, null=True)  # Field name made lowercase.
-    legajo_digital = models.CharField(db_column='Legajo_Digital', max_length=200, blank=True, null=True)  # Field name made lowercase.
 
-    class Meta:
-        managed = False
-        db_table = 'estudiantes'
-
-
-class EstadosCurriculares(models.Model):
-    id_estadocurricular = models.AutoField(db_column='Id_EstadoCurricular', primary_key=True)  # Field name made lowercase.
-    id_matxplan_estcur = models.ForeignKey('MateriasxplanesEstudios', models.DO_NOTHING, db_column='Id_MatXPlan_EstCur', blank=True, null=True)  # Field name made lowercase.
-    id_estudiante_estcur = models.ForeignKey('Estudiantes', models.DO_NOTHING, db_column='Id_Estudiante_EstCur', blank=True, null=True)  # Field name made lowercase.
-    condicion_nota = models.IntegerField(db_column='Condicion_Nota', blank=True, null=True)  # Field name made lowercase.
-    nota = models.IntegerField(db_column='Nota', blank=True, null=True)  # Field name made lowercase.
-    fecha_finalizacion = models.DateField(db_column='Fecha_Finalizacion')  # Field name made lowercase.
-    folio = models.CharField(db_column='Folio', max_length=45, blank=True, null=True)  # Field name made lowercase.
-
-    class Meta:
-        managed = False
-        db_table = 'estados_curriculares'
-
-
-        
-class Materias(models.Model):
-    id_materia = models.AutoField(db_column='Id_Materia', primary_key=True)  # Field name made lowercase.
-    nombre = models.CharField(db_column='Nombre', max_length=200)  # Field name made lowercase.
-    id_unidad = models.ForeignKey('TiposUnidades', models.DO_NOTHING, db_column='Id_Unidad', blank=True, null=True)  # Field name made lowercase.
-    cuatrimestral_anual = models.IntegerField(db_column='Cuatrimestral/Anual', blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
-    correlatividad = models.IntegerField(db_column='Correlatividad', blank=True, null=True)  # Field name made lowercase.
-
-    class Meta:
-        managed = False
-        db_table = 'materias'
-
-
-class MateriasxplanesEstudios(models.Model):
-    id_matxplan = models.AutoField(db_column='Id_MatXPlan', primary_key=True)  # Field name made lowercase.
-    id_planestudio = models.ForeignKey('PlanesEstudios', models.DO_NOTHING, db_column='Id_PlanEstudio', blank=True, null=True)  # Field name made lowercase.
-    id_materia = models.ForeignKey(Materias, models.DO_NOTHING, db_column='Id_Materia', blank=True, null=True)  # Field name made lowercase.
-    id_campoestudio = models.ForeignKey(CamposEstudios, models.DO_NOTHING, db_column='Id_CampoEstudio', blank=True, null=True)  # Field name made lowercase.
-
-    class Meta:
-        managed = False
-        db_table = 'materiasxplanes_estudios'
 
 class DjangoAdminLog(models.Model):
     action_time = models.DateTimeField()
@@ -275,16 +228,36 @@ class EstadosCuotas(models.Model):
         db_table = 'estados_cuotas'
 
 
+class EstadosCurriculares(models.Model):
+    id_estadocurricular = models.AutoField(db_column='Id_EstadoCurricular', primary_key=True)  # Field name made lowercase.
+    id_matxplan_estcur = models.ForeignKey('MateriasxplanesEstudios', models.DO_NOTHING, db_column='Id_MatXPlan_EstCur', blank=True, null=True)  # Field name made lowercase.
+    id_estudiante_estcur = models.ForeignKey('Estudiantes', models.DO_NOTHING, db_column='Id_Estudiante_EstCur', blank=True, null=True)  # Field name made lowercase.
+    condicion_nota = models.IntegerField(db_column='Condicion_Nota', blank=True, null=True)  # Field name made lowercase.
+    nota = models.IntegerField(db_column='Nota', blank=True, null=True)  # Field name made lowercase.
+    fecha_finalizacion = models.DateField(db_column='Fecha_Finalizacion')  # Field name made lowercase.
+    folio = models.CharField(db_column='Folio', max_length=45, blank=True, null=True)  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'estados_curriculares'
 
 
+class Estudiantes(models.Model):
+    id_estudiante = models.AutoField(db_column='Id_Estudiante', primary_key=True)  # Field name made lowercase.
+    id_datinsc = models.ForeignKey(DatInsc, models.DO_NOTHING, db_column='Id_DatInsc', blank=True, null=True)  # Field name made lowercase.
+    anio_insc = models.SmallIntegerField(db_column='Anio_Insc')  # Field name made lowercase.
+    nro_legajo = models.CharField(db_column='Nro_Legajo', max_length=45, blank=True, null=True)  # Field name made lowercase.
+    legajo_digital = models.CharField(db_column='Legajo_Digital', max_length=200, blank=True, null=True)  # Field name made lowercase.
 
-
+    class Meta:
+        managed = False
+        db_table = 'estudiantes'
 
 
 class InscCarreras(models.Model):
     id_insccarrera = models.AutoField(db_column='Id_InscCarrera', primary_key=True)  # Field name made lowercase.
     id_estudiante_ic = models.ForeignKey(Estudiantes, models.DO_NOTHING, db_column='Id_Estudiante_IC', blank=True, null=True)  # Field name made lowercase.
-    id_planestudio_ic = models.ForeignKey('PlanesEstudios', models.DO_NOTHING, db_column='Id_PlanEstudio_IC', blank=True, null=True)  # Field name made lowercase.
+    id_carrera_ic =  models.ForeignKey(Carreras, models.DO_NOTHING, db_column='Id_Carrera_IC', blank=True, null=True)  # Field name made lowercase.
     fecha_insc = models.DateField(db_column='Fecha_Insc')  # Field name made lowercase.
     id_empleado_ic = models.ForeignKey(Empleados, models.DO_NOTHING, db_column='Id_Empleado_IC', blank=True, null=True)  # Field name made lowercase.
 
@@ -296,9 +269,8 @@ class InscCarreras(models.Model):
 class InscExamenes(models.Model):
     id_inscexamen = models.AutoField(db_column='Id_InscExamen', primary_key=True)  # Field name made lowercase.
     id_estudiante_ie = models.ForeignKey(Estudiantes, models.DO_NOTHING, db_column='Id_Estudiante_IE', blank=True, null=True)  # Field name made lowercase.
-    id_matxplan_ie = models.ForeignKey('MateriasxplanesEstudios', models.DO_NOTHING, db_column='Id_MatXPlan_IE', blank=True, null=True)  # Field name made lowercase.
+    id_mesaexamen = models.ForeignKey('Mesas_Examenes', models.DO_NOTHING, db_column='Id_MatXPlan_IE', blank=True, null=True)  # Field name made lowercase.
     id_estadocuota_ie = models.ForeignKey(EstadosCuotas, models.DO_NOTHING, db_column='Id_EstadoCuota_IE', blank=True, null=True)  # Field name made lowercase.
-    fecha_examen = models.DateField(db_column='Fecha_Examen')  # Field name made lowercase.
     id_empleado_ie = models.ForeignKey(Empleados, models.DO_NOTHING, db_column='Id_Empleado_IE', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
@@ -306,7 +278,35 @@ class InscExamenes(models.Model):
         db_table = 'insc_examenes'
 
 
+class Materias(models.Model):
+    id_materia = models.AutoField(db_column='Id_Materia', primary_key=True)  # Field name made lowercase.
+    nombre = models.CharField(db_column='Nombre', max_length=200)  # Field name made lowercase.
+    id_unidad = models.ForeignKey('TiposUnidades', models.DO_NOTHING, db_column='Id_Unidad', blank=True, null=True)  # Field name made lowercase.
+    cuatrimestral_anual = models.BooleanField(db_column='Cuatrimestral/Anual', blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
+    correlatividad = models.BooleanField(db_column='Correlatividad', blank=True, null=True)  # Field name made lowercase.
 
+    class Meta:
+        managed = False
+        db_table = 'materias'
+
+
+class MateriasxplanesEstudios(models.Model):
+    id_matxplan = models.AutoField(db_column='Id_MatXPlan', primary_key=True)  # Field name made lowercase.
+    id_planestudio = models.ForeignKey('PlanesEstudios', models.DO_NOTHING, db_column='Id_PlanEstudio', blank=True, null=True)  # Field name made lowercase.
+    id_materia = models.ForeignKey(Materias, models.DO_NOTHING, db_column='Id_Materia', blank=True, null=True)  # Field name made lowercase.
+    id_campoestudio = models.ForeignKey(CamposEstudios, models.DO_NOTHING, db_column='Id_CampoEstudio', blank=True, null=True)  # Field name made lowercase.
+    anio_materia = models.SmallIntegerField(db_column='Anio_Materia')  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'materiasxplanes_estudios'
+
+
+class Mesas_Examenes(models.Model):
+    id_mesaexamen = models.AutoField(db_column='Id_MesaExamen', primary_key=True)
+    id_matxplan_me = models.ForeignKey('MateriasxplanesEstudios', models.DO_NOTHING, db_column='Id_MatXPlan_ME', blank=True, null=True)
+    fecha_examen = models.DateField(db_column='Fecha_Examen')
+    hora_examen = models.TimeField(db_column='Hora_Examen',blank=True, null=True)
 
 
 class PagosCuotas(models.Model):
@@ -325,6 +325,7 @@ class PagosCuotas(models.Model):
 class PlanesEstudios(models.Model):
     id_planestudio = models.AutoField(db_column='Id_PlanEstudio', primary_key=True)  # Field name made lowercase.
     id_carrera = models.ForeignKey(Carreras, models.DO_NOTHING, db_column='Id_Carrera', blank=True, null=True)  # Field name made lowercase.
+    anio_plan = models.PositiveSmallIntegerField(db_column='Anio_Plan')
     descripcion = models.CharField(db_column='Descripcion', max_length=200, blank=True, null=True)  # Field name made lowercase.
 
     class Meta:

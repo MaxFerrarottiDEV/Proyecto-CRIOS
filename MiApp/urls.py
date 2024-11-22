@@ -1,7 +1,9 @@
-from django.contrib.auth import views as auth_views
-from django.urls import path, include
-from django.contrib import admin
+from django.contrib.auth import views as auth_views # type: ignore
+from django.contrib.auth.views import LogoutView
+from django.urls import path, include # type: ignore
+from django.contrib import admin # type: ignore
 from . import views
+from .views import login_view, logout_view
 from .forms import CustomPasswordResetForm
 
 urlpatterns = [
@@ -11,9 +13,13 @@ urlpatterns = [
 
     path('', views.home, name='home'),
 
+    path('cambiar_contraseña/', views.change_password, name='change_password'),
+
     path('register/', views.register, name='register'),
 
-    path('login/', auth_views.LoginView.as_view(), name='login'),
+    path('login/', login_view, name='login'),
+
+    path('logout/', logout_view, name='logout'),
 
     path('build/',views.build, name='build'),
 
@@ -28,20 +34,24 @@ urlpatterns = [
     path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(template_name='registration/password_reset/password_reset_confirm.html'), name='password_reset_confirm'),
     path('reset_password_complete/', auth_views.PasswordResetCompleteView.as_view(template_name='registration/password_reset/password_reset_complete.html'), name='password_reset_complete'),
     
-    # Modulo de solicitudes inscripciones
+    # Modulo de inscripciones - solicitudes 
     path('inscripciones/tipoInscripcion/',views.tipo_inscripcion, name='tipo_inscripcion'),
     path('inscripciones/solicitudes/', views.lista_solicitudes, name='lista_solicitudes'),
     path('inscripciones/solicitudes/confirmar/<int:id_datinsc>/', views.confirmar_solicitud, name='confirmar_solicitud'),
-    path('inscripciones/solicitudes/editar/<id_datinsc>', views.editar_solicitud, name='editar_solicitud'),
-    path('inscripciones/solicitudes/eliminar/<id_datinsc>', views.eliminar_solicitud, name='eliminar_solicitud'),
+    path('inscripciones/solicitudes/editar/<int:id_datinsc>', views.editar_solicitud, name='editar_solicitud'),
+    path('inscripciones/solicitudes/eliminar/<int:id_datinsc>', views.eliminar_solicitud, name='eliminar_solicitud'),
 
-    # Modulo de consultas
+    # Modulo de inscripciones - consultas
     path('inscripciones/consultas/', views.consultas, name='consultas'),
-    path('inscripciones/consultas/modificar/<str:dni>/', views.modificar, name='modificar'),
-    path('eliminar/<int:dni>/', views.eliminar_estudiante, name='eliminar_estudiante'),
+    path('inscripciones/consultas/ver_datos/<int:id_estudiante_ic>/', views.ver_datos, name='ver_datos'),
+    path('inscripciones/consultas/modificar_datos/<int:id_estudiante>/', views.modificar_datos, name='modificar_datos'),
+    path('inscripciones/consultas/guardar_legajo/<int:id_estudiante>/', views.guardar_legajo_digital, name='guardar_legajo_digital'),
+    path('inscripciones/consultas/eliminar/<int:id_estudiante>/', views.eliminar_estudiante, name='eliminar_estudiante'),
 
+    #Modulo de estados Curriculares - Gestión de Planes de Estudio:
+    path('plan-estudio/', views.plan_estudio_view, name='plan_estudio'),
 
-    # Modulo de estados Curriculares
+    #Modulo de estados Curriculares - Gestión de Estados Curriculares:
     path('estadosCurriculares/estados', views.estados, name='estados'),
     path('estadosCurriculares/estados', views.agregarNota, name='agregarNota'),
     path('estadosCurriculares/agregar_nota/<str:dni>/', views.agregar_nota, name='agregar_nota'),

@@ -1,4 +1,7 @@
 {% extends 'base.html' %}
+{% block title %} 
+Estados Curriculares - Agregar Nota
+{% endblock %}
 {% block content %}
 
 <div class="container mt-4">
@@ -40,8 +43,8 @@
         
         <button type="submit" class="botonGuardar">Guardar Nota</button>
         <a href="{% url 'estados' %}" class="botonCancelar">Volver</a>
-        
-      
     </form>
 </div>
 {% endblock %}
+
+

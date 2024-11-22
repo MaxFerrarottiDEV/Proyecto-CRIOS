@@ -7,20 +7,24 @@
     {% load django_bootstrap5 %}
     {% bootstrap_css %}
     {% bootstrap_javascript %}
-    <title>Profesorado CRIOS - Pagina Principal</title>
+    <title>
+      {% block title %} {% endblock %}
+    </title>
     <link rel="icon" href="{% static 'icons/crios_logo.png' %}" type="image/x-icon">
-    <link href="{% static 'home/style.css' %}" rel="stylesheet">
-    <link href="{% static 'home/style-tipoInscripcion.css' %}" rel="stylesheet">
-    <link href="{% static 'inscripciones/solicitudes/style.css'%}" rel="stylesheet">
+    <!-- Styles CSS -->
+    <link href="{% static 'base/general.css' %}" rel="stylesheet">
     <link href="{% static 'DataTables-1.13.6/css/dataTables.bootstrap5.css' %}" rel="stylesheet">
-    <link href="{% static 'inscripciones/consultas.css' %}" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css" rel="stylesheet">
+    {% block head %} {% endblock %}
+    <!-- GoogleFonts - Rubik -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+    <!-- FontAwesome - Iconos -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet">
   </head>
-  <body  class="d-flex flex-column min-vh-100">
-    <nav id="hola123" class="navbar navbar-expand-lg">
+  <body class="d-flex flex-column min-vh-100">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg">
       <div class="container-fluid">
         <a class="navbar-brand" href="{% url 'home' %}">
           <img src="{% static 'icons/crios_logo.png'%}" alt="Logo" width="55" height="48" class="d-inline-block align-text-top">
@@ -28,53 +32,78 @@
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
-     
-        <div class="collapse navbar-collapse" id="navbarSupportedContent" >
+        <!-- Botones encabezado-->
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item">
-              <a class="nav-link nav-titulo" href="{% url 'home' %}">Pagina Principal</a>
+              <a class="nav-link nav-titulo" href="{% url 'home' %}"><i class="fa-solid fa-house"></i> Pagina Principal</a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link nav-titulo" href="{% url 'build' %}">Examenes</a>
-          </li>
-          <li class="nav-item">
-              <a class="nav-link nav-titulo" href="{% url 'estados' %}">Estados Curriculares</a>
-          </li>
-         
-          <li class="nav-item dropdown">
-              <a class="nav-link nav-titulo" href="{% url 'build' %}" id="inscripcionesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Inscripciones
+            <!-- Dropdown de EXAMENES -->
+            <li class="nav-item dropdown">
+              <a class="nav-link nav-titulo" href="" id="examenesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fa-solid fa-file-lines"></i> Examenes
               </a>
-            <ul class="dropdown-menu" aria-labelledby="inscripcionesDropdown">
-              <li><a class="dropdown-item" href="{% url 'lista_solicitudes' %}">Solicitudes de Inscripcion</a></li>
-              <li><hr class="dropdown-divider"></li>
-              <li><a class="dropdown-item" href="{% url 'consultas' %}">Consultas de Datos de Estudiantes</a></li>
-            </ul>
-          </li>
-          <li class="nav-item">
-              <a class="nav-link nav-titulo" href="{% url 'build' %}">Cuotas</a>
-          </li>
-        </ul>
-        
-        <ul class="navbar-nav mb-2 mb-lg-0">
-          <li class="nav-item">
-            <a class="saludo" href="#" >Hola {{ user.username }}.</a>
-          </li>
-          <li class="nav-item">
-            <a class="botonCerrarSesion" href="#" onclick="document.getElementById('logout-form').submit();">Cerrar sesión</a>
-            <form id="logout-form" method="post" action="{% url 'logout' %}" style="display: none;">
-              {% csrf_token %}
-            </form>
-          </li>
-        </ul>
-        
+              <ul class="dropdown-menu" aria-labelledby="examenesDropdown">
+                <li><a class="dropdown-item" href="{% url 'build' %}">Gestión de Mesas de Examen</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="{% url 'build' %}">Solicitudes a Mesas de Examen</a></li>
+              </ul>
+            </li>
+            <!-- Dropdown de ESTADOS CURRICULARES -->
+            <li class="nav-item dropdown">
+              <a class="nav-link nav-titulo" href="" id="estadosDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fa-solid fa-chart-bar"></i> Estados Curriculares
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="estadosDropdown">
+                <li><a class="dropdown-item" href="{% url 'plan_estudio' %}">Gestión de Planes de estudio</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="{% url 'estados' %}">Gestión de Estados Curriculares</a></li>
+              </ul>
+            </li>
+            <!-- Dropdown de INSCRIPCIONES -->
+            <li class="nav-item dropdown">
+              <a class="nav-link nav-titulo" href="{% url 'tipo_inscripcion' %}" id="inscripcionesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fa-solid fa-address-card"></i> Inscripciones
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="inscripcionesDropdown">
+                <li><a class="dropdown-item" href="{% url 'lista_solicitudes' %}">Solicitudes de Inscripción</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="{% url 'consultas' %}">Consultas de Datos de Estudiantes</a></li>
+              </ul>
+            </li>
+            <!-- Dropdown de CUOTAS -->
+            <li class="nav-item">
+              <a class="nav-link nav-titulo" href="{% url 'build' %}"><i class="fa-solid fa-lock"></i> Cuotas</a>
+            </li>
+          </ul>
+          <!-- Menú desplegable para perfil del usuario -->
+          <ul class="navbar-nav mb-2 mb-lg-0"> 
+            <li class="nav-item dropdown">
+                <a class="nav-link nav-titulo" href="#" id="perfilDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa-solid fa-user"></i> Perfil
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="perfilDropdown">
+                    <li>
+                        <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#perfilModal"><i class="fa-solid fa-gear"></i> Preferencias</a>
+                    </li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li>
+                        <form method="POST" action="{% url 'logout' %}" style="display: inline;">
+                          {% csrf_token %}
+                          <button type="submit" class="dropdown-item">
+                              <i class="fa-solid fa-right-from-bracket"></i> Cerrar Sesión
+                          </button>
+                      </form> 
+                    </li>
+                </ul>
+            </li>
+          </ul>  
         </div>
       </div>
     </nav>
+    <!-- Contenido -->
     <div class="flex-grow-1 container mt-5">
         {% block content %}
-
-
         {% endblock content %}
     </div>
     <!-- Footer -->
@@ -84,10 +113,10 @@
         <br>
         Redes:  
         <a href="https://www.facebook.com/criosprofesorado/?locale=es_LA" target="_blank">
-          <img src="{% static 'icons/fb_icon.png'%}" alt="Facebook" width="30px" height="auto">
+          <img src="{% static 'icons/fb_icon.png'%}" alt="Facebook" width="1.80%" height="auto">
         </a>
         <a href="https://www.instagram.com/criosprofesorado/?hl=es" target="_blank">
-          <img src="{% static 'icons/insta_icon.png'%}" alt="Instagram" width="30px" height="auto">
+          <img src="{% static 'icons/insta_icon.png'%}" alt="Instagram" width="1.80%" height="auto">
         </a> |
         Portal educativo: 
         <a href="https://crios-sal.infd.edu.ar/sitio/" target="_blank">
@@ -95,17 +124,46 @@
         </a>
       </p>
     </footer>
+
+    <!-- Modal de Perfil -->
+    <div class="modal fade" id="perfilModal" tabindex="-1" aria-labelledby="perfilModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="perfilModalLabel">Perfil</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" ></button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center">
+                        <video width="120" height="120" autoplay loop muted>
+                          <source src="{% static 'images/Profile.mp4' %}" type="video/mp4">
+                        </video>
+                        <h5 class="mt-3">Hola, {{ user.username }}</h5>
+                    </div>
+                    <p class="mt-4"><strong>Nombre de Usuario:</strong> {{ user.username }}</p>
+                    <p><strong>Correo Electrónico:</strong> {{ user.email }}</p>
+                    <div class="text-center">
+                      <a href="{% url 'change_password' %}" class="btn btn-link" class="center">Cambiar contraseña</a>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+            <div class="alert {{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
     {% block javascript %}
+    {% endblock javascript %}
     <script src="{% static 'jQuery-3.7.0/jquery-3.7.0.js' %}"></script>  
     <script src="{% static 'DataTables-1.13.6/js/jquery.dataTables.js' %}"></script>
     <script src="{% static 'DataTables-1.13.6/js/dataTables.bootstrap5.js' %}"></script> 
     <script src="{% static 'bootbox/bootbox.all.min.js' %}"></script>
-    <script>
-        $(document).ready(function () {
-            $('#myTable').DataTable();
-        });
-    </script>
-{% endblock javascript %}
-
   </body>
 </html>

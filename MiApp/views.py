@@ -1,22 +1,48 @@
-from django.shortcuts import render, redirect ,get_object_or_404 
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib import messages
-from .forms import PreinscripcionForm 
-from django.http import JsonResponse
-from .models import DatInsc, EstadosCurriculares ,Estudiantes,Materias,MateriasxplanesEstudios
 from datetime import date
-from django.template.loader import render_to_string
-from django.http import HttpResponse
-from io import BytesIO
-from reportlab.lib.pagesizes import letter
-from reportlab.pdfgen import canvas
-from reportlab.lib import colors
-from reportlab.lib.units import inch
-from reportlab.platypus import Table, TableStyle
 
-def login(request):
-    return render(request, 'login.html')
+from django.contrib import messages
+from django.contrib.auth import update_session_auth_hash, logout, login as auth_login
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.db import transaction
+from django.db.models import Q
+from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
+from django.shortcuts import render, redirect, get_object_or_404
+from django.template.loader import render_to_string
+from django.urls import reverse
+
+from io import BytesIO
+
+from reportlab.lib import colors
+from reportlab.lib.pagesizes import letter  # type: ignore
+from reportlab.lib.units import inch  # type: ignore
+from reportlab.pdfgen import canvas  # type: ignore
+from reportlab.platypus import Table, TableStyle  # type: ignore
+
+from .forms import PreinscripcionForm
+from .models import Carreras, DatInsc, EstadosCurriculares, Estudiantes, InscCarreras, Materias, MateriasxplanesEstudios, PlanesEstudios
+
+def login_view(request):
+    if request.user.is_authenticated:
+        return redirect('home')  # Cambia 'home' al nombre de tu URL para la página principal.
+    
+    if request.method == 'POST':
+        form = AuthenticationForm(data=request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            auth_login(request, user)
+            return redirect('home')  # Cambia 'home' si es necesario.
+    else:
+        form = AuthenticationForm()
+
+    return render(request, 'registration/login.html', {'form': form})
+
+
+def logout_view(request):
+    request.session['has_logged_out'] = True
+    logout(request)
+    return redirect('login')
+
 
 def register(request):
     if request.method == 'POST':
@@ -37,16 +63,45 @@ def register(request):
 def home(request):
     return render(request,'home.html')
 
+
+@login_required
+def change_password(request):
+    if request.method == 'POST':
+        # Obtener las contraseñas ingresadas
+        new_password1 = request.POST['new_password1']
+        new_password2 = request.POST['new_password2']
+        
+        # Verificar si las contraseñas coinciden
+        if new_password1 == new_password2:
+            # Establecer la nueva contraseña
+            request.user.set_password(new_password1)
+            request.user.save()
+            
+            # Cerrar la sesión del usuario
+            logout(request)
+            
+            # Mensaje de éxito
+            messages.success(request, "Contraseña cambiada exitosamente. Por favor, vuelve a iniciar sesión.")
+            
+            # Redirigir al login
+            return redirect('login')  # Redirigir al login tras cambio de contraseña
+        else:
+            # Mensaje de error si las contraseñas no coinciden
+            messages.error(request, "Las contraseñas no coinciden.")
+    
+    return render(request, 'change_password.html')
+
 @login_required
 def tipo_inscripcion(request):
     return render(request, 'inscripciones/tipo_inscripcion.html')
 
+
 @login_required
 def lista_solicitudes(request):
-    
-    solicitudes = DatInsc.objects.filter
+    # Filtrar las solicitudes con inscripto=False
+    solicitudes = DatInsc.objects.filter(inscripto=False)
 
-    # Inicializamos el formulario de la solicitud
+    # Inicializamos el formulario de preinscripción
     form = PreinscripcionForm()
 
     if request.method == 'POST':
@@ -61,38 +116,58 @@ def lista_solicitudes(request):
         else:
             messages.error(request, 'Formulario inválido. Por favor revisa los campos e inténtalo de nuevo.')
 
-    # Siempre devolver el formulario y las solicitudes, incluso para GET
+    # Devolver el formulario y las solicitudes filtradas
     return render(request, 'inscripciones/solicitudes/lista_solicitudes.html', {
         'solicitudes': solicitudes,
         'form': form  # Pasamos el formulario al contexto
     })
 
+
 @login_required
 def confirmar_solicitud(request, id_datinsc):
+    # Obtener la solicitud específica
     solicitud = get_object_or_404(DatInsc, id_datinsc=id_datinsc)
 
     if request.method == 'POST':
-        matricula = request.POST.get('matricula') == 'True'  # Si no se marca, será False
-        legajo_fisico = request.POST.get('legajo_fisico') == 'True'  # Si no se marca, será False
+        # Obtener valores del formulario
+        matricula = request.POST.get('matricula') == 'True'
+        legajo_fisico = request.POST.get('legajo_fisico') == 'True'
+        carrera_id = request.POST.get('carrera')
+        anio_insc = request.POST.get('anio_insc')
+        nro_legajo = request.POST.get('nro_legajo') or None  # Si está vacío, será None
 
-        # Actualizamos los campos en la solicitud
-        solicitud.matricula = matricula
-        solicitud.legajo_fisico = legajo_fisico
-        solicitud.save()
+        # Fecha actual
+        fecha_insc = date.today()
 
-        # Creamos un nuevo estudiante basado en la solicitud
+        # Crear un nuevo estudiante basado en la solicitud
         nuevo_estudiante = Estudiantes.objects.create(
             id_datinsc=solicitud,
-            fecha_insc_est=date.today(),  # Corregido a date.today()
-            nro_legajo=None,  # Esto puede depender de tus necesidades
-            legajo_digital=None  # Esto puede depender de tus necesidades
+            anio_insc=anio_insc,
+            nro_legajo=nro_legajo,
+            legajo_digital=None,  # Puedes ajustar según tus necesidades
         )
 
-        # Mensaje de éxito y redirigir a la lista de solicitudes
+        # Crear un nuevo registro en la tabla InscCarreras
+        insc_carrera = InscCarreras.objects.create(
+            id_carrera_ic_id=carrera_id,
+            fecha_insc=fecha_insc,
+            id_estudiante_ic=nuevo_estudiante  # Relación con el nuevo estudiante
+        )
+
+        # Actualizar el atributo "inscripto" en la solicitud
+        solicitud.inscripto = True
+        solicitud.save()
+
+        # Mensaje de éxito y redirección
         messages.success(request, 'Solicitud confirmada exitosamente.')
         return redirect('lista_solicitudes')
 
-    return render(request, 'inscripciones/solicitudes/confirmar_solicitud.html', {'solicitud': solicitud})
+    # Obtener las carreras disponibles para el formulario
+    carreras = Carreras.objects.all()
+    return render(request, 'inscripciones/solicitudes/confirmar_solicitud.html', {
+        'solicitud': solicitud,
+        'carreras': carreras
+    })
 
 
 @login_required
@@ -111,6 +186,7 @@ def editar_solicitud(request, id_datinsc):
 
     return render(request, 'inscripciones/solicitudes/editar_solicitud.html', {'form': form})
 
+
 @login_required
 def eliminar_solicitud(request, id_datinsc):
     solicitud = get_object_or_404(DatInsc, id_datinsc=id_datinsc)
@@ -127,51 +203,133 @@ def eliminar_solicitud(request, id_datinsc):
 
 @login_required
 def consultas(request):
-    dni = request.GET.get('dni')  
+    # Obtener parámetros de búsqueda y filtro
+    dni = request.GET.get('dni')
+    curso = request.GET.get('curso')  # Filtro por curso
+
     if dni:
+        # Buscar el estudiante por su DNI en DatInsc
         estudiante_datinsc = DatInsc.objects.filter(dni=dni).first()
         if estudiante_datinsc:
+            # Buscar al estudiante relacionado en Estudiantes
             estudiante = Estudiantes.objects.filter(id_datinsc=estudiante_datinsc).first()
-            context = {'estudiante': estudiante}
+            if estudiante:
+                context = {'estudiante': estudiante}
+            else:
+                context = {'error': 'No se encontró un estudiante con este DNI en la tabla de Estudiantes.'}
         else:
-            context = {'error': 'Estudiante no encontrado'}
+            context = {'error': 'No se encontró un estudiante con este DNI en DatInsc.'}
     else:
-        lista_estudiantes = Estudiantes.objects.select_related('id_datinsc').all()
-        context = {'estudiantes': lista_estudiantes}
-    
+        # Obtener todos los estudiantes, filtrados y ordenados
+        estudiantes = (
+            Estudiantes.objects
+            .select_related('id_datinsc')  # Cargar datos relacionados con DatInsc
+            .order_by('id_datinsc__apellido', 'id_datinsc__nombre')  # Ordenar por apellido y nombre
+        )
+        
+        if curso:
+            # Filtrar por curso si se seleccionó uno
+            estudiantes = estudiantes.filter(anio_insc=curso)
+        
+        context = {
+            'estudiantes': estudiantes,
+            'curso_seleccionado': curso  # Pasar el curso seleccionado al template
+        }
+
     return render(request, 'inscripciones/consultas/consultas.html', context)
 
 
 @login_required
-def modificar(request, dni):
-    estudiante = get_object_or_404(DatInsc, dni=dni)
-    
-    if request.method == 'POST':
-        estudiante.nombre = request.POST.get('nombre')
-        estudiante.apellido = request.POST.get('apellido')
-        estudiante.dni = request.POST.get('dni')
-        estudiante.celular_nro = request.POST.get('telefono')
-        estudiante.email = request.POST.get('email')
-        estudiante.domicilio = request.POST.get('domicilio')
-        estudiante.matricula = request.POST.get('matricula') == 'on'
-        estudiante.legajo_fisico = request.POST.get('legajo_fisico') == 'on'
-        estudiante.save()
-        messages.success(request, '¡Estudiante modificado exitosamente!')
-        return redirect('consultas')
-    return render(request, 'inscripciones/consultas/modificar.html', {'estudiante': estudiante})
+def ver_datos(request, id_estudiante_ic):
+    # Obtener la inscripción en carrera por id_estudiante_ic
+    insc_carrera = get_object_or_404(InscCarreras, id_estudiante_ic=id_estudiante_ic)
+
+    # Obtener el estudiante relacionado
+    estudiante = insc_carrera.id_estudiante_ic
+
+    # Obtener los datos relacionados
+    dat_insc = estudiante.id_datinsc  # Relación con DatInsc
+    carrera = insc_carrera.id_carrera_ic  # Relación con la tabla Carreras
+
+    # Contexto para el template
+    context = {
+        'estudiante': estudiante,
+        'dat_insc': dat_insc,
+        'insc_carrera': insc_carrera,
+        'carrera': carrera,
+    }
+
+    return render(request, 'inscripciones/consultas/ver_datos.html', context)
 
 
 @login_required
-def eliminar_estudiante(request, dni):
-    estudiante = get_object_or_404(Estudiantes, id_datinsc__dni=dni)
-    estudiante.delete()
-    messages.success(request, 'El estudiante ha sido eliminado exitosamente.')
-    return redirect('consultas')
+def guardar_legajo_digital(request, id_estudiante):
+    if request.method == 'POST':
+        enlace = request.POST.get('legajo_digital')
+        estudiante = get_object_or_404(Estudiantes, id_estudiante=id_estudiante)
+        estudiante.legajo_digital = enlace
+        estudiante.save()
+        messages.success(request, "Se ha guardado el enlace correctamente.")
+    return redirect('ver_datos', id_estudiante_ic=estudiante.id_estudiante)
 
 
+@login_required
+def modificar_datos(request, id_estudiante):
+    # Obtener el registro del estudiante por su ID
+    estudiante = get_object_or_404(Estudiantes, id_estudiante=id_estudiante)
+
+    # Acceder a los datos de la tabla DatInsc a través de la relación
+    dat_insc = estudiante.id_datinsc
+
+    # Si la solicitud es POST, procesar el formulario
+    if request.method == 'POST':
+        form = PreinscripcionForm(request.POST, instance=dat_insc)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('ver_datos', args=[id_estudiante]))
+    else:
+        # Crear el formulario con los datos actuales
+        form = PreinscripcionForm(instance=dat_insc)
+
+    # Renderizar la plantilla con el formulario y los datos del estudiante
+    return render(request, 'inscripciones/consultas/modificar_datos.html', {
+        'form': form,
+        'estudiante': estudiante
+    })
+
+
+@login_required
+@transaction.atomic
+def eliminar_estudiante(request, id_estudiante):
+    estudiante = get_object_or_404(Estudiantes, id_estudiante=id_estudiante)
+    try:
+        # Eliminar inscripciones vinculadas
+        InscCarreras.objects.filter(id_estudiante_ic=estudiante.id_estudiante).delete()
+        
+        # Eliminar datos personales
+        datinsc = estudiante.id_datinsc
+        estudiante.delete()
+        datinsc.delete()
+        
+        # Mensaje de éxito
+        request.session['message'] = "El estudiante ha sido eliminado con éxito."
+    except Exception as e:
+        request.session['error'] = f"Error al eliminar al estudiante: {str(e)}"
+    return redirect('consultas')  # Redirige a la página de consultas
+
+
+@login_required
 def build(request):
     return render(request, 'build.html')
 
+
+@login_required
+def plan_estudio_view(request):
+    planes = PlanesEstudios.objects.all()
+    return render(request, 'estadosCurriculares/planesEstudios/planestudio.html', {'planes': planes})
+
+
+@login_required
 def verEstado(request, dni): 
     estudiante = get_object_or_404(Estudiantes, id_datinsc__dni=dni)
     estado_curricular = EstadosCurriculares.objects.filter(id_estudiante_estcur=estudiante) 
@@ -179,6 +337,8 @@ def verEstado(request, dni):
         'estudiante': estudiante,
         'estado_curricular': estado_curricular})
 
+
+@login_required
 def estados(request):
     dni = request.GET.get('dni')
     if dni:
@@ -206,6 +366,8 @@ def estados(request):
 
     return render(request, 'estadosCurriculares/estados.html', context)
 
+
+@login_required
 def agregarNota(request):
     if request.method == 'POST':
         materia_id = request.POST.get('materia')
@@ -227,6 +389,8 @@ def agregarNota(request):
         materias = Materias.objects.all()
         return render(request, 'estados.html', {'materias': materias})
     
+
+@login_required    
 def agregar_nota(request, dni):
     estudiante = get_object_or_404(Estudiantes, id_datinsc__dni=dni)
     
@@ -250,6 +414,8 @@ def agregar_nota(request, dni):
     materias = Materias.objects.all()
     return render(request, 'estadosCurriculares/agregar_nota.html', {'estudiante': estudiante, 'materias': materias})
 
+
+@login_required
 def pdf_estadoCurricular(request):
     dni = request.GET.get('dni')
     if not dni:

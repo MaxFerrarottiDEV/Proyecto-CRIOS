@@ -1,8 +1,14 @@
 {% extends 'base.html' %}
+{% block title %} 
+Estados Curriculares
+{% endblock %}
 {% load static %}
+{% block head %} 
+    <link href="{% static 'inscripciones/botones.css' %}" rel="stylesheet">
+{% endblock %}
 {% block content %}
 <div class="container mt-4">
-    <h1 class="mb-4 text-center">Estado Curricular</h1>
+    <h1 class="mb-4 text-center">ESTADO CURRICULAR</h1>
     <form method="GET" action="{% url 'estados' %}" class="mb-4">
         <div class="input-group">
             <input type="text" name="dni" class="form-control" 
@@ -177,9 +183,9 @@
                     <td>{{ estudiante.id_datinsc.apellido }} {{ estudiante.id_datinsc.nombre }}</td>
                     <td>{{ estudiante.id_datinsc.dni }}</td>
                     <td style="width: 1px; white-space: nowrap;" class="text-end">
-                        <a href="{% url 'verEstado' dni=estudiante.id_datinsc.dni %}" class="botonGuardar">Estado Curricular</a>
-                        <a href="{% url 'agregar_nota' dni=estudiante.id_datinsc.dni %}" class="botonModificar">Agregar Nota</a>
-                        <a href="{% url 'descargar_pdf' %}?dni={{ estudiante.id_datinsc.dni }}" class="botonDescargar">Descargar PDF</a>
+                        <a href="{% url 'verEstado' dni=estudiante.id_datinsc.dni %}" class="botonGuardar"><i class="fa-solid fa-address-card"></i></i>Estado Curricular</a>
+                        <a href="{% url 'agregar_nota' dni=estudiante.id_datinsc.dni %}" class="botonModificar"><i class="fa-solid fa-plus"></i>Agregar Nota</a>
+                        <a href="{% url 'descargar_pdf' %}?dni={{ estudiante.id_datinsc.dni }}" class="botonDescargar"><i class="fa-regular fa-file-pdf"></i>Descargar PDF</a>
                     </td>
                 </tr>
                 {% endfor %}
@@ -217,9 +223,3 @@
                 "sPrevious": "Anterior"}}});});
 </script>
 {% endblock javascript %}
-
-
-
-
-
-

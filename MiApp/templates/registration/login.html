@@ -28,13 +28,11 @@
 
             <label for="password">Contraseña:</label>
             <input type="password" id="password" name="password" required>
-            <div >
-                <a class="olvidoPw" href="{% url 'password_reset' %}">
-                    ¿Olvidó su contraseña?
-                </a>
-                <br><br>
-                <button  class="botonLogin" type="submit">Acceder</button>
-            </div>
+            <a href="{% url 'password_reset' %}">
+                ¿Olvidó su contraseña?
+            </a>
+            <br><br>
+            <button type="submit">Acceder</button>
         </form>
         <br>
     </div>
