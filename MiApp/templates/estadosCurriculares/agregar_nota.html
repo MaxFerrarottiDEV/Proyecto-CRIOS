@@ -1,6 +1,10 @@
 {% extends 'base.html' %}
 {% block title %} 
-Estados Curriculares - Agregar Nota
+Estados Curriculares
+{% endblock %}
+{% load static %}
+{% block head %} 
+    <link href="{% static 'inscripciones/botones.css' %}" rel="stylesheet">
 {% endblock %}
 {% block content %}
 
@@ -40,9 +44,10 @@ Estados Curriculares - Agregar Nota
             <label for="fecha" class="form-label">Fecha de Finalización</label>
             <input type="date" id="fecha" name="fecha" class="form-control" required>
         </div>
-        
+
+        <a href="{% url 'estados' %}" class="btn btn-info btn-sm mx-1 botonVolver"><i class="fa-solid fa-arrow-left"></i> Volver</a>
         <button type="submit" class="botonGuardar">Guardar Nota</button>
-        <a href="{% url 'estados' %}" class="botonCancelar">Volver</a>
+        
     </form>
 </div>
 {% endblock %}

@@ -1,72 +1,129 @@
-body {
+
+html, body {
+    height: 100%; 
+    margin: 0; 
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background-image: url('/static/images/login/loginbackground.png') ;
+    flex-direction: column; 
+    overflow-x: hidden; 
+    font-family: 'Open Sans', sans-serif; 
+    background-image: url('/static/images/login/loginbackground.png');
     background-size: cover;
     background-position: center;
-    background-repeat: no-repeat;
-    margin: 0;
-    font-family: 'Open Sans', sans-serif;
-}
-.error-message {
-    color: red;
-    font-weight: bold;
-    margin-top: 20px;
-    transition: opacity 1s ease-out;
-}
+    background-repeat: no-repeat;}
+
+
 .form-container {
     background-color: #f6f6f6;
-    width: 500px;
+    width: 460px;
     padding: 50px;
     border-radius: 25px;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
     text-align: center;
     position: relative;
+    border: 3px solid #005187;
+    margin: auto; 
 }
+
 #login {
-    color: #082d47;
+    color: #000000;
     font-weight: bold;
-    font-size: 30px;
-    margin-bottom: 40px;
+    font-size: 35px;
+    margin-bottom: 50px;
 }
+#logo {
+    width: 45%;
+    height: auto;
+}
+
+
 label {
     display: block;
     margin-bottom: 8px;
-    font-size: 22px;
+    font-size: 20px;
     color: #333;
     text-align: left;
 }
+
 input {
     display: block;
     width: 100%;
     padding: 10px;
     margin-bottom: 20px;
     border: 1px solid #ccc;
-    border-radius: 15px;
-    font-size: 16px;
+    border-radius: 10px;
+    font-size: 14px;
     color: #333;
 }
-.forgot-password {
-    font-size: 20px;
-    color: #333;
-    text-decoration: none;
+
+.center-label {
+    display: block;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 5px;
 }
+
+
 button {
     background-color: #005187;
     color: #fff;
     border: none;
-    border-radius: 10px;
+    border-radius: 20px;
     padding: 10px 20px;
     font-size: 24px;
+    width: 300px;
+    height: 50px;
     cursor: pointer;
+    align-self: center;
 }
-#logo {
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 20%;
-    height: auto;
+
+button:hover {
+    transform: scale(1.1);
+    transition: transform 0.3s ease;
+}
+
+.recuperar {
+    font-size: 18px;
+    margin-top: 20px;
+    color: #ff0000;
+    text-decoration: none;
+    display: block;
+    text-align: center;
+}
+
+.recuperar:hover {
+    transform: scale(1.1);
+    transition: transform 0.3s ease;
+}
+
+
+.error-message {
+    color: red;
+    font-weight: bold;
+    margin-top: 20px;
+    transition: opacity 1s ease-out;
+}
+
+/* Footer */
+footer {
+    background-color: #005187; 
+    padding: 15px;
+    width: 100%; 
+    text-align: center;
+    position: relative; 
+    bottom: 0;
+}
+
+.footer-text {
+    margin: 0;
+    color: #fff;
+    font-size: 16px;
+}
+
+/* Íconos en el footer */
+.red img {
+    transition: transform 0.3s ease;
+}
+
+.red img:hover {
+    transform: scale(1.3);
 }

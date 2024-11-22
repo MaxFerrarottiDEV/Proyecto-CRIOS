@@ -95,7 +95,7 @@
 
     <!-- Datos Personales -->
     <div class="card">
-        <div class="card-header bg-secondary text-white">
+        <div class="card-header bg-primary text-white">
             <h4>Datos Personales</h4>
         </div>
         <div class="card-body">
@@ -186,6 +186,7 @@
                     </ol>
                 </div>
                 <div class="modal-footer">
+                    <a href="{% url 'ver_datos' estudiante.id_estudiante %}" class="btn btn-info btn-sm mx-1 botonVolver"><i class="fa-solid fa-arrow-left"></i> Volver</a>
                     <button type="submit" class="btn btn-info btn-sm botonVer"><i class="fa-solid fa-floppy-disk"></i> Guardar</button>
                 </div>
             </form>

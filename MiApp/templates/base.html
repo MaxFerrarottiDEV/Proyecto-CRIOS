@@ -11,19 +11,16 @@
       {% block title %} {% endblock %}
     </title>
     <link rel="icon" href="{% static 'icons/crios_logo.png' %}" type="image/x-icon">
-    <!-- Styles CSS -->
     <link href="{% static 'base/general.css' %}" rel="stylesheet">
     <link href="{% static 'DataTables-1.13.6/css/dataTables.bootstrap5.css' %}" rel="stylesheet">
     {% block head %} {% endblock %}
-    <!-- GoogleFonts - Rubik -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
-    <!-- FontAwesome - Iconos -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet">
   </head>
+
   <body class="d-flex flex-column min-vh-100">
-    <!-- Navbar -->
     <nav class="navbar navbar-expand-lg">
       <div class="container-fluid">
         <a class="navbar-brand" href="{% url 'home' %}">
@@ -32,7 +29,6 @@
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
-        <!-- Botones encabezado-->
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item">
@@ -112,14 +108,14 @@
         Teléfono: 423-3761
         <br>
         Redes:  
-        <a href="https://www.facebook.com/criosprofesorado/?locale=es_LA" target="_blank">
+        <a class="red" href="https://www.facebook.com/criosprofesorado/?locale=es_LA" target="_blank">
           <img src="{% static 'icons/fb_icon.png'%}" alt="Facebook" width="1.80%" height="auto">
         </a>
-        <a href="https://www.instagram.com/criosprofesorado/?hl=es" target="_blank">
+        <a class="red" href="https://www.instagram.com/criosprofesorado/?hl=es" target="_blank">
           <img src="{% static 'icons/insta_icon.png'%}" alt="Instagram" width="1.80%" height="auto">
         </a> |
         Portal educativo: 
-        <a href="https://crios-sal.infd.edu.ar/sitio/" target="_blank">
+        <a class="red" href="https://crios-sal.infd.edu.ar/sitio/" target="_blank">
           <img src="{% static 'icons/escudoargentino_icon.png'%}" alt="Portal" width="1.80%" height="auto">
         </a>
       </p>
