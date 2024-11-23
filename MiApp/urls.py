@@ -43,6 +43,7 @@ urlpatterns = [
 
     # Modulo de inscripciones - consultas
     path('inscripciones/consultas/', views.consultas, name='consultas'),
+    path('inscripciones/graficos/estudiantes/', views.graficos_estudiantes, name='graficos_estudiantes'),
     path('inscripciones/consultas/ver_datos/<int:id_estudiante_ic>/', views.ver_datos, name='ver_datos'),
     path('inscripciones/consultas/modificar_datos/<int:id_estudiante>/', views.modificar_datos, name='modificar_datos'),
     path('inscripciones/consultas/guardar_legajo/<int:id_estudiante>/', views.guardar_legajo_digital, name='guardar_legajo_digital'),

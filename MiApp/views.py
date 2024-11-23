@@ -5,7 +5,7 @@ from django.contrib.auth import update_session_auth_hash, logout, login as auth_
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.db import transaction
-from django.db.models import Q
+from django.db.models import Q, Count
 from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import render_to_string
@@ -239,6 +239,28 @@ def consultas(request):
     return render(request, 'inscripciones/consultas/consultas.html', context)
 
 
+
+@login_required
+def graficos_estudiantes(request):
+    # Consulta para contar estudiantes por año de inscripción
+    inscriptos_por_anio = (
+        Estudiantes.objects.values('anio_insc')
+        .annotate(total=Count('id_estudiante'))
+        .order_by('anio_insc')
+    )
+
+    # Formatear datos para el gráfico
+    etiquetas = ['1er Año', '2do Año', '3er Año', '4to Año', '5to Año']
+    datos = [0] * 5  # Inicializar con ceros para los 5 años
+
+    for inscripto in inscriptos_por_anio:
+        anio = inscripto['anio_insc']
+        if 1 <= anio <= 5:  # Asegurarnos de que esté en el rango esperado
+            datos[anio - 1] = inscripto['total']
+
+    return render(request, 'inscripciones/graficos_estudiantes.html', {'etiquetas': etiquetas, 'datos': datos})
+
+
 @login_required
 def ver_datos(request, id_estudiante_ic):
     # Obtener la inscripción en carrera por id_estudiante_ic
@@ -294,7 +316,8 @@ def modificar_datos(request, id_estudiante):
     # Renderizar la plantilla con el formulario y los datos del estudiante
     return render(request, 'inscripciones/consultas/modificar_datos.html', {
         'form': form,
-        'estudiante': estudiante
+        'estudiante': 
+        estudiante
     })
 
 
