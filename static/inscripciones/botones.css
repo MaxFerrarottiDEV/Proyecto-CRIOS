@@ -10,8 +10,14 @@
   font-size: 18px;
   margin: 5px;
   transition: background-color 0.5s, color 0.5s;
-  border-radius: 18px;
-}
+  border-radius: 18px;}
+
+.botonCancelar:hover,
+.botonEliminar:hover{
+  transform: scale(1.1);
+  transition: transform 0.3s ease;
+  background-color: #ff0000;}
+
 
 /* BOTONES PARA DAR DE BAJA ALUMNOS */
 .botonDarDeBaja{
@@ -47,13 +53,6 @@
   color: white;
   background-color: #ff0000;}
 
-
-.botonCancelar:hover,
-.botonEliminar:hover{
-  transform: scale(1.1);
-  transition: transform 0.3s ease;
-}
-
 .botonVolver,
 .botonAdjuntar,
 .botonBuscar,
@@ -75,7 +74,6 @@
   border-radius: 18px;
 }
 .botonVolver:hover,
-.botonAdjuntar:hover,
 .botonObtener:hover,
 .botonSubirArchivo:hover,
 .botonAgregarSolicitud:hover,
@@ -84,6 +82,8 @@
 .botonAzul:hover{
   transform: scale(1.1); 
   transition: transform 0.3s ease;
+  background-color: #005187;
+  color: white;
 }
 
 .botonModificar{
@@ -101,6 +101,7 @@
 }
 .botonModificar:hover{
   color: #000000;
+  background-color: #ffff00;
   transform: scale(1.1);
   transition: transform 0.3s ease; 
 }
@@ -121,6 +122,8 @@
 .botonVer:hover,
 .botonDescargar:hover
   {transform: scale(1.1); 
+  background-color: #28a745;
+  color: #fff;
   transition: transform 0.3s ease;}
   
 

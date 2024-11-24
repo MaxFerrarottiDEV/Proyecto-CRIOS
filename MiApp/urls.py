@@ -49,7 +49,13 @@ urlpatterns = [
     path('inscripciones/consultas/eliminar/<int:id_estudiante>/', views.eliminar_estudiante, name='eliminar_estudiante'),
 
     #Modulo de estados Curriculares - Gestión de Planes de Estudio:
-    path('plan-estudio/', views.plan_estudio_view, name='plan_estudio'),
+    path('plan_estudio/', views.plan_estudio_view, name='plan_estudio'),
+    path('plan_estudio/agregar_plan/', views.agregar_plan, name='agregar_plan'),
+    path('plan_estudio/eliminar_plan/<int:id_planestudio>/', views.eliminar_plan, name='eliminar_plan'),
+    path('plan_estudio/materias', views.materias_view, name='materia'),
+    path('plan_estudio/materias/agregar_materia/', views.agregar_materia, name='agregar_materia'),
+    path('plan_estudio/materias/editar_materia/', views.editar_materia, name='editar_materia'),
+    path('plan_estudio/materias/eliminar_materia/<int:id_materia>/', views.eliminar_materia, name='eliminar_materia'),
 
     #Modulo de estados Curriculares - Gestión de Estados Curriculares:
     path('estadosCurriculares/estados', views.estados, name='estados'),

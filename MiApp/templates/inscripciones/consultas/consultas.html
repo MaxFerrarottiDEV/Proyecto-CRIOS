@@ -61,10 +61,10 @@ Inscripciones - Consultas de datos de estudiantes
                     <td>{{ estudiante.insccarreras_set.first.fecha_insc }}</td>
 
                     <td class="text-center">
-                        <a href="{% url 'ver_datos' estudiante.id_estudiante %}" class="btn btn-info btn-sm botonVer">
+                        <a href="{% url 'ver_datos' estudiante.id_estudiante %}" class="botonVer">
                             <i class="fa-solid fa-eye"></i> Ver datos
                         </a>
-                        <a href="#" class="btn btn-danger btn-sm botonEliminar" data-id_estudiante="{{ estudiante.id_estudiante }}">
+                        <a href="#" class=" botonEliminar" data-id_estudiante="{{ estudiante.id_estudiante }}">
                             <i class="fa-solid fa-user-large-slash"></i> Dar de baja
                         </a>
                     </td>
@@ -111,7 +111,7 @@ Inscripciones - Consultas de datos de estudiantes
         }
     });
 
-    // Funcionalidad para el botón de eliminar
+
     $('.botonEliminar').click(function (e) {
         e.preventDefault();
         var id_estudiante = $(this).data('id_estudiante');

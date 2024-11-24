@@ -10,7 +10,7 @@ Confirmar Solicitud
 
 {% block content %}
 <div class="container mt-5">
-    <a href="{% url 'lista_solicitudes' %}" class="btn btn-info btn-sm mx-1 botonVolver"><i class="fa-solid fa-arrow-left"></i>Volver</a>
+    <a href="{% url 'lista_solicitudes' %}" class="botonVolver"><i class="fa-solid fa-arrow-left"></i>Volver</a>
     <h2 style="text-align: center;">Confirmar Solicitud</h2>
     <hr>
     <div class="card">
@@ -65,7 +65,7 @@ Confirmar Solicitud
                 </div>
 
                 <!-- Botón Confirmar -->
-                <button type="submit" class="btn btn-primary mt-4 botonVer" onclick="return confirm('¿Está seguro que desea confirmar la inscripción?')">
+                <button type="submit" class="botonVer" onclick="return confirm('¿Está seguro que desea confirmar la inscripción?')">
                     <i class="fa-solid fa-check"></i>
                     Confirmar Inscripción
                 </button>
