@@ -20,7 +20,6 @@ Planes de Estudio
             <a href="{% url 'materia' %}" class="btn btn-info btn-sm mx-1 botonVolver">Ir a materias <i class="fa-solid fa-arrow-right"></i></a>
         </div>
     </div>
-
     <h2 style="text-align: center;">PLANES DE ESTUDIO</h2>
     <hr>
     {% if messages %}
@@ -49,11 +48,25 @@ Planes de Estudio
                     <i class="fa-solid fa-circle-xmark" style="color: #e5155e;"></i>
                 </td>
                 <td>
-                    <a href="#" class="btn btn-info btn-sm botonVer"><i class="fa-solid fa-screwdriver-wrench"></i></i> Administrar</a>
+                    <button type="button" 
+                    class="btn btn-info btn-sm botonVer" 
+                    data-bs-toggle="modal" 
+                    data-bs-target="#modalAgregarMaterias"
+                    data-id_planestudio="{{ plan.id_planestudio }}">
+                    <i class="fa-solid fa-screwdriver-wrench"></i>
+                    Administrar
+                    </button>
                     <button 
                     class="btn btn-danger btn-sm botonEliminar"
                     data-id_planestudio="{{ plan.id_planestudio }}">
                     <i class="fa-solid fa-trash-can"></i> Eliminar
+                    </button>
+                    <button type="button" 
+                    class="btn btn-info" 
+                    data-bs-toggle="modal" 
+                    data-bs-target="#modalVerMaterias" 
+                    data-plan-id="{{ plan.id_planestudio }}">
+                    Ver Materias del Plan
                     </button>
                 </td>            
             </tr>
@@ -103,14 +116,183 @@ Planes de Estudio
         </div>
     </div>
 </div>
+<div class="modal fade" id="modalAgregarMaterias" tabindex="-1" aria-labelledby="modalAgregarMateriasLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form id="formAgregarMaterias" method="POST" action="{% url 'guardar_materias_plan' %}">
+                {% csrf_token %}
+                <input type="hidden" name="id_planestudio" id="id_planestudio" value="{{ plan.id_planestudio }}">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalAgregarMateriasLabel">Agregar Materias al Plan de Estudio</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
 
+                <div class="modal-body">
+                    <!-- Tabs para organizar por años -->
+                    <ul class="nav nav-tabs" id="tabsAnios" role="tablist">
+                        {% for anio in anios_cursado %}
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link {% if anio == 1 %}active{% endif %}" id="tab-{{ anio }}-tab" data-bs-toggle="tab" data-bs-target="#tab-{{ anio }}" type="button" role="tab" aria-controls="tab-{{ anio }}" aria-selected="true">
+                                    {{ anio }}º Año
+                                </button>
+                            </li>
+                        {% endfor %}
+                    </ul>
+
+                    <div class="tab-content" id="tabsAniosContent">
+                        {% for anio in anios_cursado %}
+                            <div class="tab-pane fade {% if anio == 1 %}show active{% endif %}" id="tab-{{ anio }}" role="tabpanel" aria-labelledby="tab-{{ anio }}-tab">
+                                <h6 class="mt-3">{{ anio }}º Año</h6>
+                                <div class="mb-3">
+                                    <label for="materia-{{ anio }}" class="form-label">Seleccionar Materias:</label>
+                                    <select class="form-select materia-select" id="materia-{{ anio }}" name="materias_{{ anio }}[]" multiple>
+                                        {% for materia in materias %}
+                                            <option value="{{ materia.id_materia }}">{{ materia.nombre }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <small class="form-text text-muted">Doble clic en una materia para agregarla.</small>
+                                </div>
+                                <!-- Contenedor para la lista de materias seleccionadas -->
+                                <div class="mt-3">
+                                    <h6>Materias seleccionadas:</h6>
+                                    <ul id="lista-materias-{{ anio }}" class="list-group">
+                                        <!-- Las materias seleccionadas aparecerán aquí -->
+                                    </ul>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Guardar Materias</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- Modal para Ver Materias -->
+<div class="modal fade" id="modalVerMaterias" tabindex="-1" aria-labelledby="modalVerMateriasLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalVerMateriasLabel">Materias del Plan de Estudio</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h5 id="plan-titulo"></h5>
+                <ul id="materias-list" class="list-group">
+                    <!-- Aquí se llenarán las materias dinámicamente -->
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
 
 {% block javascript %}
-<script src="{% static 'jQuery-3.7.0/jquery-3.7.0.js' %}"></script>  
-<script src="{% static 'DataTables-1.13.6/js/jquery.dataTables.js' %}"></script>
-<script src="{% static 'DataTables-1.13.6/js/dataTables.bootstrap5.js' %}"></script>
-<script src="{% static 'bootbox/bootbox.all.min.js' %}"></script>
+<script>console.log("Script cargado correctamente.");</script>
+<script>
+$('#modalAgregarMaterias').on('show.bs.modal', function (event) {
+    console.log("Modal mostrado, inicializando plan ID y listeners.");
+    
+    const button = $(event.relatedTarget); // Botón que abre el modal
+    const planId = button.data('id_planestudio'); // Obtener el ID del plan desde el botón
+    $(this).find('#id_planestudio').val(planId); // Asigna el ID al input oculto
+});
+
+$('#modalAgregarMaterias').on('shown.bs.modal', function () {
+    console.log("Modal mostrado, inicializando listeners de doble clic.");
+
+    // Limpiar eventos previos para evitar duplicaciones
+    $(this).off('dblclick', '.materia-select');
+    $(this).off('click', '.quitar-materia');
+
+    // Delegación de eventos para detectar el doble clic
+    $(this).on('dblclick', '.materia-select', function () {
+        console.log("Doble clic detectado en materia-select.");
+        
+        const opcionSeleccionada = this.options[this.selectedIndex];
+        if (opcionSeleccionada) {
+            console.log("Materia seleccionada:", opcionSeleccionada.text);
+            const anio = $(this).attr('id').split("-")[1];
+            const listaMaterias = $(`#lista-materias-${anio}`);
+            
+            if (listaMaterias.length) {
+                // Verificar si la materia ya existe en la lista
+                const existe = listaMaterias.find(`li:contains("${opcionSeleccionada.text}")`).length > 0;
+                if (existe) {
+                    console.log("La materia ya existe en la lista.");
+                    return; // Salir si ya está en la lista
+                }
+
+                // Crear elemento de lista con botón de quitar
+                const li = $('<li>', {
+                    class: 'list-group-item d-flex justify-content-between align-items-center',
+                    text: opcionSeleccionada.text
+                });
+
+                const botonQuitar = $('<button>', {
+                    class: 'btn btn-danger btn-sm quitar-materia',
+                    text: 'Quitar'
+                });
+
+                // Agregar el botón al elemento de lista
+                li.append(botonQuitar);
+                listaMaterias.append(li);
+            }
+        }
+    });
+
+    // Delegación de eventos para quitar materias
+    $(this).on('click', '.quitar-materia', function () {
+        console.log("Quitar materia clicado.");
+        $(this).closest('li').remove(); // Eliminar el elemento de la lista
+    });
+});
+
+</script>
+<script>
+    $('#modalVerMaterias').on('show.bs.modal', function (event) {
+    const button = $(event.relatedTarget); // Botón que abrió el modal
+    const planId = button.data('plan-id'); // Obtener el ID del plan
+    const modal = $(this);
+    
+    // Asignar el nombre del plan al modal
+    const planTitulo = button.data('plan-titulo'); // Suponiendo que tienes el título del plan
+    modal.find('#plan-titulo').text(planTitulo);
+
+    // Limpiar la lista de materias anterior
+    const listaMaterias = modal.find('#materias-list');
+    listaMaterias.empty();
+
+    // Hacer una petición AJAX para obtener las materias del plan de estudio
+    $.ajax({
+        url: `/plan_estudio/${planId}/materias/`, // URL de la vista que devuelve las materias
+        method: 'GET',
+        success: function (data) {
+            // Llenar la lista de materias
+            if (data.materias.length > 0) {
+                data.materias.forEach(function (materia) {
+                    const li = $('<li>', {
+                        class: 'list-group-item',
+                        text: materia.nombre
+                    });
+                    listaMaterias.append(li);
+                });
+            } else {
+                listaMaterias.append('<li class="list-group-item">No hay materias asociadas a este plan.</li>');
+            }
+        },
+        error: function () {
+            listaMaterias.append('<li class="list-group-item">Error al cargar las materias.</li>');
+        }
+    });
+});
+</script>
 <script>
     $(document).ready(function () {
         $('#dataTable').DataTable({
@@ -157,10 +339,10 @@ Planes de Estudio
             }
         });
     });
-
         setTimeout(function () {
             $('.alert').fadeOut('slow');
         }, 6000);
     });
+    
 </script>
 {% endblock javascript %}

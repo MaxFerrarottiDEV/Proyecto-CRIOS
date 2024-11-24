@@ -20,7 +20,7 @@ from reportlab.pdfgen import canvas  # type: ignore
 from reportlab.platypus import Table, TableStyle  # type: ignore
 
 from .forms import PreinscripcionForm
-from .models import Carreras, DatInsc, EstadosCurriculares, Estudiantes, InscCarreras, Materias, MateriasxplanesEstudios, PlanesEstudios, TiposUnidades
+from .models import CamposEstudios,Carreras, DatInsc, EstadosCurriculares, Estudiantes, InscCarreras, Materias, MateriasxplanesEstudios, PlanesEstudios, TiposUnidades
 
 def login_view(request):
     if request.user.is_authenticated:
@@ -239,7 +239,6 @@ def consultas(request):
     return render(request, 'inscripciones/consultas/consultas.html', context)
 
 
-
 @login_required
 def graficos_estudiantes(request):
     # Consulta para contar estudiantes por año de inscripción
@@ -348,9 +347,22 @@ def build(request):
 
 @login_required
 def plan_estudio_view(request):
+    anios_cursado = [1, 2, 3, 4, 5]  # Lista de años
+    materias = Materias.objects.all()
     planes = PlanesEstudios.objects.all()
     carreras = Carreras.objects.all()
-    return render(request, 'estadosCurriculares/planesEstudios/planestudio.html', {'planes': planes, 'carreras': carreras})
+
+    # Obtén el ID del plan seleccionado desde los parámetros GET o POST
+    id_plan = request.GET.get('id_planestudio')  # Supongamos que se pasa en la URL
+    plan = PlanesEstudios.objects.get(pk=id_plan) if id_plan else None
+
+    return render(request, 'estadosCurriculares/planesEstudios/planestudio.html', 
+                  {'anios_cursado': anios_cursado,
+                   'materias': materias,
+                   'planes': planes,
+                   'carreras': carreras,
+                   'plan': plan,  # Incluye el plan seleccionado
+                   })
 
 
 @login_required
@@ -381,6 +393,42 @@ def agregar_plan(request):
 
 
 @login_required
+def guardar_materias_plan(request):
+    if request.method == 'POST':
+        id_planestudio = request.POST.get('id_planestudio')
+        plan = get_object_or_404(PlanesEstudios, id_planestudio=id_planestudio)
+
+        for anio in range(1, 6):  # Iterar sobre los años del 1 al 5
+            materias_ids = request.POST.getlist(f'materias_{anio}[]')
+
+            for materia_id in materias_ids:
+                materia = get_object_or_404(Materias, id_materia=materia_id)
+                
+                # Crear la relación con el año correspondiente
+                MateriasxplanesEstudios.objects.create(
+                    id_planestudio=plan,
+                    id_materia=materia,
+                    anio_materia=anio,  # Asignar el año correspondiente
+                )
+
+        messages.success(request, "Materias agregadas correctamente al plan de estudio.")
+        return redirect('plan_estudio')
+    
+
+@login_required
+def obtener_materias_plan(request, plan_id):
+    # Obtener las materias asociadas al plan
+    materias = MateriasxplanesEstudios.objects.filter(id_planestudio_id=plan_id)
+    materias_data = []
+    
+    for materia in materias:
+        materias_data.append({
+            'nombre': materia.id_materia.nombre,  # Suponiendo que `id_materia` tiene un campo `nombre`
+        })
+    
+    return JsonResponse({'materias': materias_data})
+
+@login_required
 def eliminar_plan(request, id_planestudio):
     try:
         plan = PlanesEstudios.objects.get(id_planestudio=id_planestudio)
@@ -395,9 +443,11 @@ def eliminar_plan(request, id_planestudio):
 def materias_view(request):
     materias = Materias.objects.all()
     tipos_unidades = TiposUnidades.objects.all()  # Obtener todos los tipos de unidades
+    campos_estudio = CamposEstudios.objects.all()   # Obtener todos los campos de estudio
     return render(request, 'estadosCurriculares/planesEstudios/materias.html', {
         'materias': materias,
-        'tipos_unidades': tipos_unidades
+        'tipos_unidades': tipos_unidades,
+        'campos_estudio': campos_estudio,
     })
 
 
@@ -407,6 +457,7 @@ def agregar_materia(request):
         nombre = request.POST['nombre']
         id_unidad = request.POST['id_unidad']
         cuatrimestral_anual = request.POST['cuatrimestral_anual']
+        id_campoestudio = request.POST['id_campoestudio']
             # Manejar el valor del checkbox
         correlatividad = request.POST.get('correlatividad', request.POST.get('correlatividad_hidden'))
 
@@ -414,13 +465,13 @@ def agregar_materia(request):
             nombre=nombre,
             id_unidad_id=id_unidad,
             cuatrimestral_anual=cuatrimestral_anual,
+            id_campoestudio_id=id_campoestudio,
             correlatividad=correlatividad,
         )
 
         messages.success(request, 'Materia agregada exitosamente.')
         return redirect('materia')  # Redirigir a la lista de materias
     return redirect('materia')
-
 
 
 @login_required
@@ -430,6 +481,7 @@ def editar_materia(request):
         nombre = request.POST.get('nombre')
         id_unidad = request.POST.get('id_unidad')
         cuatrimestral_anual = request.POST.get('cuatrimestral_anual')
+        id_campoestudio = request.POST.get('id_campoestudio')
         correlatividad = request.POST.get('correlatividad', request.POST.get('correlatividad_hidden'))
 
         # Obtener la materia que se va a editar
@@ -444,6 +496,9 @@ def editar_materia(request):
         
         # Asignar cuatrimestral_anual y correlatividad
         materia.cuatrimestral_anual = cuatrimestral_anual
+
+        if id_campoestudio:
+            materia.id_campoestudio = get_object_or_404(CamposEstudios, id_campoestudio=id_campoestudio)
         materia.correlatividad = correlatividad
 
         # Guardar los cambios

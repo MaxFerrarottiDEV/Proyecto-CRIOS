@@ -71,10 +71,6 @@
                 <li><a class="dropdown-item" href="{% url 'consultas' %}">Consultas de Datos de Estudiantes</a></li>
               </ul>
             </li>
-            <!-- Dropdown de CUOTAS -->
-            <li class="nav-item">
-              <a class="nav-link nav-titulo" href="{% url 'build' %}"><i class="fa-solid fa-lock"></i> Cuotas</a>
-            </li>
           </ul>
           <!-- Menú desplegable para perfil del usuario -->
           <ul class="navbar-nav mb-2 mb-lg-0"> 
@@ -150,11 +146,11 @@
             </div>
         </div>
     </div>
-    {% block javascript %}
-    {% endblock javascript %}
     <script src="{% static 'jQuery-3.7.0/jquery-3.7.0.js' %}"></script>  
     <script src="{% static 'DataTables-1.13.6/js/jquery.dataTables.js' %}"></script>
     <script src="{% static 'DataTables-1.13.6/js/dataTables.bootstrap5.js' %}"></script> 
     <script src="{% static 'bootbox/bootbox.all.min.js' %}"></script>
+    {% block javascript %}
+    {% endblock javascript %}
   </body>
 </html>

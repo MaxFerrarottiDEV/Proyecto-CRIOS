@@ -148,5 +148,5 @@ EMAIL_HOST_PASSWORD = "javq hksc afwz oxgz" # Contraseña de aplicación
 DEFAULT_FROM_EMAIL = "maximo.ferrarotti1@gmail.com" 
 
 # settings.py
-SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # Cerrar sesión al cerrar el navegador.
-SESSION_COOKIE_AGE = 3600  # Tiempo en segundos (1 hora).
+#SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # Cerrar sesión al cerrar el navegador.
+#SESSION_COOKIE_AGE = 3600  # Tiempo en segundos (1 hora).

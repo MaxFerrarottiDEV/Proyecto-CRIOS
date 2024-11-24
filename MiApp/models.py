@@ -282,6 +282,7 @@ class Materias(models.Model):
     id_materia = models.AutoField(db_column='Id_Materia', primary_key=True)  # Field name made lowercase.
     nombre = models.CharField(db_column='Nombre', max_length=200)  # Field name made lowercase.
     id_unidad = models.ForeignKey('TiposUnidades', models.DO_NOTHING, db_column='Id_Unidad', blank=True, null=True)  # Field name made lowercase.
+    id_campoestudio = models.ForeignKey(CamposEstudios, models.DO_NOTHING, db_column='Id_CampoEstudio', blank=True, null=True)  # Field name made lowercase.
     cuatrimestral_anual = models.BooleanField(db_column='Cuatrimestral/Anual', blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
     correlatividad = models.BooleanField(db_column='Correlatividad', blank=True, null=True)  # Field name made lowercase.
 
@@ -294,7 +295,6 @@ class MateriasxplanesEstudios(models.Model):
     id_matxplan = models.AutoField(db_column='Id_MatXPlan', primary_key=True)  # Field name made lowercase.
     id_planestudio = models.ForeignKey('PlanesEstudios', models.DO_NOTHING, db_column='Id_PlanEstudio', blank=True, null=True)  # Field name made lowercase.
     id_materia = models.ForeignKey(Materias, models.DO_NOTHING, db_column='Id_Materia', blank=True, null=True)  # Field name made lowercase.
-    id_campoestudio = models.ForeignKey(CamposEstudios, models.DO_NOTHING, db_column='Id_CampoEstudio', blank=True, null=True)  # Field name made lowercase.
     anio_materia = models.SmallIntegerField(db_column='Anio_Materia')  # Field name made lowercase.
 
     class Meta:
