@@ -143,9 +143,9 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = "maximo.ferrarotti1@gmail.com"  # No cambiar de email
-EMAIL_HOST_PASSWORD = "javq hksc afwz oxgz" # Contraseña de aplicación
-DEFAULT_FROM_EMAIL = "maximo.ferrarotti1@gmail.com" 
+EMAIL_HOST_USER = "profesoradocrios@gmail.com"  # No cambiar de email
+EMAIL_HOST_PASSWORD = "hdzp uaup plkz vaef" # Contraseña de aplicación
+DEFAULT_FROM_EMAIL = "profesoradocrios@gmail.com" 
 
 # settings.py
 #SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # Cerrar sesión al cerrar el navegador.

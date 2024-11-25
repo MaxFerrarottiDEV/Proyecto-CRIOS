@@ -416,17 +416,23 @@ def guardar_materias_plan(request):
     
 
 @login_required
+@login_required
 def obtener_materias_plan(request, plan_id):
-    # Obtener las materias asociadas al plan
-    materias = MateriasxplanesEstudios.objects.filter(id_planestudio_id=plan_id)
-    materias_data = []
+    # Obtener las materias asociadas al plan, ordenadas por año
+    materias = MateriasxplanesEstudios.objects.filter(id_planestudio_id=plan_id).order_by('anio_materia')
     
+    # Organizar las materias por año
+    materias_data = {}
     for materia in materias:
-        materias_data.append({
+        anio = materia.anio_materia  # Atributo del año
+        if anio not in materias_data:
+            materias_data[anio] = []
+        materias_data[anio].append({
             'nombre': materia.id_materia.nombre,  # Suponiendo que `id_materia` tiene un campo `nombre`
         })
     
     return JsonResponse({'materias': materias_data})
+
 
 @login_required
 def eliminar_plan(request, id_planestudio):

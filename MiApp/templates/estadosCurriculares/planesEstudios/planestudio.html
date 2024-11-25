@@ -203,7 +203,34 @@ $('#modalAgregarMaterias').on('show.bs.modal', function (event) {
     const planId = button.data('id_planestudio'); // Obtener el ID del plan desde el botón
     $(this).find('#id_planestudio').val(planId); // Asigna el ID al input oculto
 });
+$('#formAgregarMaterias').on('submit', function (e) {
+    console.log("Preparando datos para envío del formulario.");
 
+    // Limpiar inputs ocultos anteriores para evitar duplicados
+    $(this).find('input[name^="materias_"]').remove();
+
+    // Iterar por cada lista de materias seleccionadas
+    for (let anio = 1; anio <= 5; anio++) {
+        const listaMaterias = $(`#lista-materias-${anio}`);
+        const materiasSeleccionadas = listaMaterias.find('li');
+
+        materiasSeleccionadas.each(function () {
+            const materiaNombre = $(this).text().trim(); // Texto de la materia
+            const materiaId = $(this).data('materia-id'); // ID almacenado en el atributo data
+            
+            // Agregar un input oculto por cada materia seleccionada
+            if (materiaId) {
+                $('<input>', {
+                    type: 'hidden',
+                    name: `materias_${anio}[]`,
+                    value: materiaId
+                }).appendTo('#formAgregarMaterias');
+            }
+        });
+    }
+
+    console.log("Formulario listo para envío.");
+});
 $('#modalAgregarMaterias').on('shown.bs.modal', function () {
     console.log("Modal mostrado, inicializando listeners de doble clic.");
 
@@ -213,39 +240,40 @@ $('#modalAgregarMaterias').on('shown.bs.modal', function () {
 
     // Delegación de eventos para detectar el doble clic
     $(this).on('dblclick', '.materia-select', function () {
-        console.log("Doble clic detectado en materia-select.");
+    console.log("Doble clic detectado en materia-select.");
+    
+    const opcionSeleccionada = this.options[this.selectedIndex];
+    if (opcionSeleccionada) {
+        console.log("Materia seleccionada:", opcionSeleccionada.text);
+        const anio = $(this).attr('id').split("-")[1];
+        const listaMaterias = $(`#lista-materias-${anio}`);
         
-        const opcionSeleccionada = this.options[this.selectedIndex];
-        if (opcionSeleccionada) {
-            console.log("Materia seleccionada:", opcionSeleccionada.text);
-            const anio = $(this).attr('id').split("-")[1];
-            const listaMaterias = $(`#lista-materias-${anio}`);
-            
-            if (listaMaterias.length) {
-                // Verificar si la materia ya existe en la lista
-                const existe = listaMaterias.find(`li:contains("${opcionSeleccionada.text}")`).length > 0;
-                if (existe) {
-                    console.log("La materia ya existe en la lista.");
-                    return; // Salir si ya está en la lista
-                }
-
-                // Crear elemento de lista con botón de quitar
-                const li = $('<li>', {
-                    class: 'list-group-item d-flex justify-content-between align-items-center',
-                    text: opcionSeleccionada.text
-                });
-
-                const botonQuitar = $('<button>', {
-                    class: 'btn btn-danger btn-sm quitar-materia',
-                    text: 'Quitar'
-                });
-
-                // Agregar el botón al elemento de lista
-                li.append(botonQuitar);
-                listaMaterias.append(li);
+        if (listaMaterias.length) {
+            // Verificar si la materia ya existe en la lista
+            const existe = listaMaterias.find(`li[data-materia-id="${opcionSeleccionada.value}"]`).length > 0;
+            if (existe) {
+                console.log("La materia ya existe en la lista.");
+                return; // Salir si ya está en la lista
             }
+
+            // Crear elemento de lista con botón de quitar
+            const li = $('<li>', {
+                class: 'list-group-item d-flex justify-content-between align-items-center',
+                text: opcionSeleccionada.text,
+                'data-materia-id': opcionSeleccionada.value // Guardar el ID de la materia
+            });
+
+            const botonQuitar = $('<button>', {
+                class: 'btn btn-danger btn-sm quitar-materia',
+                text: 'Quitar'
+            });
+
+            // Agregar el botón al elemento de lista
+            li.append(botonQuitar);
+            listaMaterias.append(li);
         }
-    });
+    }
+});
 
     // Delegación de eventos para quitar materias
     $(this).on('click', '.quitar-materia', function () {
@@ -256,11 +284,11 @@ $('#modalAgregarMaterias').on('shown.bs.modal', function () {
 
 </script>
 <script>
-    $('#modalVerMaterias').on('show.bs.modal', function (event) {
+$('#modalVerMaterias').on('show.bs.modal', function (event) {
     const button = $(event.relatedTarget); // Botón que abrió el modal
     const planId = button.data('plan-id'); // Obtener el ID del plan
     const modal = $(this);
-    
+
     // Asignar el nombre del plan al modal
     const planTitulo = button.data('plan-titulo'); // Suponiendo que tienes el título del plan
     modal.find('#plan-titulo').text(planTitulo);
@@ -274,21 +302,34 @@ $('#modalAgregarMaterias').on('shown.bs.modal', function () {
         url: `/plan_estudio/${planId}/materias/`, // URL de la vista que devuelve las materias
         method: 'GET',
         success: function (data) {
-            // Llenar la lista de materias
-            if (data.materias.length > 0) {
-                data.materias.forEach(function (materia) {
+            // Verificar si hay materias en el plan
+            if ($.isEmptyObject(data.materias)) {
+                listaMaterias.append('<li class="list-group-item text-center">No hay materias agregadas a este plan.</li>');
+                return;
+            }
+
+            // Ordenar las materias por año y llenar la lista
+            const anios = Object.keys(data.materias).sort(); // Asegurarse del orden de los años
+            anios.forEach(function (anio) {
+                // Crear un encabezado para el año
+                const anioHeader = $('<li>', {
+                    class: 'list-group-item list-group-item-dark',
+                    text: `${anio}° Año`
+                });
+                listaMaterias.append(anioHeader);
+
+                // Agregar las materias del año
+                data.materias[anio].forEach(function (materia) {
                     const li = $('<li>', {
                         class: 'list-group-item',
                         text: materia.nombre
                     });
                     listaMaterias.append(li);
                 });
-            } else {
-                listaMaterias.append('<li class="list-group-item">No hay materias asociadas a este plan.</li>');
-            }
+            });
         },
         error: function () {
-            listaMaterias.append('<li class="list-group-item">Error al cargar las materias.</li>');
+            listaMaterias.append('<li class="list-group-item text-center text-danger">Error al cargar las materias.</li>');
         }
     });
 });
