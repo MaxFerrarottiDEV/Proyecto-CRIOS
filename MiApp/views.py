@@ -1,5 +1,4 @@
-from datetime import date
-
+from datetime import date,datetime
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash, logout, login as auth_login
 from django.contrib.auth.decorators import login_required
@@ -10,17 +9,20 @@ from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import render_to_string
 from django.urls import reverse
-
 from io import BytesIO
-
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import letter  # type: ignore
 from reportlab.lib.units import inch  # type: ignore
 from reportlab.pdfgen import canvas  # type: ignore
-from reportlab.platypus import Table, TableStyle  # type: ignore
-
 from .forms import PreinscripcionForm
 from .models import Carreras, DatInsc, EstadosCurriculares, Estudiantes, InscCarreras, Materias, MateriasxplanesEstudios, PlanesEstudios,TiposUnidades
+from reportlab.platypus import Table, TableStyle, Paragraph, Spacer, Image
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
+
+pdfmetrics.registerFont(TTFont('Times-Roman', 'static/fonts/times.ttf'))
+
 
 def login_view(request):
     if request.user.is_authenticated:
@@ -524,49 +526,126 @@ def agregar_nota(request, dni):
     return render(request, 'estadosCurriculares/agregar_nota.html', {'estudiante': estudiante, 'materias': materias})
 
 
+
+
+
+
+
+
+
 @login_required
 def pdf_estadoCurricular(request):
     dni = request.GET.get('dni')
     if not dni:
         return HttpResponse("DNI no proporcionado.", status=400)
+
+    # Obtener estudiante por DNI
     estudiante = get_object_or_404(Estudiantes, id_datinsc__dni=dni)
+
+    # Obtener los estados curriculares del estudiante
+    estados_curriculares = estudiante.estadoscurriculares_set.all()
+
+    # Configurar el PDF
     buffer = BytesIO()
     p = canvas.Canvas(buffer, pagesize=letter)
-    p.drawString(100, 710, f"Apellidos: {estudiante.id_datinsc.apellido}"),p.drawString(100, 690, f"Nombres: {estudiante.id_datinsc.nombre}")
-    p.drawString(100, 750, f"Legajo N: {estudiante.nro_legajo}"), p.drawString(100, 730, f"DNI: {estudiante.id_datinsc.dni}")
-    p.drawString(100, 650, "Notas del Estudiante")
-    estado_curricular = estudiante.estadoscurriculares_set.all()
-   
-    data = [["Materia", "Estado", "Nota", "Fecha"]]  
-    for materia in estado_curricular:
-        data.append([
-            materia.id_matxplan_estcur.id_materia.nombre,
-            materia.condicion_nota,
-            str(materia.nota),
-            materia.fecha_finalizacion.strftime("%d/%m/%Y")
-        ])
-    
-    table = Table(data, colWidths=[2*inch, 1.5*inch, 1*inch, 1.5*inch])
-    table.setStyle(TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),  
-        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
-        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-        ('FONTSIZE', (0, 0), (-1, 0), 10),
-        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-        ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
-        ('GRID', (0, 0), (-1, -1), 1, colors.black)
-    ]))
 
-    table.wrapOn(p, 100, 500)
-    table.drawOn(p, 100, 500)
+    # Función para el encabezado
+    def draw_header():
+        logo_path = "static/images/crios_logo.jpg"
+        p.drawImage(logo_path, 40, 700, width=100, height=100)
+        p.setFont("Times-Bold", 16)
+        p.drawString(150, 750, "Instituto Superior de Formación Docente N°8022 - CRIOS")
+        p.setFont("Times-Roman", 14)
+        fecha = f"Fecha de emisión: {datetime.now().strftime('%d/%m/%Y')}"
+        hora = f"Hora de emisión: {datetime.now().strftime('%H:%M:%S')}"
+        p.drawString(150, 730, fecha)
+        p.drawString(400, 730, hora)
+
+    # Función para el título principal
+    def draw_title(y, spacing=1):
+        p.setFont("Times-Bold", 16)
+        p.drawCentredString(300, y, "Certificado de Estudio")
+        return y - spacing
+
+    # Función para el texto descriptivo
+    def draw_description(y):
+        text = (
+            f"El rectorado del Instituto Superior de Formación Docente N°8022 - CRIOS, "
+            f"certifica que el alumno/a {estudiante.id_datinsc.apellido} {estudiante.id_datinsc.nombre} "
+            f"con documento: {estudiante.id_datinsc.dni}, es alumno regular de la carrera."
+        )
+        styles = getSampleStyleSheet()
+        style = styles["Normal"]
+        style.fontName = "Times-Roman"
+        style.fontSize = 12
+        style.textColor = colors.black
+        style.alignment = 1
+        style.spaceBefore = 0
+        style.spaceAfter = 0
+
+        paragraph = Paragraph(text, style)
+        paragraph_width, paragraph_height = paragraph.wrap(500, y)
+        paragraph.drawOn(p, 50, y - paragraph_height)
+        return y - paragraph_height - 3
+
+    # Función para el contenido principal
+    def draw_main_content(y):
+        p.setFont("Times-Roman", 12)
+        data = [["Año", "Asignatura", "Condición", "Nota", "Fecha", "Folio"]]
+
+        styles = getSampleStyleSheet()
+        cell_style = ParagraphStyle(
+            name="CellStyle",
+            fontName="Times-Roman",
+            fontSize=10,
+            leading=12,
+            alignment=1,
+            wordWrap="LTR"
+        )
+
+        for estado in estados_curriculares:
+            materia = estado.id_matxplan_estcur
+            asignatura = Paragraph(
+                materia.id_materia.nombre if hasattr(materia, 'id_materia') else "---",
+                cell_style
+            )
+            data.append([
+                materia.anio_materia if hasattr(materia, 'anio_materia') else "---",
+                asignatura,
+                estado.condicion_nota if estado.condicion_nota else "---",
+                str(estado.nota) if estado.nota is not None else "---",
+                estado.fecha_finalizacion.strftime("%d/%m/%Y") if estado.fecha_finalizacion else "---",
+                estado.folio if estado.folio else "---"
+            ])
+
+        table = Table(data, colWidths=[30, 300, 70, 25, 60, 50])
+        table.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#005187")),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+            ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
+            ('FONTNAME', (0, 0), (-1, 0), 'Times-Bold'),
+            ('FONTSIZE', (0, 0), (-1, 0), 8),
+            ('BOTTOMPADDING', (0, 0), (-1, 0), 10),
+            ('BACKGROUND', (0, 1), (-1, -1), colors.whitesmoke),
+            ('GRID', (0, 0), (-1, -1), 1, colors.black),
+        ]))
+        
+        table.wrapOn(p, 60, y)
+        table.drawOn(p, 60, y - 110)
+        return y - 130
+
+    # Generar el PDF
+    draw_header()
+    y = 650
+    y = draw_title(y, spacing=10)
+    y = draw_description(y)
+    y = draw_main_content(y)
 
     p.showPage()
     p.save()
-    
     buffer.seek(0)
     response = HttpResponse(buffer, content_type='application/pdf')
-    response['Content-Disposition'] = f'attachment; filename="{estudiante.id_datinsc.apellido} {estudiante.id_datinsc.nombre}-Estado Curricular.pdf"'
+    response['Content-Disposition'] = f'attachment; filename="EstadoCurricular {estudiante.id_datinsc.apellido}{estudiante.id_datinsc.nombre}.pdf"'
     return response
 
 

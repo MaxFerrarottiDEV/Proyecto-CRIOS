@@ -229,17 +229,47 @@ class EstadosCuotas(models.Model):
 
 
 class EstadosCurriculares(models.Model):
-    id_estadocurricular = models.AutoField(db_column='Id_EstadoCurricular', primary_key=True)  # Field name made lowercase.
-    id_matxplan_estcur = models.ForeignKey('MateriasxplanesEstudios', models.DO_NOTHING, db_column='Id_MatXPlan_EstCur', blank=True, null=True)  # Field name made lowercase.
-    id_estudiante_estcur = models.ForeignKey('Estudiantes', models.DO_NOTHING, db_column='Id_Estudiante_EstCur', blank=True, null=True)  # Field name made lowercase.
-    condicion_nota = models.IntegerField(db_column='Condicion_Nota', blank=True, null=True)  # Field name made lowercase.
-    nota = models.IntegerField(db_column='Nota', blank=True, null=True)  # Field name made lowercase.
-    fecha_finalizacion = models.DateField(db_column='Fecha_Finalizacion')  # Field name made lowercase.
-    folio = models.CharField(db_column='Folio', max_length=45, blank=True, null=True)  # Field name made lowercase.
+    id_estadocurricular = models.AutoField(db_column='Id_EstadoCurricular', primary_key=True)  # Clave primaria.
+    id_matxplan_estcur = models.ForeignKey(
+        'MateriasxplanesEstudios',
+        models.DO_NOTHING,
+        db_column='Id_MatXPlan_EstCur',
+        blank=True,
+        null=True
+    )  # Relación con la tabla MateriasxplanesEstudios.
+    id_estudiante_estcur = models.ForeignKey(
+        'Estudiantes',
+        models.DO_NOTHING,
+        db_column='Id_Estudiante_EstCur',
+        blank=True,
+        null=True
+    )  # Relación con la tabla Estudiantes.
+    condicion_nota = models.CharField(
+        db_column='Condicion_Nota', 
+        max_length=45, 
+        blank=True, 
+        null=True
+    )  # Cambiado a CharField para que acepte cadenas como 'APROBADO'.
+    nota = models.IntegerField(
+        db_column='Nota',
+        blank=True,
+        null=True
+    )  # Campo para la nota numérica.
+    fecha_finalizacion = models.DateField(
+        db_column='Fecha_Finalizacion'
+    )  # Fecha obligatoria.
+    folio = models.CharField(
+        db_column='Folio',
+        max_length=45,
+        blank=True,
+        null=True,
+        default="Sin especificar"
+    )  # Folio opcional con valor por defecto.
 
     class Meta:
         managed = False
-        db_table = 'estados_curriculares'
+        db_table = 'estados_curriculares'  # Nombre de la tabla en la base de datos.
+
 
 
 class Estudiantes(models.Model):

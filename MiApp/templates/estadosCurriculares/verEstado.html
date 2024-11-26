@@ -72,7 +72,7 @@ Estados Curriculares
         </tbody>
     </table>
     <a href="{% url 'estados' %}" class="botonVolver"><i class="fa-solid fa-arrow-left"></i> Volver</a>
-    <a href="{% url 'descargar_pdf' %}?dni={{ estudiante.id_datinsc.dni }}" class="botonDescargar mt-3">Descargar PDF</a>
+    <a href="{% url 'descargar_pdf' %}?dni={{ estudiante.id_datinsc.dni }}" class="botonDescargar mt-3"><i class="fa-regular fa-file-pdf"></i>Descargar PDF</a>
     
 </div>
 {% endblock content %}
