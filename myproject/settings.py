@@ -150,3 +150,5 @@ DEFAULT_FROM_EMAIL = "profesoradocrios@gmail.com"
 # settings.py
 #SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # Cerrar sesión al cerrar el navegador.
 #SESSION_COOKIE_AGE = 3600  # Tiempo en segundos (1 hora).
+CSRF_COOKIE_NAME = "csrftoken"
+CSRF_HEADER_NAME = "X-Csrftoken"

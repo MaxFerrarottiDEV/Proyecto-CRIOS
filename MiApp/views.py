@@ -6,9 +6,10 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.db import transaction
 from django.db.models import Q, Count
-from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
+from django.http import JsonResponse, HttpResponse, HttpResponseRedirect, HttpResponseBadRequest
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import render_to_string
+from django.views.decorators.csrf import csrf_protect
 from django.urls import reverse
 
 from io import BytesIO
@@ -416,7 +417,6 @@ def guardar_materias_plan(request):
     
 
 @login_required
-@login_required
 def obtener_materias_plan(request, plan_id):
     # Obtener las materias asociadas al plan, ordenadas por año
     materias = MateriasxplanesEstudios.objects.filter(id_planestudio_id=plan_id).order_by('anio_materia')
@@ -428,11 +428,24 @@ def obtener_materias_plan(request, plan_id):
         if anio not in materias_data:
             materias_data[anio] = []
         materias_data[anio].append({
+            'id': materia.id_materia.id_materia,  # Incluye el id de la materia
             'nombre': materia.id_materia.nombre,  # Suponiendo que `id_materia` tiene un campo `nombre`
         })
     
     return JsonResponse({'materias': materias_data})
 
+@login_required
+@csrf_protect
+def eliminar_materia_plan(request, plan_id, materia_id):
+    if request.method == 'POST':
+        materias = MateriasxplanesEstudios.objects.filter(id_planestudio=plan_id, id_materia=materia_id)
+        if materias.exists():
+            materias.delete()
+            return JsonResponse({'success': True, 'message': 'Materias eliminadas correctamente.'})
+        else:
+            return JsonResponse({'success': False, 'message': 'No se encontró la materia especificada.'})
+    return JsonResponse({'success': False, 'message': 'Método no permitido.'})
+    
 
 @login_required
 def eliminar_plan(request, id_planestudio):

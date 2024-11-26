@@ -4,6 +4,8 @@ Planes de Estudio
 {% endblock %}
 {% load static %}
 {% block head %} 
+    {% csrf_token %}
+    <meta name="csrf-token" content="{{ csrf_token }}">
     <link href="{% static 'planesEstudios/planestudio.css' %}" rel="stylesheet">
     <link href="{% static 'inscripciones/botones.css' %}" rel="stylesheet">
 {% endblock %}
@@ -53,20 +55,22 @@ Planes de Estudio
                     data-bs-toggle="modal" 
                     data-bs-target="#modalAgregarMaterias"
                     data-id_planestudio="{{ plan.id_planestudio }}">
-                    <i class="fa-solid fa-screwdriver-wrench"></i>
-                    Administrar
-                    </button>
-                    <button 
-                    class="btn btn-danger btn-sm botonEliminar"
-                    data-id_planestudio="{{ plan.id_planestudio }}">
-                    <i class="fa-solid fa-trash-can"></i> Eliminar
+                    <i class="fa-solid fa-square-plus"></i>
+                        Agregar
                     </button>
                     <button type="button" 
                     class="btn btn-info" 
                     data-bs-toggle="modal" 
                     data-bs-target="#modalVerMaterias" 
+                    data-plan-id="{{ plan.id_planestudio }}"
                     data-plan-id="{{ plan.id_planestudio }}">
-                    Ver Materias del Plan
+                        Ver Materias
+                    </button>
+                    <button 
+                    class="btn btn-danger btn-sm botonEliminar"
+                    data-id_planestudio="{{ plan.id_planestudio }}">
+                    <i class="fa-solid fa-trash-can"></i> 
+                        Eliminar
                     </button>
                 </td>            
             </tr>
@@ -93,7 +97,6 @@ Planes de Estudio
                         <label for="anioPlan" class="form-label">Año del Plan de Estudio:</label>
                         <input type="number" class="form-control" id="anioPlan" name="anio_plan" min="1900" max="2100" required>
                     </div>
-
                     <!-- Seleccionar la carrera -->
                     <div class="mb-3">
                         <label for="carrera" class="form-label">Seleccionar la Carrera:</label>
@@ -184,13 +187,18 @@ Planes de Estudio
                 <ul id="materias-list" class="list-group">
                     <!-- Aquí se llenarán las materias dinámicamente -->
                 </ul>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+
+                <!-- Formulario para operaciones -->
+                <form id="form-operacion-materias" method="post">
+
+                    <input type="hidden" name="materia_id" id="materia-id">
+                    <input type="hidden" name="accion" id="materia-accion">
+                </form>
             </div>
         </div>
     </div>
 </div>
+
 {% endblock %}
 
 {% block javascript %}
@@ -203,85 +211,56 @@ $('#modalAgregarMaterias').on('show.bs.modal', function (event) {
     const planId = button.data('id_planestudio'); // Obtener el ID del plan desde el botón
     $(this).find('#id_planestudio').val(planId); // Asigna el ID al input oculto
 });
-$('#formAgregarMaterias').on('submit', function (e) {
-    console.log("Preparando datos para envío del formulario.");
-
-    // Limpiar inputs ocultos anteriores para evitar duplicados
-    $(this).find('input[name^="materias_"]').remove();
-
-    // Iterar por cada lista de materias seleccionadas
-    for (let anio = 1; anio <= 5; anio++) {
-        const listaMaterias = $(`#lista-materias-${anio}`);
-        const materiasSeleccionadas = listaMaterias.find('li');
-
-        materiasSeleccionadas.each(function () {
-            const materiaNombre = $(this).text().trim(); // Texto de la materia
-            const materiaId = $(this).data('materia-id'); // ID almacenado en el atributo data
-            
-            // Agregar un input oculto por cada materia seleccionada
-            if (materiaId) {
-                $('<input>', {
-                    type: 'hidden',
-                    name: `materias_${anio}[]`,
-                    value: materiaId
-                }).appendTo('#formAgregarMaterias');
-            }
-        });
-    }
-
-    console.log("Formulario listo para envío.");
-});
 $('#modalAgregarMaterias').on('shown.bs.modal', function () {
     console.log("Modal mostrado, inicializando listeners de doble clic.");
-
+    
     // Limpiar eventos previos para evitar duplicaciones
-    $(this).off('dblclick', '.materia-select');
-    $(this).off('click', '.quitar-materia');
+    $('.materia-select').off('dblclick'); // Importante: Limpiar todos los dblclick previos
+    $('.quitar-materia').off('click'); // Limpiar eventos previos de los botones de quitar
 
     // Delegación de eventos para detectar el doble clic
-    $(this).on('dblclick', '.materia-select', function () {
-    console.log("Doble clic detectado en materia-select.");
-    
-    const opcionSeleccionada = this.options[this.selectedIndex];
-    if (opcionSeleccionada) {
-        console.log("Materia seleccionada:", opcionSeleccionada.text);
-        const anio = $(this).attr('id').split("-")[1];
-        const listaMaterias = $(`#lista-materias-${anio}`);
+    $('.materia-select').on('dblclick', function () {
+        console.log("Doble clic detectado en materia-select.");
         
-        if (listaMaterias.length) {
-            // Verificar si la materia ya existe en la lista
-            const existe = listaMaterias.find(`li[data-materia-id="${opcionSeleccionada.value}"]`).length > 0;
-            if (existe) {
-                console.log("La materia ya existe en la lista.");
-                return; // Salir si ya está en la lista
+        const opcionSeleccionada = this.options[this.selectedIndex];
+        if (opcionSeleccionada) {
+            console.log("Materia seleccionada:", opcionSeleccionada.text);
+            const anio = $(this).attr('id').split("-")[1];
+            const listaMaterias = $(`#lista-materias-${anio}`);
+            
+            if (listaMaterias.length) {
+                // Verificar si la materia ya existe en la lista
+                const existe = listaMaterias.find(`li[data-materia-id="${opcionSeleccionada.value}"]`).length > 0;
+                if (existe) {
+                    console.log("La materia ya existe en la lista.");
+                    return; // Salir si ya está en la lista
+                }
+
+                // Crear elemento de lista con botón de quitar
+                const li = $('<li>', {
+                    class: 'list-group-item d-flex justify-content-between align-items-center',
+                    text: opcionSeleccionada.text,
+                    'data-materia-id': opcionSeleccionada.value // Guardar el ID de la materia
+                });
+
+                const botonQuitar = $('<button>', {
+                    class: 'btn btn-danger btn-sm quitar-materia',
+                    text: 'Quitar'
+                });
+
+                // Agregar evento de quitar materia al botón
+                botonQuitar.on('click', function () {
+                    console.log("Quitar materia clicado.");
+                    $(this).closest('li').remove(); // Eliminar el elemento de la lista
+                });
+
+                // Agregar el botón al elemento de lista
+                li.append(botonQuitar);
+                listaMaterias.append(li);
             }
-
-            // Crear elemento de lista con botón de quitar
-            const li = $('<li>', {
-                class: 'list-group-item d-flex justify-content-between align-items-center',
-                text: opcionSeleccionada.text,
-                'data-materia-id': opcionSeleccionada.value // Guardar el ID de la materia
-            });
-
-            const botonQuitar = $('<button>', {
-                class: 'btn btn-danger btn-sm quitar-materia',
-                text: 'Quitar'
-            });
-
-            // Agregar el botón al elemento de lista
-            li.append(botonQuitar);
-            listaMaterias.append(li);
         }
-    }
-});
-
-    // Delegación de eventos para quitar materias
-    $(this).on('click', '.quitar-materia', function () {
-        console.log("Quitar materia clicado.");
-        $(this).closest('li').remove(); // Eliminar el elemento de la lista
     });
 });
-
 </script>
 <script>
 $('#modalVerMaterias').on('show.bs.modal', function (event) {
@@ -324,6 +303,40 @@ $('#modalVerMaterias').on('show.bs.modal', function (event) {
                         class: 'list-group-item',
                         text: materia.nombre
                     });
+
+                    // Crear el botón de eliminar
+                    const eliminarForm = $(`
+                        <form method="post" class="d-inline-block ms-3">
+                            <input type="hidden" name="materia_id" value="${materia.id}">
+                            <input type="hidden" name="accion" value="eliminar">
+                            <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                        </form>
+                    `);
+
+                    // Agregar token CSRF al formulario
+                    eliminarForm.prepend(`<input type="hidden" name="csrfmiddlewaretoken" value="${$('meta[name="csrf-token"]').attr('content')}">`);
+
+                    // Manejar el evento de envío del formulario con AJAX
+                    eliminarForm.on('submit', function (e) {
+                        e.preventDefault();
+                        const form = $(this);
+                        $.ajax({
+                            url: `/plan_estudio/${planId}/materias/eliminar/${materia.id}/`,
+                            method: 'POST',
+                            data: form.serialize(),
+                            success: function (response) {
+                                alert('Materia eliminada con éxito');
+                                // Recargar las materias para reflejar el cambio
+                                $('#modalVerMaterias').modal('hide');
+                            },
+                            error: function () {
+                                alert('Error al eliminar la materia.');
+                            }
+                        });
+                    });
+
+                    // Agregar el formulario de eliminación al listado de materias
+                    li.append(eliminarForm);
                     listaMaterias.append(li);
                 });
             });
@@ -384,6 +397,5 @@ $('#modalVerMaterias').on('show.bs.modal', function (event) {
             $('.alert').fadeOut('slow');
         }, 6000);
     });
-    
 </script>
 {% endblock javascript %}
