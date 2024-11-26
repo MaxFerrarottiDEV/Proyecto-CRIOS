@@ -3,6 +3,7 @@
 {% load static %} 
 {% block head %} 
 <link href="{% static 'home/style.css' %}" rel="stylesheet">
+<link href="{% static 'inscripciones/style-tipoInscripcion.css' %}" rel="stylesheet">
 {% endblock %}
 {% block content %} 
     <!-- Contenido -->
@@ -70,7 +71,7 @@
         <div class="card-body">
           <h5 class="card-title">Inscripciones</h5>
           <p class="card-text">Permite gestionar solicitudes de inscripción de nuevos candidatos y revisar o actualizar la información de los estudiantes ya registrados.</p>
-          <a href="{% url 'tipo_inscripcion' %}" class="btn btn-primary">Ir</a>
+          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#inscripcionesModal">Ir</button>
         </div>
       </div>
       <!-- Tarjeta 2 -->
@@ -91,14 +92,44 @@
           <a href="{% url 'build' %}" class="btn btn-primary">Ir</a>
         </div>
       </div>
-      <!-- Tarjeta 4 -->
-      <div class="card" style="width: 17.5rem; height: 25rem;">
-        <img src="{% static 'images/home/formularioIns.png' %}" class="card-img-top" alt="formulario">
-        <div class="card-body">
-          <h5 class="card-title">Cuotas</h5>
-          <p class="card-text">Permite realizar un seguimiento sobre el control de morosidad de cada estudiante y también permite abrir y cerrar caja.</p>
-          <a href="{% url 'build' %}" class="btn btn-primary">Ir</a>
+    </div><br><br>
+<!-- Modal de Inscripciones -->
+<div class="modal fade" id="inscripcionesModal" tabindex="-1" aria-labelledby="inscripcionesModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="inscripcionesModalLabel">INSCRIPCIONES - FUNCIONALIDADES</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="d-flex justify-content-center" style="background-color: #4d82b4">
+          <div class="card card-size-large mx-2">
+            <img src="{% static 'images/tipo_inscripcion/Solicitudes.JPG' %}" class="card-img-top" alt="...">
+            <div class="card-body">
+              <h5 class="card-title">Solicitudes</h5>
+              <p class="card-text">Permite gestionar inscripciones de candidatos mediante un formulario integrado en la plataforma. Una vez completada la solicitud, esta se registra automáticamente 
+                en la tabla de solicitudes para su seguimiento y gestión.</p>
+              <a href="{% url 'lista_solicitudes' %}" class="btn btn-custom">Ir</a>
+            </div>
+          </div>
+
+          <div class="card card-size-large mx-2">
+            <img src="{% static 'images/tipo_inscripcion/Consultas.JPG' %}" class="card-img-top" alt="...">
+            <div class="card-body">
+              <h5 class="card-title">Consultas</h5>
+              <p class="card-text">Proporciona una tabla con el listado completo de los estudiantes inscritos en el profesorado. Además, permite adjuntar un legajo digital, modificar la información 
+                del estudiante y eliminar su registro en caso de abandono de la carrera.</p>
+              <a href="{% url 'consultas' %}" class="btn btn-custom">Ir</a>
+            </div>
+          </div>
         </div>
       </div>
-    </div><br><br>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 {% endblock content %}
