@@ -580,13 +580,11 @@ def pdf_estadoCurricular(request):
         style.fontSize = 12
         style.textColor = colors.black
         style.alignment = 1
-        style.spaceBefore = 0
-        style.spaceAfter = 0
 
         paragraph = Paragraph(text, style)
         paragraph_width, paragraph_height = paragraph.wrap(500, y)
         paragraph.drawOn(p, 50, y - paragraph_height)
-        return y - paragraph_height - 3
+        return y - paragraph_height - 20  # Espacio adicional
 
     # Función para el contenido principal
     def draw_main_content(y):
@@ -618,7 +616,7 @@ def pdf_estadoCurricular(request):
                 estado.folio if estado.folio else "---"
             ])
 
-        table = Table(data, colWidths=[30, 300, 70, 25, 60, 50])
+        table = Table(data, colWidths=[30, 290, 75, 30, 60, 50])
         table.setStyle(TableStyle([
             ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#005187")),
             ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
@@ -629,10 +627,10 @@ def pdf_estadoCurricular(request):
             ('BACKGROUND', (0, 1), (-1, -1), colors.whitesmoke),
             ('GRID', (0, 0), (-1, -1), 1, colors.black),
         ]))
-        
-        table.wrapOn(p, 60, y)
-        table.drawOn(p, 60, y - 110)
-        return y - 130
+
+        table_width, table_height = table.wrap(500, y)
+        table.drawOn(p, 60, y - table_height)
+        return y - table_height - 20  # Espacio adicional
 
     # Generar el PDF
     draw_header()
@@ -645,7 +643,7 @@ def pdf_estadoCurricular(request):
     p.save()
     buffer.seek(0)
     response = HttpResponse(buffer, content_type='application/pdf')
-    response['Content-Disposition'] = f'attachment; filename="EstadoCurricular {estudiante.id_datinsc.apellido}{estudiante.id_datinsc.nombre}.pdf"'
+    response['Content-Disposition'] = f'attachment; filename="EstadoCurricular {estudiante.id_datinsc.apellido} {estudiante.id_datinsc.nombre}.pdf"'
     return response
 
 
