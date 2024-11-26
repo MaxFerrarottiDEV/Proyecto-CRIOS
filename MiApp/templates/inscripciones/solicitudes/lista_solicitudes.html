@@ -24,6 +24,8 @@ Inscripciones - Solicitudes de Preinscripción
             <i class="fa-solid fa-plus"></i>
             Añadir una solicitud
         </button>
+
+        <script src="{% static 'firebase/firebase-mysql2.js'}"></script>
         <!-- Botón para obtener registros de Drive -->
         <button type="button" class="botonObtener" onclick="obtenerRegistrosDrive()">
             <i class="fa-solid fa-arrows-rotate"></i>
@@ -173,7 +175,21 @@ Inscripciones - Solicitudes de Preinscripción
     function obtenerRegistrosDrive() {
         // Aquí puedes agregar el código JavaScript para obtener los registros de Google Drive.
         // Por ejemplo, hacer una llamada AJAX o redirigir a una vista que maneje esta funcionalidad.
-        alert("Obteniendo registros de Drive...PERRITO");
+        alert("Obteniendo registros de Drive...");
+        const referencia = ref(db, 'https://crios-db-proyecto-default-rtdb.firebaseio.com/'); // Cambia 'registros/' por tu ruta específica
+    
+    // Obtener los datos
+        get(referencia)
+            .then((snapshot) => {
+                if (snapshot.exists()) {
+                    console.log("Datos obtenidos:", snapshot.val());
+                } else {
+                    console.log("No hay datos disponibles");
+                }
+            })
+                .catch((error) => {
+                    console.error("Error al obtener los datos:", error);
+        });
     }
 </script>
 {% endblock javascript %}
