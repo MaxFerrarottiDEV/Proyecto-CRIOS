@@ -13,7 +13,7 @@ Planes de Estudio - Materias
 <div class="container mt-5">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <!-- Botón Volver alineado a la izquierda -->
-        <a href="{% url 'plan_estudio' %}" class="botonVolver"><i class="fa-solid fa-arrow-left"></i> Volver a Planes de Estudio</a>
+        <a href="{% url 'plan_estudio' %}" class="btn btn-info btn-sm mx-1 botonVolver"><i class="fa-solid fa-arrow-left"></i> Volver a Planes de Estudio</a>
         <!-- Botones Agregar alineado a la derecha -->
         <div>
             <button type="button" class="botonAgregarSolicitud" data-bs-toggle="modal" data-bs-target="#agregarMateriaModal">
@@ -62,16 +62,17 @@ Planes de Estudio - Materias
                     {% endif %}
                     </td>
                     <td>
-                        <button class="botonModificar" 
+                        <button class="btn btn-warning btn-sm mx-1 botonModificar" 
                             data-id_materia="{{ materia.id_materia }}" 
                             data-nombre="{{ materia.nombre }}" 
                             data-id_unidad="{{ materia.id_unidad.id_unidad }}" 
                             data-cuatrimestral_anual="{{ materia.cuatrimestral_anual }}" 
+                            data-id_campoestudio="{{ materia.id_campoestudio.id_campoestudio}}"
                             data-correlatividad="{{ materia.correlatividad }}">
                             <i class="fa-solid fa-edit"></i> Editar
                         </button>               
                         <button 
-                            class="botonEliminar" 
+                            class="btn btn-danger btn-sm botonEliminar" 
                             data-id_materia="{{ materia.id_materia }}">
                             <i class="fa-solid fa-trash"></i> Eliminar
                         </button>
@@ -123,6 +124,17 @@ Planes de Estudio - Materias
                         </select>
                     </div>
 
+                    <!-- Campo de Estudio -->
+                    <div class="mb-3">
+                        <label for="tipoCampo" class="form-label">Campo de Estudio:</label>
+                        <select class="form-select" id="tipoCampo" name="id_campoestudio">
+                            <option value="">Seleccione un campo de estudio</option>
+                            {% for campo in campos_estudio %}
+                                <option value="{{ campo.id_campoestudio }}">{{ campo.nombre }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
                     <!-- Correlatividad -->
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" id="correlatividad" name="correlatividad" value="1">
@@ -135,15 +147,14 @@ Planes de Estudio - Materias
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <a href="{% url 'materia' %}" class="botonVolver"><i class="fa-solid fa-arrow-left"></i> Volver</a>
-                    <button type="submit" class="botonGuardar">Guardar Cambios</button>
+                    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
 <div class="modal fade" id="modalEditarMateria" tabindex="-1" role="dialog" aria-labelledby="modalEditarMateriaLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <form id="formEditarMateria" method="POST" action="{% url 'editar_materia' %}">
                 {% csrf_token %}
@@ -177,6 +188,16 @@ Planes de Estudio - Materias
                         </select>
                     </div>
 
+                    <!-- Campo de Estudio -->
+                    <div class="mb-3">
+                        <label for="editarTipoCampo" class="form-label">Campo de Estudio:</label>
+                        <select class="form-select" id="editarTipoCampo" name="id_campoestudio" required>
+                            {% for campo in campos_estudio %}
+                                <option value="{{ campo.id_campoestudio }}">{{ campo.nombre }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" id="editarCorrelatividad" name="correlatividad" value="1">
                         <label class="form-check-label" for="editarCorrelatividad">
@@ -186,8 +207,7 @@ Planes de Estudio - Materias
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <a href="{% url 'materia' %}" class="botonVolver"><i class="fa-solid fa-arrow-left"></i> Volver</a>
-                    <button type="submit" class="botonGuardar">Guardar Cambios</button>
+                    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
                 </div>
             </form>
         </div>
@@ -197,10 +217,6 @@ Planes de Estudio - Materias
 {% endblock %}
 
 {% block javascript %}
-<script src="{% static 'jQuery-3.7.0/jquery-3.7.0.js' %}"></script>  
-<script src="{% static 'DataTables-1.13.6/js/jquery.dataTables.js' %}"></script>
-<script src="{% static 'DataTables-1.13.6/js/dataTables.bootstrap5.js' %}"></script>
-<script src="{% static 'bootbox/bootbox.all.min.js' %}"></script>
 <script>
     $(document).ready(function () {
         $('#dataTable').DataTable({
@@ -233,12 +249,12 @@ Planes de Estudio - Materias
                 message: "¿Está seguro de que desea eliminar esta materia?",
                 buttons: {
                     confirm: {
-                        label: 'Sí,eliminar materia.',
-                        className: 'botonDarDeBaja'
+                        label: 'Sí',
+                        className: 'btn-danger'
                     },
                     cancel: {
-                        label: 'No,cancelar.',
-                        className: 'botonCancelarBaja'
+                        label: 'No',
+                        className: 'btn-secondary'
                     }
                 },
                 callback: function (result) {
@@ -256,6 +272,7 @@ Planes de Estudio - Materias
             var nombre = $(this).data('nombre');
             var id_unidad = $(this).data('id_unidad');
             var cuatrimestral_anual = $(this).data('cuatrimestral_anual');
+            var id_campoestudio = $(this).data('id_campoestudio');
             var correlatividad = $(this).data('correlatividad');
 
             // Cargar los datos en el modal
@@ -263,6 +280,7 @@ Planes de Estudio - Materias
             $('#editarNombre').val(nombre);
             $('#editarTipoUnidad').val(id_unidad).change();
             $('#editarTipoCursado').val(cuatrimestral_anual === "False" ? "0" : "1").change();
+            $('#editarTipoCampo').val(id_campoestudio).change();
             $('#editarCorrelatividad').prop('checked', correlatividad === "True");
 
             // Mostrar el modal de edición

@@ -48,10 +48,13 @@ urlpatterns = [
     path('inscripciones/consultas/guardar_legajo/<int:id_estudiante>/', views.guardar_legajo_digital, name='guardar_legajo_digital'),
     path('inscripciones/consultas/eliminar/<int:id_estudiante>/', views.eliminar_estudiante, name='eliminar_estudiante'),
 
-    #Modulo de estados Curriculares - Gestión de Planes de Estudio:
+   #Modulo de estados Curriculares - Gestión de Planes de Estudio:
     path('plan_estudio/', views.plan_estudio_view, name='plan_estudio'),
     path('plan_estudio/agregar_plan/', views.agregar_plan, name='agregar_plan'),
     path('plan_estudio/eliminar_plan/<int:id_planestudio>/', views.eliminar_plan, name='eliminar_plan'),
+    path('plan_estudio/<int:plan_id>/materias/', views.obtener_materias_plan, name='obtener_materias_plan'),
+    path('plan_estudio/<int:plan_id>/materias/eliminar/<int:materia_id>/', views.eliminar_materia_plan, name='eliminar_materia_plan'),
+    path('plan_estudio/agregar_materias/', views.guardar_materias_plan, name='guardar_materias_plan'),
     path('plan_estudio/materias', views.materias_view, name='materia'),
     path('plan_estudio/materias/agregar_materia/', views.agregar_materia, name='agregar_materia'),
     path('plan_estudio/materias/editar_materia/', views.editar_materia, name='editar_materia'),

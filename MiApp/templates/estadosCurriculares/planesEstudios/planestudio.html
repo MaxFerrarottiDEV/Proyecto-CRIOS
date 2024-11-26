@@ -4,6 +4,8 @@ Planes de Estudio
 {% endblock %}
 {% load static %}
 {% block head %} 
+    {% csrf_token %}
+    <meta name="csrf-token" content="{{ csrf_token }}">
     <link href="{% static 'estilos/planesEstudios/planestudio.css' %}" rel="stylesheet">
     <link href="{% static 'estilos/inscripciones/botones.css' %}" rel="stylesheet">
 {% endblock %}
@@ -11,18 +13,15 @@ Planes de Estudio
 {% load crispy_forms_tags %}
 {% block content %}
 <div class="container mt-5">
-    <div class="d-flex justify-content-between mb-3">
-        <a href="{% url 'home' %}" class=" botonVolver"><i class="fa-solid fa-arrow-left"></i> Volver</a>
-        <div class="d-flex">
-            <button type="button" class="botonAgregarSolicitud " data-bs-toggle="modal" data-bs-target="#agregarPlanModal">
-                <i class="fa-solid fa-plus"></i> Agregar un nuevo plan</button>
-
-            <a href="{% url 'materia' %}" class=" botonVolver ">Ir a materias <i class="fa-solid fa-arrow-right"></i></a>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <button type="button" class="botonAgregarSolicitud" data-bs-toggle="modal" data-bs-target="#agregarPlanModal">
+            <i class="fa-solid fa-plus"></i>
+            Agregar un nuevo plan
+        </button>
+        <div>
+            <a href="{% url 'materia' %}" class="btn btn-info btn-sm mx-1 botonVolver">Ir a materias <i class="fa-solid fa-arrow-right"></i></a>
         </div>
     </div>
-    
-    
-
     <h2 style="text-align: center;">PLANES DE ESTUDIO</h2>
     <hr>
     {% if messages %}
@@ -51,9 +50,28 @@ Planes de Estudio
                     <i class="fa-solid fa-circle-xmark" style="color: #e5155e;"></i>
                 </td>
                 <td>
-                    <a href="#" class="botonVer"><i class="fa-solid fa-screwdriver-wrench"></i></i> Administrar</a>
-                    <button class=" botonEliminar"data-id_planestudio="{{ plan.id_planestudio }}">
-                    <i class="fa-solid fa-trash-can"></i> Eliminar</button>
+                    <button type="button" 
+                    class="btn btn-info btn-sm botonVer" 
+                    data-bs-toggle="modal" 
+                    data-bs-target="#modalAgregarMaterias"
+                    data-id_planestudio="{{ plan.id_planestudio }}">
+                    <i class="fa-solid fa-square-plus"></i>
+                        Agregar
+                    </button>
+                    <button type="button" 
+                    class="btn btn-info" 
+                    data-bs-toggle="modal" 
+                    data-bs-target="#modalVerMaterias" 
+                    data-plan-id="{{ plan.id_planestudio }}"
+                    data-plan-id="{{ plan.id_planestudio }}">
+                        Ver Materias
+                    </button>
+                    <button 
+                    class="btn btn-danger btn-sm botonEliminar"
+                    data-id_planestudio="{{ plan.id_planestudio }}">
+                    <i class="fa-solid fa-trash-can"></i> 
+                        Eliminar
+                    </button>
                 </td>            
             </tr>
             {% empty %}
@@ -79,7 +97,6 @@ Planes de Estudio
                         <label for="anioPlan" class="form-label">Año del Plan de Estudio:</label>
                         <input type="number" class="form-control" id="anioPlan" name="anio_plan" min="1900" max="2100" required>
                     </div>
-
                     <!-- Seleccionar la carrera -->
                     <div class="mb-3">
                         <label for="carrera" class="form-label">Seleccionar la Carrera:</label>
@@ -96,10 +113,87 @@ Planes de Estudio
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <a href="{% url 'plan_estudio' %}" class="botonVolver"><i class="fa-solid fa-arrow-left"></i> Volver</a>
-                    <button type="submit" class="botonGuardar">Guardar Plan de Estudio</button>
+                    <button type="submit" class="btn btn-primary">Guardar Plan de Estudio</button>
                 </div>
             </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modalAgregarMaterias" tabindex="-1" aria-labelledby="modalAgregarMateriasLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form id="formAgregarMaterias" method="POST" action="{% url 'guardar_materias_plan' %}">
+                {% csrf_token %}
+                <input type="hidden" name="id_planestudio" id="id_planestudio" value="{{ plan.id_planestudio }}">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalAgregarMateriasLabel">Agregar Materias al Plan de Estudio</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <!-- Tabs para organizar por años -->
+                    <ul class="nav nav-tabs" id="tabsAnios" role="tablist">
+                        {% for anio in anios_cursado %}
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link {% if anio == 1 %}active{% endif %}" id="tab-{{ anio }}-tab" data-bs-toggle="tab" data-bs-target="#tab-{{ anio }}" type="button" role="tab" aria-controls="tab-{{ anio }}" aria-selected="true">
+                                    {{ anio }}º Año
+                                </button>
+                            </li>
+                        {% endfor %}
+                    </ul>
+
+                    <div class="tab-content" id="tabsAniosContent">
+                        {% for anio in anios_cursado %}
+                            <div class="tab-pane fade {% if anio == 1 %}show active{% endif %}" id="tab-{{ anio }}" role="tabpanel" aria-labelledby="tab-{{ anio }}-tab">
+                                <h6 class="mt-3">{{ anio }}º Año</h6>
+                                <div class="mb-3">
+                                    <label for="materia-{{ anio }}" class="form-label">Seleccionar Materias:</label>
+                                    <select class="form-select materia-select" id="materia-{{ anio }}" name="materias_{{ anio }}[]" multiple>
+                                        {% for materia in materias %}
+                                            <option value="{{ materia.id_materia }}">{{ materia.nombre }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <small class="form-text text-muted">Doble clic en una materia para agregarla.</small>
+                                </div>
+                                <!-- Contenedor para la lista de materias seleccionadas -->
+                                <div class="mt-3">
+                                    <h6>Materias seleccionadas:</h6>
+                                    <ul id="lista-materias-{{ anio }}" class="list-group">
+                                        <!-- Las materias seleccionadas aparecerán aquí -->
+                                    </ul>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Guardar Materias</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- Modal para Ver Materias -->
+<div class="modal fade" id="modalVerMaterias" tabindex="-1" aria-labelledby="modalVerMateriasLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalVerMateriasLabel">Materias del Plan de Estudio</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h5 id="plan-titulo"></h5>
+                <ul id="materias-list" class="list-group">
+                    <!-- Aquí se llenarán las materias dinámicamente -->
+                </ul>
+
+                <!-- Formulario para operaciones -->
+                <form id="form-operacion-materias" method="post">
+                    <input type="hidden" name="materia_id" id="materia-id">
+                    <input type="hidden" name="accion" id="materia-accion">
+                </form>
+            </div>
         </div>
     </div>
 </div>
@@ -107,10 +201,180 @@ Planes de Estudio
 {% endblock %}
 
 {% block javascript %}
-<script src="{% static 'jQuery-3.7.0/jquery-3.7.0.js' %}"></script>  
-<script src="{% static 'DataTables-1.13.6/js/jquery.dataTables.js' %}"></script>
-<script src="{% static 'DataTables-1.13.6/js/dataTables.bootstrap5.js' %}"></script>
-<script src="{% static 'bootbox/bootbox.all.min.js' %}"></script>
+<script>console.log("Script cargado correctamente.");</script>
+<script>
+$('#modalAgregarMaterias').on('show.bs.modal', function (event) {
+    console.log("Modal mostrado, inicializando plan ID y listeners.");
+    
+    const button = $(event.relatedTarget); // Botón que abre el modal
+    const planId = button.data('id_planestudio'); // Obtener el ID del plan desde el botón
+    $(this).find('#id_planestudio').val(planId); // Asigna el ID al input oculto
+});
+
+$('#modalAgregarMaterias').on('shown.bs.modal', function () {
+    console.log("Modal mostrado, inicializando listeners de doble clic.");
+    
+    // Limpiar eventos previos para evitar duplicaciones
+    $('.materia-select').off('dblclick'); // Importante: Limpiar todos los dblclick previos
+    $('.quitar-materia').off('click'); // Limpiar eventos previos de los botones de quitar
+
+    // Delegación de eventos para detectar el doble clic
+    $('.materia-select').on('dblclick', function () {
+        console.log("Doble clic detectado en materia-select.");
+        
+        const opcionSeleccionada = this.options[this.selectedIndex];
+        if (opcionSeleccionada) {
+            console.log("Materia seleccionada:", opcionSeleccionada.text);
+            const anio = $(this).attr('id').split("-")[1];
+            const listaMaterias = $(`#lista-materias-${anio}`);
+            
+            if (listaMaterias.length) {
+                // Verificar si la materia ya existe en la lista
+                const existe = listaMaterias.find(`li[data-materia-id="${opcionSeleccionada.value}"]`).length > 0;
+                if (existe) {
+                    console.log("La materia ya existe en la lista.");
+                    return; // Salir si ya está en la lista
+                }
+
+                // Crear elemento de lista con botón de quitar
+                const li = $('<li>', {
+                    class: 'list-group-item d-flex justify-content-between align-items-center',
+                    text: opcionSeleccionada.text,
+                    'data-materia-id': opcionSeleccionada.value // Guardar el ID de la materia
+                });
+
+                const botonQuitar = $('<button>', {
+                    class: 'btn btn-danger btn-sm quitar-materia',
+                    text: 'Quitar'
+                });
+
+                // Agregar evento de quitar materia al botón
+                botonQuitar.on('click', function () {
+                    console.log("Quitar materia clicado.");
+                    $(this).closest('li').remove(); // Eliminar el elemento de la lista
+                });
+
+                // Agregar el botón al elemento de lista
+                li.append(botonQuitar);
+                listaMaterias.append(li);
+            }
+        }
+    });
+});
+
+$('#formAgregarMaterias').on('submit', function (e) {
+    console.log("Preparando datos para envío del formulario.");
+    
+    // Limpiar inputs ocultos anteriores para evitar duplicados
+    $(this).find('input[name^="materias_"]').remove();
+
+    // Iterar por cada lista de materias seleccionadas por año
+    for (let anio = 1; anio <= 5; anio++) {
+        const listaMaterias = $(`#lista-materias-${anio}`);
+        const materiasSeleccionadas = listaMaterias.find('li');
+
+        materiasSeleccionadas.each(function () {
+            const materiaId = $(this).data('materia-id'); // Obtener el ID de la materia
+            if (materiaId) {
+                // Crear un input oculto por cada materia seleccionada
+                $('<input>', {
+                    type: 'hidden',
+                    name: `materias_${anio}[]`,  // Mantener el nombre correcto del campo
+                    value: materiaId  // Agregar el ID de la materia como valor
+                }).appendTo('#formAgregarMaterias');
+            }
+        });
+    }
+
+    console.log("Formulario listo para envío.");
+});
+
+</script>
+<script>
+$('#modalVerMaterias').on('show.bs.modal', function (event) {
+    const button = $(event.relatedTarget); // Botón que abrió el modal
+    const planId = button.data('plan-id'); // Obtener el ID del plan
+    const modal = $(this);
+
+    // Asignar el nombre del plan al modal
+    const planTitulo = button.data('plan-titulo'); // Suponiendo que tienes el título del plan
+    modal.find('#plan-titulo').text(planTitulo);
+
+    // Limpiar la lista de materias anterior
+    const listaMaterias = modal.find('#materias-list');
+    listaMaterias.empty();
+
+    // Hacer una petición AJAX para obtener las materias del plan de estudio
+    $.ajax({
+        url: `/plan_estudio/${planId}/materias/`, // URL de la vista que devuelve las materias
+        method: 'GET',
+        success: function (data) {
+            // Verificar si hay materias en el plan
+            if ($.isEmptyObject(data.materias)) {
+                listaMaterias.append('<li class="list-group-item text-center">No hay materias agregadas a este plan.</li>');
+                return;
+            }
+
+            // Ordenar las materias por año y llenar la lista
+            const anios = Object.keys(data.materias).sort(); // Asegurarse del orden de los años
+            anios.forEach(function (anio) {
+                // Crear un encabezado para el año
+                const anioHeader = $('<li>', {
+                    class: 'list-group-item list-group-item-dark',
+                    text: `${anio}° Año`
+                });
+                listaMaterias.append(anioHeader);
+
+                // Agregar las materias del año
+                data.materias[anio].forEach(function (materia) {
+                    const li = $('<li>', {
+                        class: 'list-group-item',
+                        text: materia.nombre
+                    });
+
+                    // Crear el botón de eliminar
+                    const eliminarForm = $(`
+                        <form method="post" class="d-inline-block ms-3">
+                            <input type="hidden" name="materia_id" value="${materia.id}">
+                            <input type="hidden" name="accion" value="eliminar">
+                            <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                        </form>
+                    `);
+
+                    // Agregar token CSRF al formulario
+                    eliminarForm.prepend(`<input type="hidden" name="csrfmiddlewaretoken" value="${$('meta[name="csrf-token"]').attr('content')}">`);
+
+                    // Manejar el evento de envío del formulario con AJAX
+                    eliminarForm.on('submit', function (e) {
+                        e.preventDefault();
+                        const form = $(this);
+                        $.ajax({
+                            url: `/plan_estudio/${planId}/materias/eliminar/${materia.id}/`,
+                            method: 'POST',
+                            data: form.serialize(),
+                            success: function (response) {
+                                alert('Materia eliminada con éxito');
+                                // Recargar las materias para reflejar el cambio
+                                $('#modalVerMaterias').modal('hide');
+                            },
+                            error: function () {
+                                alert('Error al eliminar la materia.');
+                            }
+                        });
+                    });
+
+                    // Agregar el formulario de eliminación al listado de materias
+                    li.append(eliminarForm);
+                    listaMaterias.append(li);
+                });
+            });
+        },
+        error: function () {
+            listaMaterias.append('<li class="list-group-item text-center text-danger">Error al cargar las materias.</li>');
+        }
+    });
+});
+</script>
 <script>
     $(document).ready(function () {
         $('#dataTable').DataTable({
@@ -142,12 +406,12 @@ Planes de Estudio
             message: "¿Está seguro de que desea eliminar este plan de estudio?",
             buttons: {
                 confirm: {
-                    label: 'Sí,eliminar plan.',
-                    className: 'botonDarDeBaja'
+                    label: 'Sí',
+                    className: 'btn-danger'
                 },
                 cancel: {
-                    label: 'No,cancelar.',
-                    className: 'botonCancelarBaja'
+                    label: 'No',
+                    className: 'btn-secondary'
                 }
             },
             callback: function (result) {
@@ -157,7 +421,6 @@ Planes de Estudio
             }
         });
     });
-
         setTimeout(function () {
             $('.alert').fadeOut('slow');
         }, 6000);

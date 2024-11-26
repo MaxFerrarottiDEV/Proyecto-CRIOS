@@ -56,9 +56,9 @@ Estados Curriculares
         
         
         <div class="text-left mt-4">
-            <button type="button" class="botonGuardar" data-bs-toggle="modal" data-bs-target="#modalNotas">Ver Estado Curricular</button>
-            <button type="button" class="botonModificar" data-bs-toggle="modal" data-bs-target="#modalAgregarNota">Agregar Notas</button> 
-            <a href="{% url 'estados' %}" class="botonCancelar">Volver</a>
+            <a href="{% url 'estados' %}" class="botonVolver"><i class="fa-solid fa-arrow-left"></i> Volver</a>
+            <button type="button" class="botonGuardar" data-bs-toggle="modal" data-bs-target="#modalNotas"><i class="fa-solid fa-address-card"></i></i>Ver Estado Curricular</button>
+            <button type="button" class="botonModificar" data-bs-toggle="modal" data-bs-target="#modalAgregarNota"><i class="fa-solid fa-plus"></i>Agregar Notas</button> 
         </div>
         
         <div class="modal fade" id="modalNotas" tabindex="-1" aria-labelledby="modalNotasLabel" aria-hidden="true">
@@ -91,8 +91,8 @@ Estados Curriculares
                         </table>
                     </div>
                     <div class="modal-footer">
-                        <a href="{% url 'descargar_pdf' %}?dni={{ estudiante.id_datinsc.dni }}" class="botonDescargar">Descargar PDF </a>
-                        <button type="button" class="botonEliminar" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="button" class="botonVolver" data-bs-dismiss="modal"><i class="fa-solid fa-arrow-left"></i> Volver</button>
+                        <a href="{% url 'descargar_pdf' %}?dni={{ estudiante.id_datinsc.dni }}" class="botonDescargar"><i class="fa-regular fa-file-pdf"></i>Descargar PDF </a>
                     </div>
                 </div>
             </div>
@@ -157,8 +157,8 @@ Estados Curriculares
                             </div>
         
                             <div class="modal-footer">
-                                <button type="submit" class="botonGuardar">Guardar Nota</button>
-                                <button type="button" class="botonEliminar" data-bs-dismiss="modal">Cerrar</button>
+                                <button type="button" class="botonVolver" data-bs-dismiss="modal"><i class="fa-solid fa-arrow-left"></i> Volver</button>
+                                <button type="submit" class="botonDescargar"><i class="fa-solid fa-plus"></i> Guardar Nota</button>
                             </div>
                         </form>
                     </div>
