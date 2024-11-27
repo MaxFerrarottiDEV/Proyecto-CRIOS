@@ -12,7 +12,13 @@ Editar Solicitud
 {% block content %}
 
 <div class="container mt-5">
-    <a href="{% url 'lista_solicitudes' %}" class="botonVolver"><i class="fa-solid fa-arrow-left"></i> Volver</a>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <a href="{% url 'lista_solicitudes' %}" class=" botonVolver"><i class="fa-solid fa-arrow-left"></i> Volver</a>
+        <!-- Botón de guardar cambios -->
+        <div class="d-flex justify-content-end">
+            <button type="submit" class="botonVer"><i class="fa-solid fa-floppy-disk"></i> Guardar Cambios</button>
+        </div>
+    </div>
     <h1 class="text-center">Modificar Datos de Solicitud</h1>
     <hr>
 
@@ -29,7 +35,7 @@ Editar Solicitud
     <form method="post" action="" autocomplete="off">
         {% csrf_token %}
         <div class="card">
-            <div  style="background-color: #005187; color: white;" class="card-header ">
+            <div class="card-header" style="background-color: #005187; color: white;">
                 <h4>Datos Personales</h4>
             </div>
             <div class="card-body">
@@ -77,12 +83,6 @@ Editar Solicitud
                     </div>
                 </div>
             </div>
-        </div>
-
-        <!-- Botón de guardar cambios -->
-        <div class="d-flex justify-content-end">
-            <a href="{% url 'lista_solicitudes' %}" class="botonVolver"><i class="fa-solid fa-arrow-left"></i> Volver</a>
-            <button type="submit" class=" botonVer"><i class="fa-solid fa-floppy-disk"></i> Guardar Cambios</button>
         </div>
         <br>
     </form>

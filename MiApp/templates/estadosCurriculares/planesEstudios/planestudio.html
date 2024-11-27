@@ -34,7 +34,7 @@ Planes de Estudio
     <table id="dataTable" class="table table-striped table-bordered table-hover">
         <thead>
             <tr>
-                <th style="color: white;background-color:#005187;">Año del Plan</th>
+                <th style="color: white;background-color:#005187;">Año</th>
                 <th style="color: white;background-color:#005187;">Carrera</th>                     
                 <th style="color: white;background-color:#005187;">Plan Actual</th>
                 <th style="color: white;background-color:#005187;">Acciones</th>
@@ -46,8 +46,11 @@ Planes de Estudio
                 <td>{{ plan.anio_plan }}</td>
                 <td>{{ plan.id_carrera.nombre }}</td>    
                 <td>
+                    {% if plan.plan_actual == 0 %}
+                    <i class="fa-solid fa-circle-xmark" style="color: #e5155e;"></i>    
+                    {% elif plan.plan_actual == 1 %}
                     <i class="fa-solid fa-circle-check" style="color: #63E6BE;"></i>
-                    <i class="fa-solid fa-circle-xmark" style="color: #e5155e;"></i>
+                    {% endif %}
                 </td>
                 <td>
                     <button type="button" 
@@ -59,18 +62,19 @@ Planes de Estudio
                         Agregar
                     </button>
                     <button type="button" 
-                    class="btn btn-info" 
+                    class="botonVerMateria" 
                     data-bs-toggle="modal" 
                     data-bs-target="#modalVerMaterias" 
                     data-plan-id="{{ plan.id_planestudio }}"
                     data-plan-id="{{ plan.id_planestudio }}">
+                    <i class="fa-solid fa-table-list"></i>
                         Ver Materias
                     </button>
                     <button 
                     class="btn btn-danger btn-sm botonEliminar"
                     data-id_planestudio="{{ plan.id_planestudio }}">
                     <i class="fa-solid fa-trash-can"></i> 
-                        Eliminar
+                        Quitar Plan
                     </button>
                 </td>            
             </tr>
@@ -119,6 +123,7 @@ Planes de Estudio
         </div>
     </div>
 </div>
+<!-- Modal para Agregar Materias -->
 <div class="modal fade" id="modalAgregarMaterias" tabindex="-1" aria-labelledby="modalAgregarMateriasLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -183,6 +188,9 @@ Planes de Estudio
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
+                <!-- Descripción del Plan -->
+                <p>Descripción:</p><p id="plan-descripcion" class="text-muted"></p>
+
                 <h5 id="plan-titulo"></h5>
                 <ul id="materias-list" class="list-group">
                     <!-- Aquí se llenarán las materias dinámicamente -->
@@ -193,41 +201,47 @@ Planes de Estudio
                     <input type="hidden" name="materia_id" id="materia-id">
                     <input type="hidden" name="accion" id="materia-accion">
                 </form>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="btnEstablecerPlanActual">Establecer como Plan Actual</button>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
 
 {% endblock %}
 
 {% block javascript %}
 <script>console.log("Script cargado correctamente.");</script>
 <script>
+// Inicializar el modal cuando se muestra
 $('#modalAgregarMaterias').on('show.bs.modal', function (event) {
     console.log("Modal mostrado, inicializando plan ID y listeners.");
-    
+
     const button = $(event.relatedTarget); // Botón que abre el modal
     const planId = button.data('id_planestudio'); // Obtener el ID del plan desde el botón
     $(this).find('#id_planestudio').val(planId); // Asigna el ID al input oculto
 });
 
+// Configurar listeners y limpiar eventos duplicados
 $('#modalAgregarMaterias').on('shown.bs.modal', function () {
     console.log("Modal mostrado, inicializando listeners de doble clic.");
-    
+
     // Limpiar eventos previos para evitar duplicaciones
-    $('.materia-select').off('dblclick'); // Importante: Limpiar todos los dblclick previos
+    $('.materia-select').off('dblclick'); // Limpiar dblclick previos
     $('.quitar-materia').off('click'); // Limpiar eventos previos de los botones de quitar
 
     // Delegación de eventos para detectar el doble clic
     $('.materia-select').on('dblclick', function () {
         console.log("Doble clic detectado en materia-select.");
-        
+
         const opcionSeleccionada = this.options[this.selectedIndex];
         if (opcionSeleccionada) {
             console.log("Materia seleccionada:", opcionSeleccionada.text);
             const anio = $(this).attr('id').split("-")[1];
             const listaMaterias = $(`#lista-materias-${anio}`);
-            
+
             if (listaMaterias.length) {
                 // Verificar si la materia ya existe en la lista
                 const existe = listaMaterias.find(`li[data-materia-id="${opcionSeleccionada.value}"]`).length > 0;
@@ -262,9 +276,17 @@ $('#modalAgregarMaterias').on('shown.bs.modal', function () {
     });
 });
 
+// Manejar el cierre del modal
+$('#modalAgregarMaterias').on('hidden.bs.modal', function () {
+    console.log("Modal cerrado, limpiando listas.");
+    // Limpiar todas las listas de materias seleccionadas al cerrar el modal
+    $('ul[id^="lista-materias-"]').empty();
+});
+
+// Manejar el envío del formulario
 $('#formAgregarMaterias').on('submit', function (e) {
     console.log("Preparando datos para envío del formulario.");
-    
+
     // Limpiar inputs ocultos anteriores para evitar duplicados
     $(this).find('input[name^="materias_"]').remove();
 
@@ -273,6 +295,7 @@ $('#formAgregarMaterias').on('submit', function (e) {
         const listaMaterias = $(`#lista-materias-${anio}`);
         const materiasSeleccionadas = listaMaterias.find('li');
 
+        // Asegurarse de que no haya duplicados en el formulario
         materiasSeleccionadas.each(function () {
             const materiaId = $(this).data('materia-id'); // Obtener el ID de la materia
             if (materiaId) {
@@ -296,6 +319,9 @@ $('#modalVerMaterias').on('show.bs.modal', function (event) {
     const planId = button.data('plan-id'); // Obtener el ID del plan
     const modal = $(this);
 
+    // Asignar el ID del plan al modal para referencia futura
+    modal.data('plan-id', planId);
+
     // Asignar el nombre del plan al modal
     const planTitulo = button.data('plan-titulo'); // Suponiendo que tienes el título del plan
     modal.find('#plan-titulo').text(planTitulo);
@@ -304,73 +330,139 @@ $('#modalVerMaterias').on('show.bs.modal', function (event) {
     const listaMaterias = modal.find('#materias-list');
     listaMaterias.empty();
 
-    // Hacer una petición AJAX para obtener las materias del plan de estudio
+    // Hacer una petición AJAX para obtener las materias y la descripción del plan de estudio
     $.ajax({
-        url: `/plan_estudio/${planId}/materias/`, // URL de la vista que devuelve las materias
+        url: `/plan_estudio/${planId}/materias/`, // URL de la vista que devuelve las materias y la descripción
         method: 'GET',
         success: function (data) {
-            // Verificar si hay materias en el plan
+            // Mostrar la descripción del plan
+            modal.find('#plan-descripcion').text(data.descripcion || 'Sin descripción disponible.');
+
+            // Mostrar materias
             if ($.isEmptyObject(data.materias)) {
                 listaMaterias.append('<li class="list-group-item text-center">No hay materias agregadas a este plan.</li>');
                 return;
             }
 
-            // Ordenar las materias por año y llenar la lista
             const anios = Object.keys(data.materias).sort(); // Asegurarse del orden de los años
             anios.forEach(function (anio) {
-                // Crear un encabezado para el año
                 const anioHeader = $('<li>', {
                     class: 'list-group-item list-group-item-dark',
                     text: `${anio}° Año`
                 });
                 listaMaterias.append(anioHeader);
 
-                // Agregar las materias del año
                 data.materias[anio].forEach(function (materia) {
                     const li = $('<li>', {
                         class: 'list-group-item',
                         text: materia.nombre
                     });
 
-                    // Crear el botón de eliminar
-                    const eliminarForm = $(`
-                        <form method="post" class="d-inline-block ms-3">
-                            <input type="hidden" name="materia_id" value="${materia.id}">
-                            <input type="hidden" name="accion" value="eliminar">
-                            <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
-                        </form>
-                    `);
-
-                    // Agregar token CSRF al formulario
-                    eliminarForm.prepend(`<input type="hidden" name="csrfmiddlewaretoken" value="${$('meta[name="csrf-token"]').attr('content')}">`);
-
-                    // Manejar el evento de envío del formulario con AJAX
-                    eliminarForm.on('submit', function (e) {
-                        e.preventDefault();
-                        const form = $(this);
-                        $.ajax({
-                            url: `/plan_estudio/${planId}/materias/eliminar/${materia.id}/`,
-                            method: 'POST',
-                            data: form.serialize(),
-                            success: function (response) {
-                                alert('Materia eliminada con éxito');
-                                // Recargar las materias para reflejar el cambio
-                                $('#modalVerMaterias').modal('hide');
-                            },
-                            error: function () {
-                                alert('Error al eliminar la materia.');
-                            }
-                        });
+                    // Crear botón de eliminar
+                    const eliminarButton = $('<button>', {
+                        class: 'btn btn-danger btn-sm ms-3 botonEliminarMateria',
+                        text: 'Eliminar',
+                        'data-id_matxplan': materia.id_matxplan // Almacenar el id_matxplan como atributo de datos
                     });
 
-                    // Agregar el formulario de eliminación al listado de materias
-                    li.append(eliminarForm);
+                    li.append(eliminarButton);
                     listaMaterias.append(li);
                 });
             });
         },
         error: function () {
+            modal.find('#plan-descripcion').text('Error al cargar la descripción del plan.');
             listaMaterias.append('<li class="list-group-item text-center text-danger">Error al cargar las materias.</li>');
+        }
+    });
+});
+
+// Manejar el evento de clic en los botones de eliminación con Bootbox
+$(document).on('click', '.botonEliminarMateria', function (e) {
+    e.preventDefault();
+    const button = $(this);
+    const id_matxplan = button.data('id_matxplan'); // Obtener el ID del matxplan
+    const planId = $('#modalVerMaterias').data('plan-id'); // Obtener el ID del plan desde el modal
+
+    bootbox.confirm({
+        message: "¿Está seguro de que desea quitar esta materia del plan de estudio?",
+        buttons: {
+            confirm: {
+                label: 'Sí',
+                className: 'btn-danger'
+            },
+            cancel: {
+                label: 'No',
+                className: 'btn-secondary'
+            }
+        },
+        callback: function (result) {
+            if (result) {
+                // Realizar la solicitud AJAX para eliminar la materia
+                $.ajax({
+                    url: `/plan_estudio/${planId}/materias/eliminar/${id_matxplan}/`,
+                    method: 'POST',
+                    data: {
+                        csrfmiddlewaretoken: $('meta[name="csrf-token"]').attr('content') // Asegura que se envíe el token CSRF
+                    },
+                    success: function (response) {
+                        if (response.success) {
+                            alert('Materia eliminada con éxito.');
+                            button.closest('li').remove(); // Remover la materia de la lista
+                        } else {
+                            alert(response.message || 'Error al eliminar la materia.');
+                        }
+                    },
+                    error: function () {
+                        alert('Error al eliminar la materia.');
+                    }
+                });
+            }
+        }
+    });
+});
+$('#btnEstablecerPlanActual').on('click', function () {
+    const planId = $('#modalVerMaterias').data('plan-id'); // Obtener el ID del plan desde el modal
+
+    if (!planId) {
+        alert("No se pudo identificar el plan de estudio.");
+        return;
+    }
+
+    bootbox.confirm({
+        message: "¿Está seguro de que desea establecer este plan como el plan actual? Esto desactivará cualquier otro plan actual de la misma carrera.",
+        buttons: {
+            confirm: {
+                label: 'Sí',
+                className: 'btn-primary'
+            },
+            cancel: {
+                label: 'No',
+                className: 'btn-secondary'
+            }
+        },
+        callback: function (result) {
+            if (result) {
+                // Realizar la solicitud AJAX para establecer el plan como actual
+                $.ajax({
+                    url: `/plan_estudio/${planId}/establecer_actual/`, // URL de la vista
+                    method: 'POST',
+                    data: {
+                        csrfmiddlewaretoken: $('meta[name="csrf-token"]').attr('content') // Token CSRF
+                    },
+                    success: function (response) {
+                        if (response.success) {
+                            alert('El plan ha sido establecido como el plan actual.');
+                            location.reload(); // Recargar la página
+                        } else {
+                            alert(response.message || 'Error al establecer el plan como actual.');
+                        }
+                    },
+                    error: function () {
+                        alert('Error en la solicitud para establecer el plan como actual.');
+                    }
+                });
+            }
         }
     });
 });
@@ -406,12 +498,12 @@ $('#modalVerMaterias').on('show.bs.modal', function (event) {
             message: "¿Está seguro de que desea eliminar este plan de estudio?",
             buttons: {
                 confirm: {
-                    label: 'Sí,dar de baja plan.',
-                    className: 'botonDarDeBaja'
+                    label: 'Sí',
+                    className: 'btn-danger'
                 },
                 cancel: {
-                    label: 'No,cancelar.',
-                    className: 'botonCancelarBaja'
+                    label: 'No',
+                    className: 'btn-secondary'
                 }
             },
             callback: function (result) {

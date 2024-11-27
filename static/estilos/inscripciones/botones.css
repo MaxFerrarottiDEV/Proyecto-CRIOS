@@ -60,6 +60,7 @@
 .botonGuardar,
 .botonGuardarSolicitud,
 .botonAzul,
+.botonVerMateria,
 .botonObtener{
   color: #fff;
   background-color: #005187;
@@ -78,6 +79,7 @@
 .botonSubirArchivo:hover,
 .botonAgregarSolicitud:hover,
 .botonGuardar:hover,
+.botonVerMateria:hover,
 .botonGuardarSolicitud:hover,
 .botonAzul:hover{
   transform: scale(1.1); 

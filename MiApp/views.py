@@ -200,7 +200,7 @@ def editar_solicitud(request, id_datinsc):
 @login_required
 def eliminar_solicitud(request, id_datinsc):
     solicitud = get_object_or_404(DatInsc, id_datinsc=id_datinsc)
-    
+
     if request.method == "POST":
         try:
             solicitud.delete()
@@ -208,7 +208,6 @@ def eliminar_solicitud(request, id_datinsc):
         except Exception as e:
             messages.error(request, f"Ocurrió un error al eliminar la solicitud: {str(e)}")
         return redirect('lista_solicitudes')
-    return render(request, 'inscripciones/solicitudes/eliminar_solicitud.html', {'solicitud': solicitud})
 
 
 @login_required
@@ -247,6 +246,27 @@ def consultas(request):
         }
 
     return render(request, 'inscripciones/consultas/consultas.html', context)
+
+
+@login_required
+def graficos_estudiantes(request):
+    # Consulta para contar estudiantes por año de inscripción
+    inscriptos_por_anio = (
+        Estudiantes.objects.values('anio_insc')
+        .annotate(total=Count('id_estudiante'))
+        .order_by('anio_insc')
+    )
+
+    # Formatear datos para el gráfico
+    etiquetas = ['1er Año', '2do Año', '3er Año', '4to Año', '5to Año']
+    datos = [0] * 5  # Inicializar con ceros para los 5 años
+
+    for inscripto in inscriptos_por_anio:
+        anio = inscripto['anio_insc']
+        if 1 <= anio <= 5:  # Asegurarnos de que esté en el rango esperado
+            datos[anio - 1] = inscripto['total']
+
+    return render(request, 'inscripciones/graficos_estudiantes.html', {'etiquetas': etiquetas, 'datos': datos})
 
 
 @login_required
@@ -304,7 +324,8 @@ def modificar_datos(request, id_estudiante):
     # Renderizar la plantilla con el formulario y los datos del estudiante
     return render(request, 'inscripciones/consultas/modificar_datos.html', {
         'form': form,
-        'estudiante': estudiante
+        'estudiante': 
+        estudiante
     })
 
 
@@ -326,6 +347,7 @@ def eliminar_estudiante(request, id_estudiante):
     except Exception as e:
         request.session['error'] = f"Error al eliminar al estudiante: {str(e)}"
     return redirect('consultas')  # Redirige a la página de consultas
+
 
 
 @login_required
@@ -366,13 +388,15 @@ def agregar_plan(request):
 
         try:
             carrera = Carreras.objects.get(id_carrera=id_carrera)
+            # Crear el nuevo plan de estudios con plan_actual por defecto como False
             nuevo_plan = PlanesEstudios.objects.create(
                 anio_plan=anio_plan,
                 id_carrera=carrera,
-                descripcion=descripcion
+                descripcion=descripcion,
+                plan_actual=False  # Asegurarse de asignar False explícitamente
             )
             nuevo_plan.save()
-            messages.success(request, "Plan de estudio agregado con éxito. No se olvide de agregar la materias en el boton 'Administrar Plan'")
+            messages.success(request, "Plan de estudio agregado con éxito. No se olvide de agregar las materias en el botón 'Agregar'")
         except Carreras.DoesNotExist:
             messages.error(request, "La carrera seleccionada no existe.")
         return redirect('plan_estudio')
@@ -386,55 +410,89 @@ def guardar_materias_plan(request):
         id_planestudio = request.POST.get('id_planestudio')
         plan = get_object_or_404(PlanesEstudios, id_planestudio=id_planestudio)
 
-        for anio in range(1, 6):  # Iterar sobre los años del 1 al 5
+        for anio in range(1, 6):
             materias_ids = request.POST.getlist(f'materias_{anio}[]')
 
             for materia_id in materias_ids:
                 materia = get_object_or_404(Materias, id_materia=materia_id)
                 
-                # Crear la relación con el año correspondiente
-                MateriasxplanesEstudios.objects.create(
-                    id_planestudio=plan,
-                    id_materia=materia,
-                    anio_materia=anio,  # Asignar el año correspondiente
-                )
+                # Evitar duplicados
+                if not MateriasxplanesEstudios.objects.filter(
+                        id_planestudio=plan, id_materia=materia, anio_materia=anio).exists():
+                    MateriasxplanesEstudios.objects.create(
+                        id_planestudio=plan,
+                        id_materia=materia,
+                        anio_materia=anio
+                    )
 
         messages.success(request, "Materias agregadas correctamente al plan de estudio.")
         return redirect('plan_estudio')
+
     
 
 @login_required
 def obtener_materias_plan(request, plan_id):
-    # Obtener las materias asociadas al plan, ordenadas por año
-    materias = MateriasxplanesEstudios.objects.filter(id_planestudio_id=plan_id).order_by('anio_materia')
-    
-    # Organizar las materias por año
-    materias_data = {}
-    for materia in materias:
-        anio = materia.anio_materia  # Atributo del año
-        if anio not in materias_data:
-            materias_data[anio] = []
-        materias_data[anio].append({
-            'id': materia.id_materia.id_materia,  # Incluye el id de la materia
-            'nombre': materia.id_materia.nombre,  # Suponiendo que `id_materia` tiene un campo `nombre`
+    try:
+        plan = PlanesEstudios.objects.get(id_planestudio=plan_id)  # Obtener el plan de estudio
+        materias = MateriasxplanesEstudios.objects.filter(id_planestudio_id=plan_id).order_by('anio_materia')
+        
+        # Organizar las materias por año
+        materias_data = {}
+        for materia in materias:
+            anio = materia.anio_materia  # Atributo del año
+            if anio not in materias_data:
+                materias_data[anio] = []
+            materias_data[anio].append({
+                'id_matxplan': materia.id_matxplan,  # ID único de la relación MateriasxplanesEstudios
+                'id': materia.id_materia.id_materia,  # Incluye el id de la materia
+                'nombre': materia.id_materia.nombre,  # Suponiendo que `id_materia` tiene un campo `nombre`
+            })
+        
+        return JsonResponse({
+            'materias': materias_data,
+            'descripcion': plan.descripcion  # Agregar la descripción al JSON
         })
-    
-    return JsonResponse({'materias': materias_data})
+    except PlanesEstudios.DoesNotExist:
+        return JsonResponse({'materias': {}, 'descripcion': 'Plan no encontrado.'})
+
 
 
 @login_required
 @csrf_protect
-def eliminar_materia_plan(request, plan_id, materia_id):
+def establecer_plan_actual(request, plan_id):
     if request.method == 'POST':
-        materias = MateriasxplanesEstudios.objects.filter(id_planestudio=plan_id, id_materia=materia_id)
-        if materias.exists():
-            materias.delete()
-            return JsonResponse({'success': True, 'message': 'Materias eliminadas correctamente.'})
-        else:
+        try:
+            # Obtener el plan a establecer como actual
+            plan = PlanesEstudios.objects.get(id_planestudio=plan_id)
+
+            # Desactivar otros planes actuales de la misma carrera
+            PlanesEstudios.objects.filter(id_carrera=plan.id_carrera, plan_actual=True).update(plan_actual=False)
+
+            # Establecer el nuevo plan como actual
+            plan.plan_actual = True
+            plan.save()
+
+            return JsonResponse({'success': True, 'message': 'El plan se ha establecido como el plan actual.'})
+        except PlanesEstudios.DoesNotExist:
+            return JsonResponse({'success': False, 'message': 'El plan de estudio no existe.'})
+
+    return JsonResponse({'success': False, 'message': 'Método no permitido.'})
+
+
+@login_required
+@csrf_protect
+def eliminar_materia_plan(request, plan_id, id_matxplan):
+    if request.method == 'POST':
+        # Buscar la materia por su clave primaria id_matxplan
+        try:
+            materia = MateriasxplanesEstudios.objects.get(id_planestudio=plan_id, id_matxplan=id_matxplan)
+            materia.delete()
+            return JsonResponse({'success': True, 'message': 'Materia eliminada correctamente.'})
+        except MateriasxplanesEstudios.DoesNotExist:
             return JsonResponse({'success': False, 'message': 'No se encontró la materia especificada.'})
     return JsonResponse({'success': False, 'message': 'Método no permitido.'})
-    
 
+    
 @login_required
 def eliminar_plan(request, id_planestudio):
     try:
@@ -567,41 +625,7 @@ def estados(request):
     return render(request, 'estadosCurriculares/estados.html', context)
 
 
-@login_required
-def modalAgregarNota(request, dni):
-    estudiante = get_object_or_404(Estudiantes, id_datinsc__dni=dni)
-    if request.method == 'POST':
-        plan_id = request.POST.get('plan') 
-        materia_id = request.POST.get('materia')
-        condicion = request.POST.get('condicion')
-        nota = request.POST.get('nota')
-        fecha = request.POST.get('fecha')
-        folio= request.POST.get('folio')
-
-        plan = get_object_or_404(PlanesEstudios, id_planestudio=plan_id)
-        materia = get_object_or_404(MateriasxplanesEstudios, id_materia=materia_id)
-        nuevo_estado = EstadosCurriculares(
-            id_estudiante_estcur=estudiante,
-            id_matxplan_estcur=materia,
-            condicion_nota=condicion,
-            nota=nota,
-            fecha_finalizacion=fecha,
-            folio=folio)
-        nuevo_estado.save()
-        return redirect('agregar_nota', dni=dni)
-    planes = PlanesEstudios.objects.select_related('id_carrera').all()
-    materias = Materias.objects.all()
-    plan_id = request.GET.get('plan')
-    if plan_id:
-        materias = Materias.objects.filter(
-            materiasxplanesestudios__id_planestudio=plan_id).distinct()
-
-    return render(request, 'estadosCurriculares/estados.html', {
-        'estudiante': estudiante,
-        'materias': materias,
-        'planes': planes})
     
-
 
 @login_required
 def obtener_materias(request):
@@ -625,7 +649,6 @@ def obtener_materias(request):
             })
         return JsonResponse(materias_agrupadas, safe=False)
     return JsonResponse({'error': 'No se encontró el plan'}, status=400)
-
 
 @login_required
 def agregar_nota(request, dni):

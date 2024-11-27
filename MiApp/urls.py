@@ -41,8 +41,9 @@ urlpatterns = [
     path('inscripciones/solicitudes/editar/<int:id_datinsc>', views.editar_solicitud, name='editar_solicitud'),
     path('inscripciones/solicitudes/eliminar/<int:id_datinsc>', views.eliminar_solicitud, name='eliminar_solicitud'),
 
-    # Modulo de inscripciones - consultas
+     # Modulo de inscripciones - consultas
     path('inscripciones/consultas/', views.consultas, name='consultas'),
+    path('inscripciones/graficos/estudiantes/', views.graficos_estudiantes, name='graficos_estudiantes'),
     path('inscripciones/consultas/ver_datos/<int:id_estudiante_ic>/', views.ver_datos, name='ver_datos'),
     path('inscripciones/consultas/modificar_datos/<int:id_estudiante>/', views.modificar_datos, name='modificar_datos'),
     path('inscripciones/consultas/guardar_legajo/<int:id_estudiante>/', views.guardar_legajo_digital, name='guardar_legajo_digital'),
@@ -53,7 +54,8 @@ urlpatterns = [
     path('plan_estudio/agregar_plan/', views.agregar_plan, name='agregar_plan'),
     path('plan_estudio/eliminar_plan/<int:id_planestudio>/', views.eliminar_plan, name='eliminar_plan'),
     path('plan_estudio/<int:plan_id>/materias/', views.obtener_materias_plan, name='obtener_materias_plan'),
-    path('plan_estudio/<int:plan_id>/materias/eliminar/<int:materia_id>/', views.eliminar_materia_plan, name='eliminar_materia_plan'),
+    path('plan_estudio/<int:plan_id>/materias/eliminar/<int:id_matxplan>/', views.eliminar_materia_plan, name='eliminar_materia_plan'),
+    path('plan_estudio/<int:plan_id>/establecer_actual/', views.establecer_plan_actual, name='establecer_plan_actual'),
     path('plan_estudio/agregar_materias/', views.guardar_materias_plan, name='guardar_materias_plan'),
     path('plan_estudio/materias', views.materias_view, name='materia'),
     path('plan_estudio/materias/agregar_materia/', views.agregar_materia, name='agregar_materia'),
@@ -64,9 +66,9 @@ urlpatterns = [
     path('estadosCurriculares/estados', views.estados, name='estados'),
     path('obtener-materias/', views.obtener_materias, name='obtener_materias'),
 
-    path('estadosCurriculares/estados', views.modalAgregarNota, name='modalAgregarNota'),
-    path('estadosCurriculares/agregar_nota/<str:dni>/', views.agregar_nota, name='agregar_nota'),
     
+    path('estadosCurriculares/agregar_nota/<str:dni>/', views.agregar_nota, name='agregar_nota'),
+
     path('estadosCurriculares/verEstado/<str:dni>/', views.verEstado, name='verEstado'),
 
     path('pdf_estadoCurricular', views.pdf_estadoCurricular, name='descargar_pdf'),]

@@ -7,10 +7,13 @@
     <link href="{% static 'estilos/inscripciones/consultas/ver_datos.css' %}" rel="stylesheet">
     <link href="{% static 'estilos/inscripciones/botones.css' %}" rel="stylesheet">
 {% endblock %}
+
 {% block content %}
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-3">
+        <!-- Botón Volver alineado a la izquierda -->
         <a href="{% url 'consultas' %}" class="botonVolver"><i class="fa-solid fa-arrow-left"></i> Volver</a>
+        <!-- Botones Modificar y Adjuntar alineados a la derecha -->
         <div>
             {% if estudiante.id_estudiante %}
             <a href="{% url 'modificar_datos' estudiante.id_estudiante %}" class="botonModificar">
@@ -19,7 +22,7 @@
             {% else %}
             <p>No se puede modificar los datos del estudiante porque falta el ID.</p>
             {% endif %}
-            <button type="button" class="botonAzul" data-bs-toggle="modal" data-bs-target="#adjuntarLegajoModal">
+            <button type="button" class="botonVolver" data-bs-toggle="modal" data-bs-target="#adjuntarLegajoModal">
                 <i class="fa-solid fa-plus"></i> Adjuntar Legajo Digital
             </button>
         </div>
@@ -35,11 +38,10 @@
     <hr>
 
     <!-- Datos Estudiantiles -->
-    <div class="card mb-4">
-        <div class="card-header" style="background-color: #005187; color: white;">
+    <div class="card mb-4" >
+        <div class="card-header "style="background-color: #005187; color: white;">
             <h4>Datos Estudiantiles</h4>
         </div>
-        
         <div class="card-body">
             <div class="row">
                 <div class="col-md-6">
@@ -92,8 +94,8 @@
     </div>
 
     <!-- Datos Personales -->
-    <div class="card">
-        <div  style="background-color: #005187; color: white;" class="card-header">
+    <div class="card" >
+        <div class="card-header "style="background-color: #005187; color: white;">
             <h4>Datos Personales</h4>
         </div>
         <div class="card-body">
@@ -184,7 +186,7 @@
                     </ol>
                 </div>
                 <div class="modal-footer">
-                    <a href="{% url 'ver_datos' estudiante.id_estudiante %}" class="botonVolver"><i class="fa-solid fa-arrow-left"></i> Volver</a>
+                    <a href="{% url 'consultas' %}" class="botonVolver" data-bs-dismiss="modal"><i class="fa-solid fa-arrow-left"></i> Volver</a>
                     <button type="submit" class="botonVer"><i class="fa-solid fa-floppy-disk"></i> Guardar</button>
                 </div>
             </form>

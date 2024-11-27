@@ -76,21 +76,38 @@ Estados Curriculares
                         <table id="dataTable" class="table table-striped table-bordered table-hover mt-3">
                             <thead class="table-dark">
                                 <tr>
-                                    <th>Materia</th>
-                                    <th>Estado</th>
-                                    <th>Nota</th>
-                                    <th>Fecha</th>
+                                    <th style="color: white;background-color:#005187;">Año</th>
+                                    <th style="color: white;background-color:#005187;">Materia</th>
+                                    <th style="color: white;background-color:#005187;">Estado</th>
+                                    <th style="color: white;background-color:#005187;">Nota</th>
+                                    <th style="color: white;background-color:#005187;">Fecha</th>
+                                    <th style="color: white;background-color:#005187;">Folio</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {% for materia in estado_curricular %}
-                                <tr>
-                                    <td>{{ materia.id_matxplan_estcur.id_materia.nombre }}</td>
-                                    <td>{{ materia.condicion_nota }}</td>  
-                                    <td>{{ materia.nota }}</td>
-                                    <td>{{ materia.fecha_finalizacion|date:"d/m/Y" }}</td>
-                                </tr>
-                                {% endfor %}
+                            <tr>
+                                <td>
+                                {% if materia.id_matxplan_estcur.anio_materia == 1 %}
+                                    1ro
+                                {% elif materia.id_matxplan_estcur.anio_materia == 2 %}
+                                    2do
+                                {% elif materia.id_matxplan_estcur.anio_materia == 3 %}
+                                    3ro
+                                {% elif materia.id_matxplan_estcur.anio_materia == 4 %}
+                                    4to
+                                {% elif materia.id_matxplan_estcur.anio_materia == 5 %}
+                                    5to
+                                {% endif %}
+                                </td>
+                                <td>{{ materia.id_matxplan_estcur.id_materia.nombre }}</td>
+                                <td>{{ materia.condicion_nota }}</td>  
+                                <td>{{ materia.nota }}</td>
+                                <td>{{ materia.fecha_finalizacion|date:"d/m/Y" }}</td>
+                                <td>{{ materia.folio}}</td>
+                            </tr>
+                            {% empty %}
+                            {% endfor %}
                             </tbody>
                         </table>
                     </div>
@@ -111,7 +128,7 @@ Estados Curriculares
                     </div>
                     <div class="modal-body">
                         <h4>Estudiante: {{ estudiante.id_datinsc.apellido }} {{ estudiante.id_datinsc.nombre }}</h4>
-                        <form method="POST" action="{% url 'modalAgregarNota' %}">
+                        <form method="POST" action="{% url 'agregar_nota' dni=estudiante.id_datinsc.dni %}">
                             {% csrf_token %}
                             <input type="hidden" name="estudiante_id" value="{{ estudiante.id }}">
                             <input type="hidden" name="dni" value="{{ estudiante.id_datinsc.dni }}">
@@ -212,6 +229,30 @@ Estados Curriculares
 {% block javascript %}
 
 <script>
+    $(document).ready(function () {
+        $('#dataTable').DataTable({
+            language: {
+                "sProcessing": "Procesando...",
+                "sLengthMenu": "Mostrar _MENU_ registros",
+                "sZeroRecords": "No se encontraron resultados",
+                "sEmptyTable": "No hay datos disponibles en esta tabla",
+                "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+                "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+                "sSearch": "Buscar:",
+                "oPaginate": {
+                    "sFirst": "Primero",
+                    "sLast": "Último",
+                    "sNext": "Siguiente",
+                    "sPrevious": "Anterior"
+                },
+                "oAria": {
+                    "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
+                    "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                }
+            }
+        }); 
+    });
     function setDni(dni) {
     // Asigna el valor de DNI al campo oculto del formulario en el modal
     document.querySelector('input[name="dni"]').value = dni;
