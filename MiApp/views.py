@@ -22,8 +22,7 @@ from reportlab.platypus import Table, TableStyle  # type: ignore
 from .forms import PreinscripcionForm
 from .models import Carreras, DatInsc, EstadosCurriculares, Estudiantes, InscCarreras, Materias, MateriasxplanesEstudios, PlanesEstudios
 
-def lista_empleados(request):
-    return render(request, 'empleados/lista_empleados.html')
+
 
 def login(request):
     return render(request, 'login.html')
@@ -64,10 +63,6 @@ def change_password(request):
             messages.error(request, "Las contraseñas no coinciden.")
     
     return render(request, 'change_password.html')
-
-@login_required
-def tipo_inscripcion(request):
-    return render(request, 'inscripciones/tipo_inscripcion.html')
 
 
 @login_required
