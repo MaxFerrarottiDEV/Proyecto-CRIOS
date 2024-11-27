@@ -309,7 +309,6 @@ class Mesas_Examenes(models.Model):
     fecha_examen = models.DateField(db_column='Fecha_Examen')
     hora_examen = models.TimeField(db_column='Hora_Examen',blank=True, null=True)
 
-
 class PagosCuotas(models.Model):
     id_pagcuot = models.AutoField(db_column='Id_PagCuot', primary_key=True)  # Field name made lowercase.
     id_cuota_pg = models.ForeignKey(Cuotas, models.DO_NOTHING, db_column='Id_Cuota_PG', blank=True, null=True)  # Field name made lowercase.

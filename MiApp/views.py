@@ -10,6 +10,8 @@ from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import render_to_string
 from django.urls import reverse
+from django.contrib.auth import authenticate
+
 
 from io import BytesIO
 
@@ -45,6 +47,21 @@ def register(request):
 @login_required
 def home(request):
     return render(request,'home.html')
+
+
+@login_required
+def validate_password(request):
+    if request.method == 'POST':
+        current_password = request.POST.get('current_password')
+        user = authenticate(username=request.user.username, password=current_password)
+        if user is not None:
+            # Contraseña válida, redirigir al cambio de contraseña
+            return redirect('change_password')
+        else:
+            # Contraseña incorrecta
+            messages.error(request, 'La contraseña actual es incorrecta.')
+            return redirect('home')  # Puedes redirigir donde creas necesario
+    return redirect('home')
 
 
 @login_required
