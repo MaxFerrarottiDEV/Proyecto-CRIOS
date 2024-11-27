@@ -401,21 +401,24 @@ def guardar_materias_plan(request):
         id_planestudio = request.POST.get('id_planestudio')
         plan = get_object_or_404(PlanesEstudios, id_planestudio=id_planestudio)
 
-        for anio in range(1, 6):  # Iterar sobre los años del 1 al 5
+        for anio in range(1, 6):
             materias_ids = request.POST.getlist(f'materias_{anio}[]')
 
             for materia_id in materias_ids:
                 materia = get_object_or_404(Materias, id_materia=materia_id)
                 
-                # Crear la relación con el año correspondiente
-                MateriasxplanesEstudios.objects.create(
-                    id_planestudio=plan,
-                    id_materia=materia,
-                    anio_materia=anio,  # Asignar el año correspondiente
-                )
+                # Evitar duplicados
+                if not MateriasxplanesEstudios.objects.filter(
+                        id_planestudio=plan, id_materia=materia, anio_materia=anio).exists():
+                    MateriasxplanesEstudios.objects.create(
+                        id_planestudio=plan,
+                        id_materia=materia,
+                        anio_materia=anio
+                    )
 
         messages.success(request, "Materias agregadas correctamente al plan de estudio.")
         return redirect('plan_estudio')
+
     
 
 @login_required
