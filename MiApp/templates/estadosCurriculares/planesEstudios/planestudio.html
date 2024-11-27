@@ -186,22 +186,24 @@ Planes de Estudio
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
+                <!-- Descripción del Plan -->
+                <p>Descripción:</p><p id="plan-descripcion" class="text-muted"></p>
+
                 <h5 id="plan-titulo"></h5>
                 <ul id="materias-list" class="list-group">
                     <!-- Aquí se llenarán las materias dinámicamente -->
                 </ul>
+
                 <!-- Formulario para operaciones -->
                 <form id="form-operacion-materias" method="post">
                     <input type="hidden" name="materia_id" id="materia-id">
                     <input type="hidden" name="accion" id="materia-accion">
                 </form>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" id="btnEstablecerPlanActual">Establecer como Plan Actual</button>
-                </div>
             </div>
         </div>
     </div>
 </div>
+
 
 {% endblock %}
 
@@ -316,11 +318,15 @@ $('#modalVerMaterias').on('show.bs.modal', function (event) {
     const listaMaterias = modal.find('#materias-list');
     listaMaterias.empty();
 
-    // Hacer una petición AJAX para obtener las materias del plan de estudio
+    // Hacer una petición AJAX para obtener las materias y la descripción del plan de estudio
     $.ajax({
-        url: `/plan_estudio/${planId}/materias/`, // URL de la vista que devuelve las materias
+        url: `/plan_estudio/${planId}/materias/`, // URL de la vista que devuelve las materias y la descripción
         method: 'GET',
         success: function (data) {
+            // Mostrar la descripción del plan
+            modal.find('#plan-descripcion').text(data.descripcion || 'Sin descripción disponible.');
+
+            // Mostrar materias
             if ($.isEmptyObject(data.materias)) {
                 listaMaterias.append('<li class="list-group-item text-center">No hay materias agregadas a este plan.</li>');
                 return;
@@ -353,6 +359,7 @@ $('#modalVerMaterias').on('show.bs.modal', function (event) {
             });
         },
         error: function () {
+            modal.find('#plan-descripcion').text('Error al cargar la descripción del plan.');
             listaMaterias.append('<li class="list-group-item text-center text-danger">Error al cargar las materias.</li>');
         }
     });

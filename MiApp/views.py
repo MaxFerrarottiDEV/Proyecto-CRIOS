@@ -420,22 +420,29 @@ def guardar_materias_plan(request):
 
 @login_required
 def obtener_materias_plan(request, plan_id):
-    # Obtener las materias asociadas al plan, ordenadas por año
-    materias = MateriasxplanesEstudios.objects.filter(id_planestudio_id=plan_id).order_by('anio_materia')
-    
-    # Organizar las materias por año
-    materias_data = {}
-    for materia in materias:
-        anio = materia.anio_materia  # Atributo del año
-        if anio not in materias_data:
-            materias_data[anio] = []
-        materias_data[anio].append({
-            'id_matxplan': materia.id_matxplan,  # ID único de la relación MateriasxplanesEstudios
-            'id': materia.id_materia.id_materia,  # Incluye el id de la materia
-            'nombre': materia.id_materia.nombre,  # Suponiendo que `id_materia` tiene un campo `nombre`
+    try:
+        plan = PlanesEstudios.objects.get(id_planestudio=plan_id)  # Obtener el plan de estudio
+        materias = MateriasxplanesEstudios.objects.filter(id_planestudio_id=plan_id).order_by('anio_materia')
+        
+        # Organizar las materias por año
+        materias_data = {}
+        for materia in materias:
+            anio = materia.anio_materia  # Atributo del año
+            if anio not in materias_data:
+                materias_data[anio] = []
+            materias_data[anio].append({
+                'id_matxplan': materia.id_matxplan,  # ID único de la relación MateriasxplanesEstudios
+                'id': materia.id_materia.id_materia,  # Incluye el id de la materia
+                'nombre': materia.id_materia.nombre,  # Suponiendo que `id_materia` tiene un campo `nombre`
+            })
+        
+        return JsonResponse({
+            'materias': materias_data,
+            'descripcion': plan.descripcion  # Agregar la descripción al JSON
         })
-    
-    return JsonResponse({'materias': materias_data})
+    except PlanesEstudios.DoesNotExist:
+        return JsonResponse({'materias': {}, 'descripcion': 'Plan no encontrado.'})
+
 
 
 @login_required
