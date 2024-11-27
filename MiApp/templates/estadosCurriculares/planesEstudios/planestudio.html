@@ -301,6 +301,9 @@ $('#modalVerMaterias').on('show.bs.modal', function (event) {
     const planId = button.data('plan-id'); // Obtener el ID del plan
     const modal = $(this);
 
+    // Asignar el ID del plan al modal para referencia futura
+    modal.data('plan-id', planId);
+
     // Asignar el nombre del plan al modal
     const planTitulo = button.data('plan-titulo'); // Suponiendo que tienes el título del plan
     modal.find('#plan-titulo').text(planTitulo);
@@ -333,34 +336,14 @@ $('#modalVerMaterias').on('show.bs.modal', function (event) {
                         text: materia.nombre
                     });
 
-                    const eliminarForm = $(` 
-                        <form method="post" class="d-inline-block ms-3">
-                            <input type="hidden" name="matxplan_id" value="${materia.id_matxplan}">
-                            <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
-                        </form>
-                    `);
-
-                    eliminarForm.prepend(`<input type="hidden" name="csrfmiddlewaretoken" value="${$('meta[name="csrf-token"]').attr('content')}">`);
-
-                    eliminarForm.on('submit', function (e) {
-                        e.preventDefault();
-                        const form = $(this);
-                        const matxplanId = form.find('input[name="matxplan_id"]').val(); // Obtener el matxplan_id
-                        $.ajax({
-                            url: `/plan_estudio/${planId}/materias/eliminar/${matxplanId}/`,
-                            method: 'POST',
-                            data: form.serialize(),
-                            success: function (response) {
-                                alert(response.message || 'Materia eliminada con éxito');
-                                $('#modalVerMaterias').modal('hide'); // Opción de recargar lista
-                            },
-                            error: function () {
-                                alert('Error al eliminar la materia.');
-                            }
-                        });
+                    // Crear botón de eliminar
+                    const eliminarButton = $('<button>', {
+                        class: 'btn btn-danger btn-sm ms-3 botonEliminarMateria',
+                        text: 'Eliminar',
+                        'data-id_matxplan': materia.id_matxplan // Almacenar el id_matxplan como atributo de datos
                     });
 
-                    li.append(eliminarForm);
+                    li.append(eliminarButton);
                     listaMaterias.append(li);
                 });
             });
@@ -370,6 +353,52 @@ $('#modalVerMaterias').on('show.bs.modal', function (event) {
         }
     });
 });
+
+// Manejar el evento de clic en los botones de eliminación con Bootbox
+$(document).on('click', '.botonEliminarMateria', function (e) {
+    e.preventDefault();
+    const button = $(this);
+    const id_matxplan = button.data('id_matxplan'); // Obtener el ID del matxplan
+    const planId = $('#modalVerMaterias').data('plan-id'); // Obtener el ID del plan desde el modal
+
+    bootbox.confirm({
+        message: "¿Está seguro de que desea quitar esta materia del plan de estudio?",
+        buttons: {
+            confirm: {
+                label: 'Sí',
+                className: 'btn-danger'
+            },
+            cancel: {
+                label: 'No',
+                className: 'btn-secondary'
+            }
+        },
+        callback: function (result) {
+            if (result) {
+                // Realizar la solicitud AJAX para eliminar la materia
+                $.ajax({
+                    url: `/plan_estudio/${planId}/materias/eliminar/${id_matxplan}/`,
+                    method: 'POST',
+                    data: {
+                        csrfmiddlewaretoken: $('meta[name="csrf-token"]').attr('content') // Asegura que se envíe el token CSRF
+                    },
+                    success: function (response) {
+                        if (response.success) {
+                            alert('Materia eliminada con éxito.');
+                            button.closest('li').remove(); // Remover la materia de la lista
+                        } else {
+                            alert(response.message || 'Error al eliminar la materia.');
+                        }
+                    },
+                    error: function () {
+                        alert('Error al eliminar la materia.');
+                    }
+                });
+            }
+        }
+    });
+});
+
 </script>
 <script>
     $(document).ready(function () {
