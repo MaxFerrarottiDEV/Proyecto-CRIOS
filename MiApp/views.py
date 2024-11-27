@@ -428,25 +428,28 @@ def obtener_materias_plan(request, plan_id):
         if anio not in materias_data:
             materias_data[anio] = []
         materias_data[anio].append({
+            'id_matxplan': materia.id_matxplan,  # ID único de la relación MateriasxplanesEstudios
             'id': materia.id_materia.id_materia,  # Incluye el id de la materia
             'nombre': materia.id_materia.nombre,  # Suponiendo que `id_materia` tiene un campo `nombre`
         })
     
     return JsonResponse({'materias': materias_data})
 
+
 @login_required
 @csrf_protect
-def eliminar_materia_plan(request, plan_id, materia_id):
+def eliminar_materia_plan(request, plan_id, id_matxplan):
     if request.method == 'POST':
-        materias = MateriasxplanesEstudios.objects.filter(id_planestudio=plan_id, id_materia=materia_id)
-        if materias.exists():
-            materias.delete()
-            return JsonResponse({'success': True, 'message': 'Materias eliminadas correctamente.'})
-        else:
+        # Buscar la materia por su clave primaria id_matxplan
+        try:
+            materia = MateriasxplanesEstudios.objects.get(id_planestudio=plan_id, id_matxplan=id_matxplan)
+            materia.delete()
+            return JsonResponse({'success': True, 'message': 'Materia eliminada correctamente.'})
+        except MateriasxplanesEstudios.DoesNotExist:
             return JsonResponse({'success': False, 'message': 'No se encontró la materia especificada.'})
     return JsonResponse({'success': False, 'message': 'Método no permitido.'})
-    
 
+    
 @login_required
 def eliminar_plan(request, id_planestudio):
     try:

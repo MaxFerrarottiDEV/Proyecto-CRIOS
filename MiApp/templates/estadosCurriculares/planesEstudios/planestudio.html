@@ -211,11 +211,12 @@ $('#modalAgregarMaterias').on('show.bs.modal', function (event) {
     const planId = button.data('id_planestudio'); // Obtener el ID del plan desde el botón
     $(this).find('#id_planestudio').val(planId); // Asigna el ID al input oculto
 });
+
 $('#modalAgregarMaterias').on('shown.bs.modal', function () {
     console.log("Modal mostrado, inicializando listeners de doble clic.");
     
     // Limpiar eventos previos para evitar duplicaciones
-    $('.materia-select').off('dblclick'); // Importante: Limpiar todos los dblclick previos
+    $('.materia-select').off('dblclick'); // Limpiar todos los dblclick previos
     $('.quitar-materia').off('click'); // Limpiar eventos previos de los botones de quitar
 
     // Delegación de eventos para detectar el doble clic
@@ -261,6 +262,38 @@ $('#modalAgregarMaterias').on('shown.bs.modal', function () {
         }
     });
 });
+$('#formAgregarMaterias').on('submit', function (e) {
+    console.log("Preparando datos para envío del formulario.");
+    
+    // Limpiar inputs ocultos anteriores para evitar duplicados
+    $(this).find('input[name^="materias_"]').remove();
+    
+    // Iterar por cada lista de materias seleccionadas por año
+    for (let anio = 1; anio <= 5; anio++) {
+        const listaMaterias = $(`#lista-materias-${anio}`);
+        const materiasSeleccionadas = listaMaterias.find('li');
+        
+        // Asegurarse de que no haya duplicados en el formulario
+        materiasSeleccionadas.each(function () {
+            const materiaId = $(this).data('materia-id'); // Obtener el ID de la materia
+            if (materiaId) {
+                // Verificar si ya fue agregada al formulario
+                const inputExistente = $(this).closest('form').find(`input[value="${materiaId}"]`);
+                if (inputExistente.length === 0) {
+                    // Crear un input oculto por cada materia seleccionada si no se ha agregado
+                    $('<input>', {
+                        type: 'hidden',
+                        name: `materias_${anio}[]`,  // Mantener el nombre correcto del campo
+                        value: materiaId  // Agregar el ID de la materia como valor
+                    }).appendTo('#formAgregarMaterias');
+                }
+            }
+        });
+    }
+
+    console.log("Formulario listo para envío.");
+});
+
 </script>
 <script>
 $('#modalVerMaterias').on('show.bs.modal', function (event) {
@@ -281,53 +314,45 @@ $('#modalVerMaterias').on('show.bs.modal', function (event) {
         url: `/plan_estudio/${planId}/materias/`, // URL de la vista que devuelve las materias
         method: 'GET',
         success: function (data) {
-            // Verificar si hay materias en el plan
             if ($.isEmptyObject(data.materias)) {
                 listaMaterias.append('<li class="list-group-item text-center">No hay materias agregadas a este plan.</li>');
                 return;
             }
 
-            // Ordenar las materias por año y llenar la lista
             const anios = Object.keys(data.materias).sort(); // Asegurarse del orden de los años
             anios.forEach(function (anio) {
-                // Crear un encabezado para el año
                 const anioHeader = $('<li>', {
                     class: 'list-group-item list-group-item-dark',
                     text: `${anio}° Año`
                 });
                 listaMaterias.append(anioHeader);
 
-                // Agregar las materias del año
                 data.materias[anio].forEach(function (materia) {
                     const li = $('<li>', {
                         class: 'list-group-item',
                         text: materia.nombre
                     });
 
-                    // Crear el botón de eliminar
-                    const eliminarForm = $(`
+                    const eliminarForm = $(` 
                         <form method="post" class="d-inline-block ms-3">
-                            <input type="hidden" name="materia_id" value="${materia.id}">
-                            <input type="hidden" name="accion" value="eliminar">
+                            <input type="hidden" name="matxplan_id" value="${materia.id_matxplan}">
                             <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
                         </form>
                     `);
 
-                    // Agregar token CSRF al formulario
                     eliminarForm.prepend(`<input type="hidden" name="csrfmiddlewaretoken" value="${$('meta[name="csrf-token"]').attr('content')}">`);
 
-                    // Manejar el evento de envío del formulario con AJAX
                     eliminarForm.on('submit', function (e) {
                         e.preventDefault();
                         const form = $(this);
+                        const matxplanId = form.find('input[name="matxplan_id"]').val(); // Obtener el matxplan_id
                         $.ajax({
-                            url: `/plan_estudio/${planId}/materias/eliminar/${materia.id}/`,
+                            url: `/plan_estudio/${planId}/materias/eliminar/${matxplanId}/`,
                             method: 'POST',
                             data: form.serialize(),
                             success: function (response) {
-                                alert('Materia eliminada con éxito');
-                                // Recargar las materias para reflejar el cambio
-                                $('#modalVerMaterias').modal('hide');
+                                alert(response.message || 'Materia eliminada con éxito');
+                                $('#modalVerMaterias').modal('hide'); // Opción de recargar lista
                             },
                             error: function () {
                                 alert('Error al eliminar la materia.');
@@ -335,7 +360,6 @@ $('#modalVerMaterias').on('show.bs.modal', function (event) {
                         });
                     });
 
-                    // Agregar el formulario de eliminación al listado de materias
                     li.append(eliminarForm);
                     listaMaterias.append(li);
                 });
