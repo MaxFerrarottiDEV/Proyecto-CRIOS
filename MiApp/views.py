@@ -191,7 +191,7 @@ def editar_solicitud(request, id_datinsc):
 @login_required
 def eliminar_solicitud(request, id_datinsc):
     solicitud = get_object_or_404(DatInsc, id_datinsc=id_datinsc)
-    
+
     if request.method == "POST":
         try:
             solicitud.delete()
@@ -199,7 +199,6 @@ def eliminar_solicitud(request, id_datinsc):
         except Exception as e:
             messages.error(request, f"Ocurrió un error al eliminar la solicitud: {str(e)}")
         return redirect('lista_solicitudes')
-    return render(request, 'inscripciones/solicitudes/eliminar_solicitud.html', {'solicitud': solicitud})
 
 
 @login_required
@@ -308,6 +307,7 @@ def modificar_datos(request, id_estudiante):
         form = PreinscripcionForm(request.POST, instance=dat_insc)
         if form.is_valid():
             form.save()
+            messages.success(request, "Se ha editado los datos correctamente.")
             return HttpResponseRedirect(reverse('ver_datos', args=[id_estudiante]))
     else:
         # Crear el formulario con los datos actuales
@@ -335,10 +335,12 @@ def eliminar_estudiante(request, id_estudiante):
         datinsc.delete()
         
         # Mensaje de éxito
-        request.session['message'] = "El estudiante ha sido eliminado con éxito."
+        messages.success(request, "El estudiante ha sido eliminado de la lista con éxito.")
     except Exception as e:
-        request.session['error'] = f"Error al eliminar al estudiante: {str(e)}"
-    return redirect('consultas')  # Redirige a la página de consultas
+        messages.error(request, f"Error al eliminar al estudiante: {str(e)}")
+    
+    # Redirigir a la página de consultas
+    return redirect('consultas')
 
 
 @login_required
@@ -447,7 +449,6 @@ def obtener_materias_plan(request, plan_id):
         return JsonResponse({'materias': {}, 'descripcion': 'Plan no encontrado.'})
 
 
-
 @login_required
 @csrf_protect
 def establecer_plan_actual(request, plan_id):
@@ -483,7 +484,7 @@ def eliminar_materia_plan(request, plan_id, id_matxplan):
             return JsonResponse({'success': False, 'message': 'No se encontró la materia especificada.'})
     return JsonResponse({'success': False, 'message': 'Método no permitido.'})
 
-    
+
 @login_required
 def eliminar_plan(request, id_planestudio):
     try:

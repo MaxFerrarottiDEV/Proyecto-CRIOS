@@ -308,6 +308,10 @@ class Mesas_Examenes(models.Model):
     fecha_examen = models.DateField(db_column='Fecha_Examen')
     hora_examen = models.TimeField(db_column='Hora_Examen',blank=True, null=True)
 
+    class Meta:
+        managed = False
+        db_table = 'mesas_examenes'
+
 
 class PagosCuotas(models.Model):
     id_pagcuot = models.AutoField(db_column='Id_PagCuot', primary_key=True)  # Field name made lowercase.

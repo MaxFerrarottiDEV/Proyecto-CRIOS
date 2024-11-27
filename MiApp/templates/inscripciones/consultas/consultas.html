@@ -11,6 +11,13 @@ Inscripciones - Consultas de datos de estudiantes
     <div class="table-container">
         <h1 class="mb-4 text-center">ESTUDIANTES</h1>
         <hr>
+        {% if messages %}
+        <div id="successMessage" class="alert alert-success">
+            {% for message in messages %}
+                {{ message }}
+            {% endfor %}
+        </div>
+        {% endif %}
         <!-- Formulario de filtro -->
         <div class="mb-4">
             <form method="GET" action="{% url 'consultas' %}">

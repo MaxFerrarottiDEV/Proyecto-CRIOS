@@ -27,6 +27,8 @@
             </button>
         </div>
     </div>
+    <h1 class="text-center">{{ estudiante.id_datinsc.nombre }} {{ estudiante.id_datinsc.apellido }}</h1>
+    <hr>
     {% if messages %}
     <div id="successMessage" class="alert alert-success">
         {% for message in messages %}
@@ -34,9 +36,6 @@
         {% endfor %}
     </div>
     {% endif %}
-    <h1 class="text-center">{{ estudiante.id_datinsc.nombre }} {{ estudiante.id_datinsc.apellido }}</h1>
-    <hr>
-
     <!-- Datos Estudiantiles -->
     <div class="card mb-4">
         <div class="card-header bg-primary text-white">
