@@ -35,13 +35,10 @@ Estados Curriculares
             <label for="materia" class="form-label">Materia</label>
             <select id="materia" name="materia" class="form-select" required>
                 <option value="" disabled selected>Seleccione una materia</option>
-                {% for materia in materias %}
-                    <option value="{{ materia.id }}">{{ materia.nombre }}</option>
-                {% empty %}
-                    <option value="">No hay materias disponibles</option>
-                {% endfor %}
+                <!-- Aquí se generarán dinámicamente las opciones -->
             </select>
         </div>
+        
         
         <div class="mb-3">
             <label for="condicion" class="form-label">Condición Nota</label>
@@ -70,31 +67,36 @@ Estados Curriculares
 </div>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const planSelect = document.getElementById('plan');
-        const materiaSelect = document.getElementById('materia');
-        planSelect.addEventListener('change', function () {
-            const planId = this.value;
-            materiaSelect.innerHTML = '<option value="" disabled selected>Seleccione una materia</option>';
-            if (planId) {
-                fetch(`/obtener-materias/?plan_id=${planId}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.error) {
-                            alert('Error: ' + data.error);
-                        } else {
-                            // Agrega las materias al menú desplegable
-                            data.forEach(materia => {
+    const planSelect = document.getElementById('plan');
+    const materiaSelect = document.getElementById('materia');
+    planSelect.addEventListener('change', function () {
+        const planId = this.value;
+        materiaSelect.innerHTML = '<option value="" disabled selected>Seleccione una materia</option>';
+        if (planId) {
+            fetch(`/obtener-materias/?plan_id=${planId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        alert('Error: ' + data.error);
+                    } else {
+                        Object.keys(data).forEach(anio => {
+                            const optGroup = document.createElement('optgroup');
+                            optGroup.label = `Año ${anio}`;
+                            data[anio].forEach(materia => {
                                 const option = document.createElement('option');
                                 option.value = materia.id_materia;
                                 option.textContent = materia.nombre;
-                                materiaSelect.appendChild(option);
+                                optGroup.appendChild(option);
                             });
-                        }
-                    })
-                    .catch(error => console.error('Error en la solicitud:', error));
-            }
-        });
+                            materiaSelect.appendChild(optGroup);
+                        });
+                    }
+                })
+                .catch(error => console.error('Error en la solicitud:', error));
+        }
     });
+});
+
 </script>
 {% endblock %}
 

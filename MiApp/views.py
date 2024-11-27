@@ -591,11 +591,25 @@ def agregarNota(request):
 def obtener_materias(request):
     plan_id = request.GET.get('plan_id')
     if plan_id:
-        materias = Materias.objects.filter(
-            materiasxplanes__id_planestudio=plan_id
-        ).values('id_materia', 'nombre').distinct()
-        return JsonResponse(list(materias), safe=False)
+        materias = MateriasxplanesEstudios.objects.filter(
+            id_planestudio=plan_id
+        ).select_related('id_materia').values(
+            'id_materia', 'id_materia__nombre', 'anio_materia'
+        ).order_by('anio_materia', 'id_materia__nombre')
+        
+        # Agrupar materias por año
+        materias_agrupadas = {}
+        for materia in materias:
+            anio = materia['anio_materia']
+            if anio not in materias_agrupadas:
+                materias_agrupadas[anio] = []
+            materias_agrupadas[anio].append({
+                'id_materia': materia['id_materia'],
+                'nombre': materia['id_materia__nombre']
+            })
+        return JsonResponse(materias_agrupadas, safe=False)
     return JsonResponse({'error': 'No se encontró el plan'}, status=400)
+
 
 @login_required
 def agregar_nota(request, dni):
@@ -618,8 +632,6 @@ def agregar_nota(request, dni):
             fecha_finalizacion=fecha)
         nuevo_estado.save()
         return redirect('estado_curricular', dni=dni)
-
-
     planes = PlanesEstudios.objects.select_related('id_carrera').all()
     materias =Materias.objects.all()
     plan_id = request.GET.get('plan')
