@@ -326,7 +326,7 @@ class PlanesEstudios(models.Model):
     id_planestudio = models.AutoField(db_column='Id_PlanEstudio', primary_key=True)  # Field name made lowercase.
     id_carrera = models.ForeignKey(Carreras, models.DO_NOTHING, db_column='Id_Carrera', blank=True, null=True)  # Field name made lowercase.
     anio_plan = models.PositiveSmallIntegerField(db_column='Anio_Plan')
-    #inscripto = models.BooleanField(db_column='Inscripto', default=False) # No permitimos NULL, default es False
+    plan_actual = models.BooleanField(db_column='Plan_Actual', default=False) # No permitimos NULL, default es False
     descripcion = models.CharField(db_column='Descripcion', max_length=200, blank=True, null=True)  # Field name made lowercase.
     
     class Meta:

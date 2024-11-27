@@ -379,13 +379,15 @@ def agregar_plan(request):
 
         try:
             carrera = Carreras.objects.get(id_carrera=id_carrera)
+            # Crear el nuevo plan de estudios con plan_actual por defecto como False
             nuevo_plan = PlanesEstudios.objects.create(
                 anio_plan=anio_plan,
                 id_carrera=carrera,
-                descripcion=descripcion
+                descripcion=descripcion,
+                plan_actual=False  # Asegurarse de asignar False explícitamente
             )
             nuevo_plan.save()
-            messages.success(request, "Plan de estudio agregado con éxito. No se olvide de agregar la materias en el boton 'Administrar Plan'")
+            messages.success(request, "Plan de estudio agregado con éxito. No se olvide de agregar las materias en el botón 'Administrar Plan'")
         except Carreras.DoesNotExist:
             messages.error(request, "La carrera seleccionada no existe.")
         return redirect('plan_estudio')

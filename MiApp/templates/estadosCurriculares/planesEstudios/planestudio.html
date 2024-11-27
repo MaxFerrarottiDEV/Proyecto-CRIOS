@@ -46,8 +46,11 @@ Planes de Estudio
                 <td>{{ plan.anio_plan }}</td>
                 <td>{{ plan.id_carrera.nombre }}</td>    
                 <td>
+                    {% if plan.plan_actual == 0 %}
+                    <i class="fa-solid fa-circle-xmark" style="color: #e5155e;"></i>    
+                    {% elif plan.plan_actual == 1 %}
                     <i class="fa-solid fa-circle-check" style="color: #63E6BE;"></i>
-                    <i class="fa-solid fa-circle-xmark" style="color: #e5155e;"></i>
+                    {% endif %}
                 </td>
                 <td>
                     <button type="button" 
