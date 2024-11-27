@@ -584,29 +584,63 @@ def agregarNota(request):
         return render(request, 'estados.html', {'materias': materias})
     
 
-@login_required    
+
+
+
+@login_required
+def obtener_materias(request):
+    plan_id = request.GET.get('plan_id')
+    if plan_id:
+        materias = Materias.objects.filter(
+            materiasxplanes__id_planestudio=plan_id
+        ).values('id_materia', 'nombre').distinct()
+        return JsonResponse(list(materias), safe=False)
+    return JsonResponse({'error': 'No se encontró el plan'}, status=400)
+
+@login_required
 def agregar_nota(request, dni):
     estudiante = get_object_or_404(Estudiantes, id_datinsc__dni=dni)
-    
+
     if request.method == 'POST':
+        plan_id = request.POST.get('plan')  # Captura el plan seleccionado
         materia_id = request.POST.get('materia')
         condicion = request.POST.get('condicion')
         nota = request.POST.get('nota')
         fecha = request.POST.get('fecha')
 
-        # Crear la nueva nota
+        plan = get_object_or_404(PlanesEstudios, id_planestudio=plan_id)
         materia = get_object_or_404(Materias, id=materia_id)
         nuevo_estado = EstadosCurriculares(
             id_estudiante=estudiante,
             id_matxplan=materia,
             condicion_nota=condicion,
             nota=nota,
-            fecha_finalizacion=fecha
-        )
+            fecha_finalizacion=fecha)
         nuevo_estado.save()
         return redirect('estado_curricular', dni=dni)
-    materias = Materias.objects.all()
-    return render(request, 'estadosCurriculares/agregar_nota.html', {'estudiante': estudiante, 'materias': materias})
+
+
+    planes = PlanesEstudios.objects.select_related('id_carrera').all()
+    materias =Materias.objects.all()
+    plan_id = request.GET.get('plan')
+    if plan_id:
+        materias = Materias.objects.filter(
+            materiasxplanesestudios__id_planestudio=plan_id).distinct()  
+
+    return render(request, 'estadosCurriculares/agregar_nota.html', {
+        'estudiante': estudiante,
+        'materias': materias,
+        'planes': planes})
+
+
+
+
+    
+
+
+
+
+
 
 
 @login_required
@@ -614,18 +648,12 @@ def pdf_estadoCurricular(request):
     dni = request.GET.get('dni')
     if not dni:
         return HttpResponse("DNI no proporcionado.", status=400)
-
-    # Obtener estudiante por DNI
     estudiante = get_object_or_404(Estudiantes, id_datinsc__dni=dni)
-
-    # Obtener los estados curriculares del estudiante
-    estados_curriculares = estudiante.estadoscurriculares_set.all()
-
-    # Configurar el PDF
+    estados_curriculares = estudiante.estadoscurriculares_set.order_by(
+    'id_matxplan_estcur__anio_materia')
     buffer = BytesIO()
     p = canvas.Canvas(buffer, pagesize=letter)
 
-    # Función para el encabezado
     def draw_header():
         logo_path = "static/images/crios_logo.jpg"
         p.drawImage(logo_path, 40, 700, width=100, height=100)
@@ -637,36 +665,30 @@ def pdf_estadoCurricular(request):
         p.drawString(150, 730, fecha)
         p.drawString(400, 730, hora)
 
-    # Función para el título principal
     def draw_title(y, spacing=1):
         p.setFont("Times-Bold", 16)
         p.drawCentredString(300, y, "Certificado de Estudio")
         return y - spacing
 
-    # Función para el texto descriptivo
     def draw_description(y):
         text = (
             f"El rectorado del Instituto Superior de Formación Docente N°8022 - CRIOS, "
             f"certifica que el alumno/a {estudiante.id_datinsc.apellido} {estudiante.id_datinsc.nombre} "
-            f"con documento: {estudiante.id_datinsc.dni}, es alumno regular de la carrera."
-        )
+            f"con documento: {estudiante.id_datinsc.dni}, es alumno regular de la carrera.")
         styles = getSampleStyleSheet()
         style = styles["Normal"]
         style.fontName = "Times-Roman"
         style.fontSize = 12
         style.textColor = colors.black
         style.alignment = 1
-
         paragraph = Paragraph(text, style)
         paragraph_width, paragraph_height = paragraph.wrap(500, y)
         paragraph.drawOn(p, 50, y - paragraph_height)
-        return y - paragraph_height - 20  # Espacio adicional
-
-    # Función para el contenido principal
+        return y - paragraph_height - 20 
+    
     def draw_main_content(y):
         p.setFont("Times-Roman", 12)
         data = [["Año", "Asignatura", "Condición", "Nota", "Fecha", "Folio"]]
-
         styles = getSampleStyleSheet()
         cell_style = ParagraphStyle(
             name="CellStyle",
@@ -674,24 +696,20 @@ def pdf_estadoCurricular(request):
             fontSize=10,
             leading=12,
             alignment=1,
-            wordWrap="LTR"
-        )
+            wordWrap="LTR")
 
         for estado in estados_curriculares:
             materia = estado.id_matxplan_estcur
             asignatura = Paragraph(
                 materia.id_materia.nombre if hasattr(materia, 'id_materia') else "---",
-                cell_style
-            )
+                cell_style)
             data.append([
                 materia.anio_materia if hasattr(materia, 'anio_materia') else "---",
                 asignatura,
                 estado.condicion_nota if estado.condicion_nota else "---",
                 str(estado.nota) if estado.nota is not None else "---",
                 estado.fecha_finalizacion.strftime("%d/%m/%Y") if estado.fecha_finalizacion else "---",
-                estado.folio if estado.folio else "---"
-            ])
-
+                estado.folio if estado.folio else "---"])
         table = Table(data, colWidths=[30, 290, 75, 30, 60, 50])
         table.setStyle(TableStyle([
             ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#005187")),
@@ -701,20 +719,16 @@ def pdf_estadoCurricular(request):
             ('FONTSIZE', (0, 0), (-1, 0), 8),
             ('BOTTOMPADDING', (0, 0), (-1, 0), 10),
             ('BACKGROUND', (0, 1), (-1, -1), colors.whitesmoke),
-            ('GRID', (0, 0), (-1, -1), 1, colors.black),
-        ]))
-
+            ('GRID', (0, 0), (-1, -1), 1, colors.black),]))
         table_width, table_height = table.wrap(500, y)
         table.drawOn(p, 60, y - table_height)
-        return y - table_height - 20  # Espacio adicional
-
+        return y - table_height - 20  
     # Generar el PDF
     draw_header()
     y = 650
     y = draw_title(y, spacing=10)
     y = draw_description(y)
     y = draw_main_content(y)
-
     p.showPage()
     p.save()
     buffer.seek(0)

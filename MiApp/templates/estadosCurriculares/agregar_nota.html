@@ -14,6 +14,23 @@ Estados Curriculares
     <form method="POST" action="{% url 'agregar_nota' dni=estudiante.id_datinsc.dni %}">
         {% csrf_token %}
         <input type="hidden" name="dni" value="{{ estudiante.id_datinsc.dni }}">
+
+        <div class="mb-3">
+            <label for="plan" class="form-label">Plan de Estudio</label>
+            <select id="plan" name="plan" class="form-select" required>
+                <option value="" disabled selected>Seleccione un plan</option>
+                {% for plan in planes %}
+                    <option value="{{ plan.id_planestudio }}">
+                        {{ plan.id_carrera.nombre }} - {{ plan.descripcion }} (Año: {{ plan.anio_plan }})
+                    </option>
+                {% empty %}
+                    <option value="">No hay planes disponibles</option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        
+
         <div class="mb-3">
             <label for="materia" class="form-label">Materia</label>
             <select id="materia" name="materia" class="form-select" required>
@@ -25,6 +42,7 @@ Estados Curriculares
                 {% endfor %}
             </select>
         </div>
+        
         <div class="mb-3">
             <label for="condicion" class="form-label">Condición Nota</label>
             <select id="condicion" name="condicion" class="form-select" required>
@@ -50,6 +68,34 @@ Estados Curriculares
         
     </form>
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const planSelect = document.getElementById('plan');
+        const materiaSelect = document.getElementById('materia');
+        planSelect.addEventListener('change', function () {
+            const planId = this.value;
+            materiaSelect.innerHTML = '<option value="" disabled selected>Seleccione una materia</option>';
+            if (planId) {
+                fetch(`/obtener-materias/?plan_id=${planId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.error) {
+                            alert('Error: ' + data.error);
+                        } else {
+                            // Agrega las materias al menú desplegable
+                            data.forEach(materia => {
+                                const option = document.createElement('option');
+                                option.value = materia.id_materia;
+                                option.textContent = materia.nombre;
+                                materiaSelect.appendChild(option);
+                            });
+                        }
+                    })
+                    .catch(error => console.error('Error en la solicitud:', error));
+            }
+        });
+    });
+</script>
 {% endblock %}
 
 
