@@ -7,6 +7,17 @@ Estados Curriculares
     <link href="{% static 'estilos/inscripciones/botones.css' %}" rel="stylesheet">
 {% endblock %}
 {% block content %}
+{% if messages %}
+    <div class="alert-container">
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+
 <div class="container mt-4">
     <h1 class="mb-4 text-center">ESTADO CURRICULAR</h1>
     <form method="GET" action="{% url 'estados' %}" class="mb-4">
@@ -227,8 +238,23 @@ Estados Curriculares
 {% endblock content %}
 
 {% block javascript %}
+<script>
+    // Espera a que la página cargue completamente
+    document.addEventListener('DOMContentLoaded', function() {
+        // Selecciona el contenedor de mensajes (puedes ajustar el selector según tu HTML)
+        const alertContainer = document.querySelector('.alert-container');
+
+        if (alertContainer) {
+            // Configura un temporizador para ocultar el mensaje después de 2 segundos (2000 ms)
+            setTimeout(function() {
+                alertContainer.style.display = 'none';
+            }, 3000);
+        }
+    });
+</script>
 
 <script>
+
     $(document).ready(function () {
         $('#dataTable').DataTable({
             language: {

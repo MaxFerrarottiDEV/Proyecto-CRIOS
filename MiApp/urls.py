@@ -65,10 +65,6 @@ urlpatterns = [
     #Modulo de estados Curriculares - Gestión de Estados Curriculares:
     path('estadosCurriculares/estados', views.estados, name='estados'),
     path('obtener-materias/', views.obtener_materias, name='obtener_materias'),
-
-    
     path('estadosCurriculares/agregar_nota/<str:dni>/', views.agregar_nota, name='agregar_nota'),
-
     path('estadosCurriculares/verEstado/<str:dni>/', views.verEstado, name='verEstado'),
-
     path('pdf_estadoCurricular', views.pdf_estadoCurricular, name='descargar_pdf'),]

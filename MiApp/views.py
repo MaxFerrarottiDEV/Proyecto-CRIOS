@@ -660,9 +660,8 @@ def agregar_nota(request, dni):
         nota = request.POST.get('nota')
         fecha = request.POST.get('fecha')
         folio= request.POST.get('folio')
-
         plan = get_object_or_404(PlanesEstudios, id_planestudio=plan_id)
-        materia = get_object_or_404(MateriasxplanesEstudios, id_materia=materia_id)
+        materia = get_object_or_404(MateriasxplanesEstudios, id_materia=materia_id, id_planestudio=plan_id)
         nuevo_estado = EstadosCurriculares(
             id_estudiante_estcur=estudiante,
             id_matxplan_estcur=materia,
@@ -671,14 +670,14 @@ def agregar_nota(request, dni):
             fecha_finalizacion=fecha,
             folio=folio)
         nuevo_estado.save()
-        return redirect('agregar_nota', dni=dni)
+        messages.success(request, "Nota agregada correctamente.")
+        return redirect('estados')
     planes = PlanesEstudios.objects.select_related('id_carrera').all()
     materias = Materias.objects.all()
     plan_id = request.GET.get('plan')
     if plan_id:
         materias = Materias.objects.filter(
             materiasxplanesestudios__id_planestudio=plan_id).distinct()
-
     return render(request, 'estadosCurriculares/agregar_nota.html', {
         'estudiante': estudiante,
         'materias': materias,
