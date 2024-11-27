@@ -542,49 +542,65 @@ def estados(request):
             if estudiante:
                 estado_curricular = EstadosCurriculares.objects.filter(id_estudiante_estcur=estudiante)
                 materias = Materias.objects.all()
+                planes = PlanesEstudios.objects.select_related('id_carrera').all()
                 context = {
                     'estudiante': estudiante,
                     'estudiante_datinsc': estudiante_datinsc,
                     'estado_curricular': estado_curricular,
-                    'materias': materias  }
+                    'materias': materias,
+                    'planes':planes  }
+                
             else:
                 context = {'error': 'No se encontró el estado curricular para este estudiante.'}
         else:
             context = {'error': 'Estudiante no encontrado.'}
     else:
         lista_estudiantes = Estudiantes.objects.all()
+        planes = PlanesEstudios.objects.select_related('id_carrera').all()
+        plan_id = request.GET.get('plan')
         materias = Materias.objects.all()  #
         context = {
             'estudiantes': lista_estudiantes,
+            'planes': planes,
             'materias': materias }
 
     return render(request, 'estadosCurriculares/estados.html', context)
 
 
 @login_required
-def agregarNota(request):
+def modalAgregarNota(request, dni):
+    estudiante = get_object_or_404(Estudiantes, id_datinsc__dni=dni)
     if request.method == 'POST':
+        plan_id = request.POST.get('plan') 
         materia_id = request.POST.get('materia')
-        condicion_nota = request.POST.get('condicion')
+        condicion = request.POST.get('condicion')
         nota = request.POST.get('nota')
-        fecha_finalizacion = request.POST.get('fecha')
-        estudiante_id = request.POST.get('estudiante_id')
+        fecha = request.POST.get('fecha')
+        folio= request.POST.get('folio')
 
-        nueva_nota = EstadosCurriculares(
-            id_matxplan_estcur_id=materia_id, 
-            id_estudiante_estcur_id=estudiante_id,
-            condicion_nota=condicion_nota,
+        plan = get_object_or_404(PlanesEstudios, id_planestudio=plan_id)
+        materia = get_object_or_404(MateriasxplanesEstudios, id_materia=materia_id)
+        nuevo_estado = EstadosCurriculares(
+            id_estudiante_estcur=estudiante,
+            id_matxplan_estcur=materia,
+            condicion_nota=condicion,
             nota=nota,
-            fecha_finalizacion=fecha_finalizacion
-        )
-        nueva_nota.save()
-        return redirect('estados')
-    else:
-        materias = Materias.objects.all()
-        return render(request, 'estados.html', {'materias': materias})
+            fecha_finalizacion=fecha,
+            folio=folio)
+        nuevo_estado.save()
+        return redirect('agregar_nota', dni=dni)
+    planes = PlanesEstudios.objects.select_related('id_carrera').all()
+    materias = Materias.objects.all()
+    plan_id = request.GET.get('plan')
+    if plan_id:
+        materias = Materias.objects.filter(
+            materiasxplanesestudios__id_planestudio=plan_id).distinct()
+
+    return render(request, 'estadosCurriculares/estados.html', {
+        'estudiante': estudiante,
+        'materias': materias,
+        'planes': planes})
     
-
-
 
 
 @login_required
