@@ -197,6 +197,9 @@ Planes de Estudio
                     <input type="hidden" name="materia_id" id="materia-id">
                     <input type="hidden" name="accion" id="materia-accion">
                 </form>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="btnEstablecerPlanActual">Establecer como Plan Actual</button>
+                </div>
             </div>
         </div>
     </div>
@@ -401,7 +404,51 @@ $(document).on('click', '.botonEliminarMateria', function (e) {
         }
     });
 });
+$('#btnEstablecerPlanActual').on('click', function () {
+    const planId = $('#modalVerMaterias').data('plan-id'); // Obtener el ID del plan desde el modal
 
+    if (!planId) {
+        alert("No se pudo identificar el plan de estudio.");
+        return;
+    }
+
+    bootbox.confirm({
+        message: "¿Está seguro de que desea establecer este plan como el plan actual? Esto desactivará cualquier otro plan actual de la misma carrera.",
+        buttons: {
+            confirm: {
+                label: 'Sí',
+                className: 'btn-primary'
+            },
+            cancel: {
+                label: 'No',
+                className: 'btn-secondary'
+            }
+        },
+        callback: function (result) {
+            if (result) {
+                // Realizar la solicitud AJAX para establecer el plan como actual
+                $.ajax({
+                    url: `/plan_estudio/${planId}/establecer_actual/`, // URL de la vista
+                    method: 'POST',
+                    data: {
+                        csrfmiddlewaretoken: $('meta[name="csrf-token"]').attr('content') // Token CSRF
+                    },
+                    success: function (response) {
+                        if (response.success) {
+                            alert('El plan ha sido establecido como el plan actual.');
+                            location.reload(); // Recargar la página
+                        } else {
+                            alert(response.message || 'Error al establecer el plan como actual.');
+                        }
+                    },
+                    error: function () {
+                        alert('Error en la solicitud para establecer el plan como actual.');
+                    }
+                });
+            }
+        }
+    });
+});
 </script>
 <script>
     $(document).ready(function () {

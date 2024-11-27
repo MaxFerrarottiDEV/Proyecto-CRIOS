@@ -440,6 +440,28 @@ def obtener_materias_plan(request, plan_id):
 
 @login_required
 @csrf_protect
+def establecer_plan_actual(request, plan_id):
+    if request.method == 'POST':
+        try:
+            # Obtener el plan a establecer como actual
+            plan = PlanesEstudios.objects.get(id_planestudio=plan_id)
+
+            # Desactivar otros planes actuales de la misma carrera
+            PlanesEstudios.objects.filter(id_carrera=plan.id_carrera, plan_actual=True).update(plan_actual=False)
+
+            # Establecer el nuevo plan como actual
+            plan.plan_actual = True
+            plan.save()
+
+            return JsonResponse({'success': True, 'message': 'El plan se ha establecido como el plan actual.'})
+        except PlanesEstudios.DoesNotExist:
+            return JsonResponse({'success': False, 'message': 'El plan de estudio no existe.'})
+
+    return JsonResponse({'success': False, 'message': 'Método no permitido.'})
+
+
+@login_required
+@csrf_protect
 def eliminar_materia_plan(request, plan_id, id_matxplan):
     if request.method == 'POST':
         # Buscar la materia por su clave primaria id_matxplan
