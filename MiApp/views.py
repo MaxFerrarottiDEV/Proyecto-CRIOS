@@ -20,12 +20,20 @@ from reportlab.pdfgen import canvas  # type: ignore
 from reportlab.platypus import Table, TableStyle  # type: ignore
 
 from .forms import PreinscripcionForm
-from .models import CamposEstudios,Carreras, DatInsc, EstadosCurriculares, Estudiantes, InscCarreras, Materias, MateriasxplanesEstudios, PlanesEstudios, TiposUnidades
+from .models import CamposEstudios, Carreras, InscCarreras, TiposUnidades
+
+# Importa el modelo MesaExamenes
+from .forms import MesaExamenForm
+from .models import Estudiantes, DatInsc, MesasExamenes, InscExamenes, MateriasxplanesEstudios, PlanesEstudios, EstadosCurriculares, Materias
+import json
+import logging
+
 
 def login_view(request):
     if request.user.is_authenticated:
-        return redirect('home')  # Cambia 'home' al nombre de tu URL para la página principal.
-    
+        # Cambia 'home' al nombre de tu URL para la página principal.
+        return redirect('home')
+
     if request.method == 'POST':
         form = AuthenticationForm(data=request.POST)
         if form.is_valid():
@@ -48,20 +56,22 @@ def register(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
         if form.is_valid():
-            form.save() 
-            messages.success(request, '¡Cuenta creada exitosamente! Ahora puedes iniciar sesión.')
-            return redirect('login')  
+            form.save()
+            messages.success(
+                request, '¡Cuenta creada exitosamente! Ahora puedes iniciar sesión.')
+            return redirect('login')
         else:
-            messages.error(request, 'Hubo un error en la creación de la solicitud. Inténtalo de nuevo.')
+            messages.error(
+                request, 'Hubo un error en la creación de la solicitud. Inténtalo de nuevo.')
     else:
         form = UserCreationForm()
-    
-    return render(request, 'registration/register.html', {'form': form}) 
+
+    return render(request, 'registration/register.html', {'form': form})
 
 
 @login_required
 def home(request):
-    return render(request,'home.html')
+    return render(request, 'home.html')
 
 
 @login_required
@@ -70,26 +80,29 @@ def change_password(request):
         # Obtener las contraseñas ingresadas
         new_password1 = request.POST['new_password1']
         new_password2 = request.POST['new_password2']
-        
+
         # Verificar si las contraseñas coinciden
         if new_password1 == new_password2:
             # Establecer la nueva contraseña
             request.user.set_password(new_password1)
             request.user.save()
-            
+
             # Cerrar la sesión del usuario
             logout(request)
-            
+
             # Mensaje de éxito
-            messages.success(request, "Contraseña cambiada exitosamente. Por favor, vuelve a iniciar sesión.")
-            
+            messages.success(
+                request, "Contraseña cambiada exitosamente. Por favor, vuelve a iniciar sesión.")
+
             # Redirigir al login
-            return redirect('login')  # Redirigir al login tras cambio de contraseña
+            # Redirigir al login tras cambio de contraseña
+            return redirect('login')
         else:
             # Mensaje de error si las contraseñas no coinciden
             messages.error(request, "Las contraseñas no coinciden.")
-    
+
     return render(request, 'change_password.html')
+
 
 @login_required
 def tipo_inscripcion(request):
@@ -109,12 +122,15 @@ def lista_solicitudes(request):
         if form.is_valid():
             try:
                 form.save()
-                messages.success(request, 'Se ha agregado exitosamente la solicitud.')
+                messages.success(
+                    request, 'Se ha agregado exitosamente la solicitud.')
                 return redirect('lista_solicitudes')
             except Exception as e:
-                messages.error(request, f'Ocurrió un error al agregar la solicitud: {str(e)}')
+                messages.error(
+                    request, f'Ocurrió un error al agregar la solicitud: {str(e)}')
         else:
-            messages.error(request, 'Formulario inválido. Por favor revisa los campos e inténtalo de nuevo.')
+            messages.error(
+                request, 'Formulario inválido. Por favor revisa los campos e inténtalo de nuevo.')
 
     # Devolver el formulario y las solicitudes filtradas
     return render(request, 'inscripciones/solicitudes/lista_solicitudes.html', {
@@ -134,7 +150,8 @@ def confirmar_solicitud(request, id_datinsc):
         legajo_fisico = request.POST.get('legajo_fisico') == 'True'
         carrera_id = request.POST.get('carrera')
         anio_insc = request.POST.get('anio_insc')
-        nro_legajo = request.POST.get('nro_legajo') or None  # Si está vacío, será None
+        nro_legajo = request.POST.get(
+            'nro_legajo') or None  # Si está vacío, será None
 
         # Fecha actual
         fecha_insc = date.today()
@@ -180,7 +197,8 @@ def editar_solicitud(request, id_datinsc):
             messages.success(request, 'Solicitud actualizada con éxito.')
             return redirect('lista_solicitudes')
         else:
-            messages.error(request, 'Hubo un error en el formulario. Por favor, corrige los errores.')
+            messages.error(
+                request, 'Hubo un error en el formulario. Por favor, corrige los errores.')
     else:
         form = PreinscripcionForm(instance=solicitud)
 
@@ -190,13 +208,15 @@ def editar_solicitud(request, id_datinsc):
 @login_required
 def eliminar_solicitud(request, id_datinsc):
     solicitud = get_object_or_404(DatInsc, id_datinsc=id_datinsc)
-    
+
     if request.method == "POST":
         try:
             solicitud.delete()
-            messages.success(request, "La solicitud ha sido eliminada correctamente.")
+            messages.success(
+                request, "La solicitud ha sido eliminada correctamente.")
         except Exception as e:
-            messages.error(request, f"Ocurrió un error al eliminar la solicitud: {str(e)}")
+            messages.error(
+                request, f"Ocurrió un error al eliminar la solicitud: {str(e)}")
         return redirect('lista_solicitudes')
     return render(request, 'inscripciones/solicitudes/eliminar_solicitud.html', {'solicitud': solicitud})
 
@@ -212,25 +232,30 @@ def consultas(request):
         estudiante_datinsc = DatInsc.objects.filter(dni=dni).first()
         if estudiante_datinsc:
             # Buscar al estudiante relacionado en Estudiantes
-            estudiante = Estudiantes.objects.filter(id_datinsc=estudiante_datinsc).first()
+            estudiante = Estudiantes.objects.filter(
+                id_datinsc=estudiante_datinsc).first()
             if estudiante:
                 context = {'estudiante': estudiante}
             else:
-                context = {'error': 'No se encontró un estudiante con este DNI en la tabla de Estudiantes.'}
+                context = {
+                    'error': 'No se encontró un estudiante con este DNI en la tabla de Estudiantes.'}
         else:
-            context = {'error': 'No se encontró un estudiante con este DNI en DatInsc.'}
+            context = {
+                'error': 'No se encontró un estudiante con este DNI en DatInsc.'}
     else:
         # Obtener todos los estudiantes, filtrados y ordenados
         estudiantes = (
             Estudiantes.objects
-            .select_related('id_datinsc')  # Cargar datos relacionados con DatInsc
-            .order_by('id_datinsc__apellido', 'id_datinsc__nombre')  # Ordenar por apellido y nombre
+            # Cargar datos relacionados con DatInsc
+            .select_related('id_datinsc')
+            # Ordenar por apellido y nombre
+            .order_by('id_datinsc__apellido', 'id_datinsc__nombre')
         )
-        
+
         if curso:
             # Filtrar por curso si se seleccionó uno
             estudiantes = estudiantes.filter(anio_insc=curso)
-        
+
         context = {
             'estudiantes': estudiantes,
             'curso_seleccionado': curso  # Pasar el curso seleccionado al template
@@ -263,7 +288,8 @@ def graficos_estudiantes(request):
 @login_required
 def ver_datos(request, id_estudiante_ic):
     # Obtener la inscripción en carrera por id_estudiante_ic
-    insc_carrera = get_object_or_404(InscCarreras, id_estudiante_ic=id_estudiante_ic)
+    insc_carrera = get_object_or_404(
+        InscCarreras, id_estudiante_ic=id_estudiante_ic)
 
     # Obtener el estudiante relacionado
     estudiante = insc_carrera.id_estudiante_ic
@@ -287,7 +313,8 @@ def ver_datos(request, id_estudiante_ic):
 def guardar_legajo_digital(request, id_estudiante):
     if request.method == 'POST':
         enlace = request.POST.get('legajo_digital')
-        estudiante = get_object_or_404(Estudiantes, id_estudiante=id_estudiante)
+        estudiante = get_object_or_404(
+            Estudiantes, id_estudiante=id_estudiante)
         estudiante.legajo_digital = enlace
         estudiante.save()
         messages.success(request, "Se ha guardado el enlace correctamente.")
@@ -315,7 +342,7 @@ def modificar_datos(request, id_estudiante):
     # Renderizar la plantilla con el formulario y los datos del estudiante
     return render(request, 'inscripciones/consultas/modificar_datos.html', {
         'form': form,
-        'estudiante': 
+        'estudiante':
         estudiante
     })
 
@@ -326,13 +353,14 @@ def eliminar_estudiante(request, id_estudiante):
     estudiante = get_object_or_404(Estudiantes, id_estudiante=id_estudiante)
     try:
         # Eliminar inscripciones vinculadas
-        InscCarreras.objects.filter(id_estudiante_ic=estudiante.id_estudiante).delete()
-        
+        InscCarreras.objects.filter(
+            id_estudiante_ic=estudiante.id_estudiante).delete()
+
         # Eliminar datos personales
         datinsc = estudiante.id_datinsc
         estudiante.delete()
         datinsc.delete()
-        
+
         # Mensaje de éxito
         request.session['message'] = "El estudiante ha sido eliminado con éxito."
     except Exception as e:
@@ -353,10 +381,11 @@ def plan_estudio_view(request):
     carreras = Carreras.objects.all()
 
     # Obtén el ID del plan seleccionado desde los parámetros GET o POST
-    id_plan = request.GET.get('id_planestudio')  # Supongamos que se pasa en la URL
+    # Supongamos que se pasa en la URL
+    id_plan = request.GET.get('id_planestudio')
     plan = PlanesEstudios.objects.get(pk=id_plan) if id_plan else None
 
-    return render(request, 'estadosCurriculares/planesEstudios/planestudio.html', 
+    return render(request, 'estadosCurriculares/planesEstudios/planestudio.html',
                   {'anios_cursado': anios_cursado,
                    'materias': materias,
                    'planes': planes,
@@ -384,7 +413,8 @@ def agregar_plan(request):
                 descripcion=descripcion
             )
             nuevo_plan.save()
-            messages.success(request, "Plan de estudio agregado con éxito. No se olvide de agregar la materias en el boton 'Administrar Plan'")
+            messages.success(
+                request, "Plan de estudio agregado con éxito. No se olvide de agregar la materias en el boton 'Administrar Plan'")
         except Carreras.DoesNotExist:
             messages.error(request, "La carrera seleccionada no existe.")
         return redirect('plan_estudio')
@@ -403,7 +433,7 @@ def guardar_materias_plan(request):
 
             for materia_id in materias_ids:
                 materia = get_object_or_404(Materias, id_materia=materia_id)
-                
+
                 # Crear la relación con el año correspondiente
                 MateriasxplanesEstudios.objects.create(
                     id_planestudio=plan,
@@ -411,16 +441,17 @@ def guardar_materias_plan(request):
                     anio_materia=anio,  # Asignar el año correspondiente
                 )
 
-        messages.success(request, "Materias agregadas correctamente al plan de estudio.")
+        messages.success(
+            request, "Materias agregadas correctamente al plan de estudio.")
         return redirect('plan_estudio')
-    
 
-@login_required
+
 @login_required
 def obtener_materias_plan(request, plan_id):
     # Obtener las materias asociadas al plan, ordenadas por año
-    materias = MateriasxplanesEstudios.objects.filter(id_planestudio_id=plan_id).order_by('anio_materia')
-    
+    materias = MateriasxplanesEstudios.objects.filter(
+        id_planestudio_id=plan_id).order_by('anio_materia')
+
     # Organizar las materias por año
     materias_data = {}
     for materia in materias:
@@ -428,9 +459,10 @@ def obtener_materias_plan(request, plan_id):
         if anio not in materias_data:
             materias_data[anio] = []
         materias_data[anio].append({
-            'nombre': materia.id_materia.nombre,  # Suponiendo que `id_materia` tiene un campo `nombre`
+            # Suponiendo que `id_materia` tiene un campo `nombre`
+            'nombre': materia.id_materia.nombre,
         })
-    
+
     return JsonResponse({'materias': materias_data})
 
 
@@ -448,8 +480,10 @@ def eliminar_plan(request, id_planestudio):
 @login_required
 def materias_view(request):
     materias = Materias.objects.all()
-    tipos_unidades = TiposUnidades.objects.all()  # Obtener todos los tipos de unidades
-    campos_estudio = CamposEstudios.objects.all()   # Obtener todos los campos de estudio
+    # Obtener todos los tipos de unidades
+    tipos_unidades = TiposUnidades.objects.all()
+    # Obtener todos los campos de estudio
+    campos_estudio = CamposEstudios.objects.all()
     return render(request, 'estadosCurriculares/planesEstudios/materias.html', {
         'materias': materias,
         'tipos_unidades': tipos_unidades,
@@ -464,8 +498,9 @@ def agregar_materia(request):
         id_unidad = request.POST['id_unidad']
         cuatrimestral_anual = request.POST['cuatrimestral_anual']
         id_campoestudio = request.POST['id_campoestudio']
-            # Manejar el valor del checkbox
-        correlatividad = request.POST.get('correlatividad', request.POST.get('correlatividad_hidden'))
+        # Manejar el valor del checkbox
+        correlatividad = request.POST.get(
+            'correlatividad', request.POST.get('correlatividad_hidden'))
 
         Materias.objects.create(
             nombre=nombre,
@@ -488,23 +523,26 @@ def editar_materia(request):
         id_unidad = request.POST.get('id_unidad')
         cuatrimestral_anual = request.POST.get('cuatrimestral_anual')
         id_campoestudio = request.POST.get('id_campoestudio')
-        correlatividad = request.POST.get('correlatividad', request.POST.get('correlatividad_hidden'))
+        correlatividad = request.POST.get(
+            'correlatividad', request.POST.get('correlatividad_hidden'))
 
         # Obtener la materia que se va a editar
         materia = get_object_or_404(Materias, id_materia=id_materia)
-        
+
         # Asignar los valores a la materia
         materia.nombre = nombre
 
         # Obtener la instancia de TiposUnidades correspondiente al id_unidad
         if id_unidad:
-            materia.id_unidad = get_object_or_404(TiposUnidades, id_unidad=id_unidad)
-        
+            materia.id_unidad = get_object_or_404(
+                TiposUnidades, id_unidad=id_unidad)
+
         # Asignar cuatrimestral_anual y correlatividad
         materia.cuatrimestral_anual = cuatrimestral_anual
 
         if id_campoestudio:
-            materia.id_campoestudio = get_object_or_404(CamposEstudios, id_campoestudio=id_campoestudio)
+            materia.id_campoestudio = get_object_or_404(
+                CamposEstudios, id_campoestudio=id_campoestudio)
         materia.correlatividad = correlatividad
 
         # Guardar los cambios
@@ -512,20 +550,22 @@ def editar_materia(request):
 
         messages.success(request, "Materia actualizada con éxito.")
         return redirect('materia')
-    
-    
+
+
 @login_required
 def eliminar_materia(request, id_materia):
     materia = get_object_or_404(Materias, id_materia=id_materia)
     materia.delete()
     messages.success(request, "La materia se ha eliminado correctamente.")
-    return redirect('materia')  # Asegúrate de usar el nombre correcto de la vista
+    # Asegúrate de usar el nombre correcto de la vista
+    return redirect('materia')
 
 
 @login_required
-def verEstado(request, dni): 
+def verEstado(request, dni):
     estudiante = get_object_or_404(Estudiantes, id_datinsc__dni=dni)
-    estado_curricular = EstadosCurriculares.objects.filter(id_estudiante_estcur=estudiante) 
+    estado_curricular = EstadosCurriculares.objects.filter(
+        id_estudiante_estcur=estudiante)
     return render(request, 'estadosCurriculares/verEstado.html', {
         'estudiante': estudiante,
         'estado_curricular': estado_curricular})
@@ -537,17 +577,20 @@ def estados(request):
     if dni:
         estudiante_datinsc = DatInsc.objects.filter(dni=dni).first()
         if estudiante_datinsc:
-            estudiante = Estudiantes.objects.filter(id_datinsc=estudiante_datinsc).first()
+            estudiante = Estudiantes.objects.filter(
+                id_datinsc=estudiante_datinsc).first()
             if estudiante:
-                estado_curricular = EstadosCurriculares.objects.filter(id_estudiante_estcur=estudiante)
+                estado_curricular = EstadosCurriculares.objects.filter(
+                    id_estudiante_estcur=estudiante)
                 materias = Materias.objects.all()
                 context = {
                     'estudiante': estudiante,
                     'estudiante_datinsc': estudiante_datinsc,
                     'estado_curricular': estado_curricular,
-                    'materias': materias  }
+                    'materias': materias}
             else:
-                context = {'error': 'No se encontró el estado curricular para este estudiante.'}
+                context = {
+                    'error': 'No se encontró el estado curricular para este estudiante.'}
         else:
             context = {'error': 'Estudiante no encontrado.'}
     else:
@@ -555,7 +598,7 @@ def estados(request):
         materias = Materias.objects.all()  #
         context = {
             'estudiantes': lista_estudiantes,
-            'materias': materias }
+            'materias': materias}
 
     return render(request, 'estadosCurriculares/estados.html', context)
 
@@ -570,7 +613,7 @@ def agregarNota(request):
         estudiante_id = request.POST.get('estudiante_id')
 
         nueva_nota = EstadosCurriculares(
-            id_matxplan_estcur_id=materia_id, 
+            id_matxplan_estcur_id=materia_id,
             id_estudiante_estcur_id=estudiante_id,
             condicion_nota=condicion_nota,
             nota=nota,
@@ -581,12 +624,12 @@ def agregarNota(request):
     else:
         materias = Materias.objects.all()
         return render(request, 'estados.html', {'materias': materias})
-    
 
-@login_required    
+
+@login_required
 def agregar_nota(request, dni):
     estudiante = get_object_or_404(Estudiantes, id_datinsc__dni=dni)
-    
+
     if request.method == 'POST':
         materia_id = request.POST.get('materia')
         condicion = request.POST.get('condicion')
@@ -616,12 +659,14 @@ def pdf_estadoCurricular(request):
     estudiante = get_object_or_404(Estudiantes, id_datinsc__dni=dni)
     buffer = BytesIO()
     p = canvas.Canvas(buffer, pagesize=letter)
-    p.drawString(100, 710, f"Apellidos: {estudiante.id_datinsc.apellido}"),p.drawString(100, 690, f"Nombres: {estudiante.id_datinsc.nombre}")
-    p.drawString(100, 750, f"Legajo N: {estudiante.nro_legajo}"), p.drawString(100, 730, f"DNI: {estudiante.id_datinsc.dni}")
+    p.drawString(100, 710, f"Apellidos: {estudiante.id_datinsc.apellido}"), p.drawString(
+        100, 690, f"Nombres: {estudiante.id_datinsc.nombre}")
+    p.drawString(100, 750, f"Legajo N: {estudiante.nro_legajo}"), p.drawString(
+        100, 730, f"DNI: {estudiante.id_datinsc.dni}")
     p.drawString(100, 650, "Notas del Estudiante")
     estado_curricular = estudiante.estadoscurriculares_set.all()
-   
-    data = [["Materia", "Estado", "Nota", "Fecha"]]  
+
+    data = [["Materia", "Estado", "Nota", "Fecha"]]
     for materia in estado_curricular:
         data.append([
             materia.id_matxplan_estcur.id_materia.nombre,
@@ -629,10 +674,10 @@ def pdf_estadoCurricular(request):
             str(materia.nota),
             materia.fecha_finalizacion.strftime("%d/%m/%Y")
         ])
-    
+
     table = Table(data, colWidths=[2*inch, 1.5*inch, 1*inch, 1.5*inch])
     table.setStyle(TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),  
+        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
         ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
@@ -647,8 +692,240 @@ def pdf_estadoCurricular(request):
 
     p.showPage()
     p.save()
-    
+
     buffer.seek(0)
     response = HttpResponse(buffer, content_type='application/pdf')
     response['Content-Disposition'] = f'attachment; filename="{estudiante.id_datinsc.apellido} {estudiante.id_datinsc.nombre}-Estado Curricular.pdf"'
     return response
+
+
+# examenes
+@login_required
+def gestion_Examenes(request):
+    return render(request, 'examenes/Gestion/gestion_Examenes.html')
+
+
+@login_required
+def obtener_examenes(request):
+    examenes = MesasExamenes.objects.select_related('Id_MatXPlan_ME').values(
+        'Id_MesaExamen',  # ID único de la mesa de examen
+        'Id_MatXPlan_ME__id_materia__nombre',  # Nombre de la materia
+        'Fecha_Examen',
+        'Hora_Examen'
+    )
+
+    data = [
+        {
+            "Id_MesaExamen": examen["Id_MesaExamen"],
+            "materia": examen["Id_MatXPlan_ME__id_materia__nombre"],
+            "fecha_examen": examen["Fecha_Examen"],
+            "hora_examen": examen["Hora_Examen"]
+        }
+        for examen in examenes
+    ]
+
+    return JsonResponse({"data": data})
+
+
+@login_required
+def obtener_materias(request):
+    materias = MateriasxplanesEstudios.objects.select_related('id_materia').values(
+        'id_matxplan',  # ID de la materia en el plan
+        'id_materia__nombre'  # Nombre de la materia
+    )
+    data = [
+        {
+            "id": materia["id_matxplan"],
+            "nombre": materia["id_materia__nombre"]
+        }
+        for materia in materias
+    ]
+    return JsonResponse({"materias": data})
+
+
+logger = logging.getLogger('mi_aplicacion')
+
+
+@login_required
+def agregar_examen(request):
+    if request.method == 'POST':
+        try:
+            # Cargar los datos JSON de la solicitud
+            data = json.loads(request.body)
+            id_materia_plan = data.get('materia')
+            fecha_examen = data.get('fecha_examen')
+            hora_examen = data.get('hora_examen')
+
+            # Verificar que los datos no estén vacíos
+            if not id_materia_plan or not fecha_examen or not hora_examen:
+                return JsonResponse({'success': False, 'message': 'Todos los campos son obligatorios.'}, status=400)
+
+            # Verificar si ya existe una mesa de examen con la misma materia, fecha y hora
+            existe = MesasExamenes.objects.filter(
+                Id_MatXPlan_ME_id=id_materia_plan,
+                Fecha_Examen=fecha_examen,
+                Hora_Examen=hora_examen
+            ).exists()
+
+            if existe:
+                return JsonResponse({'success': False, 'message': 'Ya existe una mesa de examen para esta materia en esa fecha y hora.'}, status=409)
+
+            # Crear y guardar la nueva mesa de examen
+            MesasExamenes.objects.create(
+                Id_MatXPlan_ME_id=id_materia_plan,
+                Fecha_Examen=fecha_examen,
+                Hora_Examen=hora_examen
+            )
+            # messages.success(
+            #   request, "La mesa de examen ha sido eliminada correctamente.")
+            return JsonResponse({'success': True, 'message': 'Mesa de examen guardada con éxito.'}, status=201)
+
+        except MateriasxplanesEstudios.DoesNotExist:
+            return JsonResponse({'success': False, 'message': 'Materia no encontrada.'}, status=404)
+        except Exception as e:
+            logger.error(f"Error al guardar la mesa de examen: {e}")
+            return JsonResponse({'success': False, 'message': f'Error inesperado: {str(e)}'}, status=500)
+
+    return JsonResponse({'success': False, 'message': 'Método no permitido.'}, status=405)
+
+
+@login_required
+def eliminar_mesaExamen(request, Id_MesaExamen):
+    # Obtén la mesa de examen o devuelve un error 404
+    mesaExamen = get_object_or_404(MesasExamenes, Id_MesaExamen=Id_MesaExamen)
+
+    if request.method == 'POST':  # Confirmar eliminación
+        try:
+            mesaExamen.delete()
+            messages.success(
+                request, "La mesa de examen ha sido eliminada correctamente.")
+            return redirect('gestion_Examenes')  # Redirige después de eliminar
+        except Exception as e:
+            messages.error(
+                request, f"Ocurrió un error al eliminar la mesa de examen: {str(e)}")
+
+    # Si es GET, muestra el formulario de confirmación
+    return render(request, 'examenes/Gestion/eliminar_mesaExamen.html', {'mesaExamen': mesaExamen})
+
+
+def editar_mesaExamen(request, Id_MesaExamen):
+    # Obtén la instancia de la mesa de examen
+    mesaExamen = get_object_or_404(MesasExamenes, Id_MesaExamen=Id_MesaExamen)
+
+    if request.method == 'POST':
+        # Al enviar el formulario, actualiza la instancia con los datos del POST
+        form = MesaExamenForm(request.POST, instance=mesaExamen)
+        if form.is_valid():
+            form.save()  # Guarda los cambios en la base de datos
+            messages.success(
+                request, "La mesa de examen se ha actualizado correctamente.")
+            return redirect('gestion_Examenes')
+        else:
+            messages.error(
+                request, "Por favor corrige los errores en el formulario.")
+    else:
+        # Carga el formulario con los datos de la instancia
+        form = MesaExamenForm(instance=mesaExamen)
+
+    print(mesaExamen.Fecha_Examen)
+    return render(request, 'examenes/Gestion/editar_mesaExamen.html', {'form': form, 'mesaExamen': mesaExamen})
+
+# incribir Examenes
+
+
+@login_required
+def solicitud_examenes(request):
+    # Obtener parámetros de búsqueda y filtro
+    dni = request.GET.get('dni')
+    curso = request.GET.get('curso')  # Filtro por curso
+
+    if dni:
+        # Buscar el estudiante por su DNI en DatInsc
+        estudiante_datinsc = DatInsc.objects.filter(dni=dni).first()
+        if estudiante_datinsc:
+            # Buscar al estudiante relacionado en Estudiantes
+            estudiante = Estudiantes.objects.filter(
+                id_datinsc=estudiante_datinsc).first()
+            if estudiante:
+                context = {'estudiante': estudiante}
+            else:
+                context = {
+                    'error': 'No se encontró un estudiante con este DNI en la tabla de Estudiantes.'}
+        else:
+            context = {
+                'error': 'No se encontró un estudiante con este DNI en DatInsc.'}
+    else:
+        # Obtener todos los estudiantes, filtrados y ordenados
+        estudiantes = (
+            Estudiantes.objects
+            # Cargar datos relacionados con DatInsc
+            .select_related('id_datinsc')
+            # Ordenar por apellido y nombre
+            .order_by('id_datinsc__apellido', 'id_datinsc__nombre')
+        )
+
+        if curso:
+            # Filtrar por curso si se seleccionó uno
+            estudiantes = estudiantes.filter(anio_insc=curso)
+
+        context = {
+            'estudiantes': estudiantes,
+            'curso_seleccionado': curso  # Pasar el curso seleccionado al template
+        }
+
+    return render(request, 'examenes/solicitud/solicitud_Examenes.html', context)
+
+
+@login_required
+def inscribir_examen(request, id_estudiante_ie):
+    error = None
+    estudiante = None
+    mesas_examenes = MesasExamenes.objects.select_related(
+        'Id_MatXPlan_ME__id_materia').all()
+
+    if request.method == 'POST':
+        dni = request.POST.get('dni')
+        try:
+            estudiante_datinsc = DatInsc.objects.get(dni=dni)
+            estudiante = Estudiantes.objects.get(id_datinsc=estudiante_datinsc)
+        except (DatInsc.DoesNotExist, Estudiantes.DoesNotExist) as e:
+            error = str(e)
+
+        if estudiante and 'materia' in request.POST and 'fecha' in request.POST:
+            materia_id = request.POST.get('materia')
+            fecha_id = request.POST.get('fecha')
+
+            try:
+                mesa_examen = MesasExamenes.objects.get(id=materia_id)
+                fecha_examen = mesa_examen.fechas.filter(id=fecha_id).first()
+
+                if fecha_examen:
+                    inscripcion, created = InscExamenes.objects.get_or_create(
+                        estudiante=estudiante,
+                        mesa_examen=mesa_examen,
+                        fecha=fecha_examen
+                    )
+                    if created:
+                        return render(request, 'inscribir_examen.html', {
+                            'estudiante': estudiante,
+                            'inscripcion': inscripcion,
+                            'mesas_examenes': mesas_examenes
+                        })
+                    else:
+                        error = "El estudiante ya está inscrito en esta mesa de examen."
+                else:
+                    error = "No se encontró la fecha seleccionada para la mesa de examen."
+            except MesasExamenes.DoesNotExist:
+                error = "No se encontró la mesa de examen seleccionada"
+            except Exception as e:
+                error = str(e)
+
+        return render(request, 'examenes/solicitud/inscribir_Examen.html', {
+            'estudiante': estudiante,
+            'error': error,
+            'mesas_examenes': mesas_examenes
+        })
+
+    return render(request, 'examenes/solicitud/inscribir_Examen.html', {
+        'mesas_examenes': mesas_examenes
+    })

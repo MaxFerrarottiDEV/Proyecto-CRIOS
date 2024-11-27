@@ -1,0 +1,252 @@
+{% extends 'base.html' %}
+{% load static %}
+console.log('Inicializando la tabla con datos de la API');
+console.log('Cargando las materias al mostrar el modal');
+console.log('Agregando una nueva mesa de examen');
+console.log('Eliminando una mesa de examen');
+{% load static %}
+{% block head %} 
+    <link href="{% static 'inscripciones/botones.css' %}" rel="stylesheet">
+{% endblock %}
+
+
+
+
+{% block content %}
+<div class="container mt-5">
+    <h2 style="text-align: center;">GESTIÓN DE MESAS DE EXAMEN</h2><br>
+    <hr>
+
+    {% if messages %}
+                <div class="alert-container">
+                    {% for message in messages %}
+                        <div class="alert alert-success" role="alert">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+    {% endif %}
+
+    <div class="d-flex justify-content mb-3">
+        <!-- Botón que abre el modal para añadir una solicitud -->
+        <button type="button" class="botonAgregarExamen" data-bs-toggle="modal" data-bs-target="#agregarExamenModal">
+            <i class="fa-solid fa-plus"></i>
+            Añadir Mesa Examen
+        </button>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="agregarExamenModal" tabindex="-1" aria-labelledby="agregarExamenModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="agregarExamenModalLabel">Añadir Mesa de Examen</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                
+            </div>
+            <div class="modal-body">
+                <form id="formAgregarMesa">
+                    <div class="mb-3">
+                        <label for="materia" class="form-label">Seleccionar Materia</label>
+                        <select class="form-control" id="materia" name="materia" required>
+                            <!-- Opciones dinámicas generadas en JS -->
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="fecha_examen" class="form-label">Fecha del Examen</label>
+                        <input type="date" class="form-control" id="fecha_examen" name="fecha_examen" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="hora_examen" class="form-label">Hora del Examen</label>
+                        <input type="time" class="form-control" id="hora_examen" name="hora_examen" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="guardarMesaExamen" style="background-color: #005187;">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Fin Modal -->
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="table-responsive">
+            <table id="TablaExamenes" class="table table-striped table-bordered table-hover display">
+                <thead>
+                    <tr>
+                        <th style="color: white;background-color:#005187;">#</th>
+                        <th style="color: white;background-color:#005187;">Materia</th>
+                        <th style="color: white;background-color:#005187;">Fecha Examen</th>
+                        <th style="color: white;background-color:#005187;">Hora Examen</th>
+                        <th style="color: white;background-color:#005187;" class="text-center">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody_programmers">
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block javascript %}
+<script src="{% static 'jQuery-3.7.0/jquery-3.7.0.js' %}"></script>  
+<script src="{% static 'DataTables-1.13.6/js/jquery.dataTables.js' %}"></script>
+<script src="{% static 'DataTables-1.13.6/js/dataTables.bootstrap5.js' %}"></script>
+
+<script>
+$(document).ready(function() {
+    // Inicializa la tabla con datos de la API
+    $('#TablaExamenes').DataTable({
+        "ajax": {
+            "url": "/examenes/obtener_examenes/",
+            "dataSrc": "data",  // Especifica que los datos vienen bajo la clave "data"
+            "type": "GET"
+        },
+        "columns": [
+            { 
+                "data": null,
+                "render": function (data, type, row, meta) {
+                    return meta.row + 1;
+                }
+            },
+            { "data": "materia" },
+            { 
+            "data": "fecha_examen", 
+            "render": function(data, type, row) {
+                    if (type === 'display' && data) {
+                        // Crear un objeto de fecha a partir del valor en formato ISO (YYYY-MM-DD)
+                        const date = new Date(data);  
+                        
+                        // Formatear la fecha a "Dec. 15, 2021"
+                        const options = { year: 'numeric', month: 'short', day: 'numeric' };
+                        return date.toLocaleDateString('es-ES', options); // 'en-US' es para el formato en inglés
+                    }
+                    return data;  // Si no es de tipo 'display', devolver el dato sin cambios
+                }
+            },
+            { 
+                "data": "hora_examen",
+                "render": function (data, type, row) {
+                    if (type === 'display' && data) {
+                        var time = data.slice(0, 5);  // Obtén solo la parte de la hora y minutos
+                        return time;  // Retorna la hora en formato 24 horas
+                    }
+                return data;
+                }  
+            },
+            { 
+                "data": null,
+                "render": function (data, type, row) {
+                    return `
+                        <button class="btn btn-warning editarExamen" data-id="${row.Id_MesaExamen}">Editar</button>
+                        <button class="btn btn-danger eliminarExamen" data-id="${row.Id_MesaExamen}">Eliminar</button>
+
+                    `;
+                }
+            }
+        ]
+    });
+
+    // Agregar una nueva mesa de examen
+    $('#guardarMesaExamen').click(function() {
+        const formData = {
+            materia: $('#materia').val(),
+            fecha_examen: $('#fecha_examen').val(),
+            hora_examen: $('#hora_examen').val(),
+        };
+
+        // Validación simple
+        if (!formData.materia || !formData.fecha_examen || !formData.hora_examen) {
+            alert('Por favor, complete todos los campos.');
+            return;
+        }
+
+        // Deshabilitar el botón mientras la solicitud esté en proceso
+        $('#guardarMesaExamen').prop('disabled', true);
+
+        $.ajax({
+            url: '/examenes/agregar_examen/',
+            type: 'POST',
+            data: JSON.stringify(formData),
+            contentType: 'application/json',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+            },
+            success: function(response) {
+                if(response.success){
+                    $('#agregarExamenModal').modal('hide'); // Cierra el modal
+                    $('#TablaExamenes').DataTable().ajax.reload(); // Recarga la tabla
+                    $('#formAgregarMesa')[0].reset();  // Limpiar el formulario
+
+                }else{
+                    alert(response.message);
+                }
+                $('#guardarMesaExamen').prop('disabled', false);
+            },
+            error: function(error) {
+                alert('Ocurrió un error al añadir la mesa de examen.');
+                
+                $('#guardarMesaExamen').prop('disabled', true);
+            }
+        });
+    });
+
+    // Cargar las materias al mostrar el modal
+    $('#agregarExamenModal').on('show.bs.modal', function () {
+        $.ajax({
+            url: '/examenes/obtener_materias/',
+            type: 'GET',
+            success: function (response) {
+                const selectMateria = $('#materia');
+                selectMateria.empty(); // Limpia el dropdown
+
+                response.materias.forEach(materia => {
+                    selectMateria.append(
+                        `<option value="${materia.id}">${materia.nombre}</option>`
+                    );
+                });
+            },
+            error: function () {
+                alert('Error al cargar las materias.');
+            }
+        });
+    });
+    //dirigir a la pagina de eliminar 
+    $(document).on('click', '.eliminarExamen', function () {
+        const idExamen = $(this).data('id');
+        console.log('ID Examen:', idExamen);
+        if (idExamen) {
+            // Redirige al formulario de confirmación
+            window.location.href = `/examenes/eliminar_mesaExamen/${idExamen}/`;
+        } else {
+            alert('No se pudo identificar la mesa de examen.'); // Mensaje opcional
+        }
+    });
+
+    $(document).on('click', '.editarExamen', function () {
+        const idExamen = $(this).data('id');
+        if (idExamen) {
+            window.location.href = `/examenes/editar_mesaExamen/${idExamen}/`;
+        } else {
+            alert('No se pudo identificar la mesa de examen.');
+        }
+    });
+
+    setTimeout(() => {
+            const msg = document.getElementById('successMessage');
+            if (msg) {
+                msg.style.display = 'none';
+            }
+        }, 30); // 3 segundos
+
+});
+</script>
+
+{% endblock javascript %}
+
+

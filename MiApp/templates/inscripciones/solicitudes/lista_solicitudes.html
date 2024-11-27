@@ -10,11 +10,8 @@ Inscripciones - Solicitudes de Preinscripción
 
 {% load crispy_forms_tags %}
 {% block content %}
-<div class="container mt-5">
-    <h2 style="text-align: center;">SOLICITUDES DE PREINSCRIPCIÓN</h2>
-    <hr>
-    <!-- Mostrar mensajes si existen (de éxito o error) -->
-    {% if messages %}
+
+{% if messages %}
         {% for message in messages %}
             <div class="alert alert-{{ message.tags }} fade-out">
                 {{ message }}
@@ -22,6 +19,11 @@ Inscripciones - Solicitudes de Preinscripción
         {% endfor %}
     {% endif %}
 
+<div class="container mt-5">
+    <h2 style="text-align: center;">SOLICITUDES DE PREINSCRIPCIÓN</h2>
+    <hr>
+    <!-- Mostrar mensajes si existen (de éxito o error) -->
+    
     <!-- Botones para obtener registros y añadir una solicitud -->
     <div class="d-flex justify-content mb-3">
         <!-- Botón que abre el modal para añadir una solicitud -->

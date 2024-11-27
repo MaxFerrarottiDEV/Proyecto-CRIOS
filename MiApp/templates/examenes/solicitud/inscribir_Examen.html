@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h2>Inscribir a un Estudiante a una Mesa de Examen</h2>
+    <hr>
+    <div id="datosEstudiante">
+        <h4>Datos del Estudiante</h4>
+        {% if estudiante %}
+            {% if estudiante.id_datinsc %}
+                <p><strong>Nombre:</strong> {{ estudiante.id_datinsc.nombre }} {{ estudiante.id_datinsc.apellido }}</p>
+                <p><strong>DNI:</strong> {{ estudiante.id_datinsc.dni }}</p>
+            {% else %}
+                <p>No se encontraron datos personales del estudiante.</p>
+            {% endif %}
+        {% else %}
+            <p>No se encontró ningún estudiante.</p>
+        {% endif %}
+
+    </div>
+    <hr>
+
+    <!-- Formulario para inscribir al estudiante -->
+        {% csrf_token %}
+        <input type="hidden" name="dni" value="{{ estudiante.dni }}">
+
+        <div class="form-group">
+            <select class="form-control" id="materia" name="materia" required>
+                <option value="" disabled selected>Seleccione una materia</option>
+                {% for mesa in mesas_examenes %}
+                    <option value="{{ mesa.id }}">
+                        {{ mesa.Id_MatXPlan_ME.id_materia.nombre }} {{ mesa.Fecha_Examen }} {{ mesa.Hora_Examenes }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-success">Inscribir</button>
+
+</div>
+
+<script>
+    // JavaScript para filtrar fechas de exámenes basadas en la materia seleccionada
+    document.getElementById('materia').addEventListener('change', function () {
+        const materiaId = this.value;
+        const fechasSelect = document.getElementById('fecha');
+
+        // Limpia las opciones previas
+        fechasSelect.innerHTML = '<option value="" disabled selected>Seleccione una fecha</option>';
+
+        // Obtiene las fechas disponibles para la materia seleccionada
+        fetch(`/examenes/fechas_disponibles/${materiaId}/`)
+            .then(response => response.json())
+            .then(data => {
+                data.fechas.forEach(fecha => {
+                    const option = document.createElement('option');
+                    option.value = fecha.id;
+                    option.textContent = fecha.fecha; // Ejemplo: "2024-12-01"
+                    fechasSelect.appendChild(option);
+                });
+            })
+            .catch(error => {
+                console.error('Error al obtener las fechas disponibles:', error);
+            });
+    });
+
+</script>
+{% endblock %}

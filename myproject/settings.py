@@ -18,7 +18,7 @@ MESSAGE_TAGS = {
 }
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-STATIC_DIR = os.path.join(BASE_DIR,'static')
+STATIC_DIR = os.path.join(BASE_DIR, 'static')
 
 
 # Quick-start development settings - unsuitable for production
@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     'MiApp',
     'django_bootstrap5',
     'crispy_forms',
-    'crispy_bootstrap5', 
+    'crispy_bootstrap5',
     'reportlab',
 ]
 
@@ -99,9 +99,9 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'criosdb',
         'USER': 'root',
-        'PASSWORD': 'Samilove2016*',
+        'PASSWORD': 'ariel123',
         'HOST': 'localhost',
-        'PORT': '3306'  
+        'PORT': '3306'
     }
 }
 
@@ -134,9 +134,9 @@ STATICFILES_DIRS = [STATIC_DIR,]
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-LOGIN_REDIRECT_URL='/'
-LOGOUT_REDIRECT_URL='/login/'
-LOGIN_URL='/login/'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/login/'
+LOGIN_URL = '/login/'
 
 # Configuración de email en settings.py
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -144,9 +144,9 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = "profesoradocrios@gmail.com"  # No cambiar de email
-EMAIL_HOST_PASSWORD = "hdzp uaup plkz vaef" # Contraseña de aplicación
-DEFAULT_FROM_EMAIL = "profesoradocrios@gmail.com" 
+EMAIL_HOST_PASSWORD = "hdzp uaup plkz vaef"  # Contraseña de aplicación
+DEFAULT_FROM_EMAIL = "profesoradocrios@gmail.com"
 
 # settings.py
-#SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # Cerrar sesión al cerrar el navegador.
-#SESSION_COOKIE_AGE = 3600  # Tiempo en segundos (1 hora).
+# SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # Cerrar sesión al cerrar el navegador.
+# SESSION_COOKIE_AGE = 3600  # Tiempo en segundos (1 hora).
