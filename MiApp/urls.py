@@ -3,6 +3,8 @@ from django.urls import path, include # type: ignore
 from django.contrib import admin # type: ignore
 from . import views
 from .forms import CustomPasswordResetForm
+from .views import guardar_datos_google_forms, sincronizar_datos
+
 
 urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
@@ -34,6 +36,8 @@ urlpatterns = [
     path('inscripciones/solicitudes/confirmar/<int:id_datinsc>/', views.confirmar_solicitud, name='confirmar_solicitud'),
     path('inscripciones/solicitudes/editar/<id_datinsc>', views.editar_solicitud, name='editar_solicitud'),
     path('inscripciones/solicitudes/eliminar/<id_datinsc>', views.eliminar_solicitud, name='eliminar_solicitud'),
+    path('inscripciones/solicitudes/guardarDatos', views.guardar_datos_google_forms, name='guardar_datos_google_forms'),
+    path('sincronizar/', sincronizar_datos, name='sincronizar_datos'),
 
     # Modulo de consultas
     path('inscripciones/consultas/', views.consultas, name='consultas'),

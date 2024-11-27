@@ -25,7 +25,7 @@ Inscripciones - Solicitudes de Preinscripción
             Añadir una solicitud
         </button>
 
-        <script src="{% static 'firebase/firebase-mysql2.js'}"></script>
+        
         <!-- Botón para obtener registros de Drive -->
         <button type="button" class="botonObtener" onclick="obtenerRegistrosDrive()">
             <i class="fa-solid fa-arrows-rotate"></i>
@@ -171,26 +171,42 @@ Inscripciones - Solicitudes de Preinscripción
         });
     }
 </script>
+
+<!-- Asegúrate de cargar el archivo antes de usar la función -->
+<script type="module" src="{% static 'firebase/firebase-mysql2.js' %}"></script>
+
 <script type="text/javascript">
-    function obtenerRegistrosDrive() {
-        // Aquí puedes agregar el código JavaScript para obtener los registros de Google Drive.
-        // Por ejemplo, hacer una llamada AJAX o redirigir a una vista que maneje esta funcionalidad.
-        alert("Obteniendo registros de Drive...");
-        const referencia = ref(db, 'https://crios-db-proyecto-default-rtdb.firebaseio.com/'); // Cambia 'registros/' por tu ruta específica
-    
-    // Obtener los datos
-        get(referencia)
-            .then((snapshot) => {
-                if (snapshot.exists()) {
-                    console.log("Datos obtenidos:", snapshot.val());
+    // Asegúrate de que syncFirebaseToMySQL esté definida correctamente en el archivo JS que has importado.
+    async function obtenerRegistrosDrive() {
+        try {
+            const response = await fetch('/sincronizar/', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({})
+            });
+
+            // Verifica si la respuesta es exitosa
+            if (response.ok) {
+                const result = await response.json();
+                if (result.success) {
+                    alert("Datos obtenidos y guardados correctamente");
+                    location.reload();
                 } else {
-                    console.log("No hay datos disponibles");
+                    throw new Error(result.message);
                 }
-            })
-                .catch((error) => {
-                    console.error("Error al obtener los datos:", error);
-        });
+            } else {
+                throw new Error("Error al sincronizar datos");
+            }
+        } catch(error) {
+            console.error("Error al sincronizar con el backend:", error);
+            alert("Ocurrió un error: " + error.message);
+        }
     }
+</script>
+
 </script>
 {% endblock javascript %}
 

@@ -9,12 +9,16 @@ from .models import DatInsc, EstadosCurriculares ,Estudiantes,Materias,Materiasx
 from datetime import date
 from django.template.loader import render_to_string
 from django.http import HttpResponse
+from django.views.decorators.csrf import csrf_exempt
+from MiApp.management.commands.sync_firebase_to_mysql import Command
 from io import BytesIO
 from reportlab.lib.pagesizes import letter # type: ignore
 from reportlab.pdfgen import canvas # type: ignore
 from reportlab.lib import colors # type: ignore
 from reportlab.lib.units import inch # type: ignore
 from reportlab.platypus import Table, TableStyle # type: ignore
+import json
+
 
 def login(request):
     return render(request, 'login.html')
@@ -67,6 +71,56 @@ def lista_solicitudes(request):
         'solicitudes': solicitudes,
         'form': form  # Pasamos el formulario al contexto
     })
+
+@csrf_exempt  # Desactiva la verificación CSRF solo para este endpoint
+def sincronizar_datos(request):
+    if request.method == 'POST':
+        try:
+            # Ejecutar el comando de sincronización de Firebase a MySQL
+            command = Command()
+            command.handle()
+
+            return JsonResponse({'success': True, 'message': 'Datos sincronizados correctamente'})
+        except Exception as e:
+            return JsonResponse({'success': False, 'message': str(e)})
+
+    return JsonResponse({'success': False, 'message': 'Método no permitido'}, status=405)
+
+@csrf_exempt
+def guardar_datos_google_forms(request):
+    if request.method == 'POST':
+        datos = json.loads(request.body)
+        for dato in datos:
+            # Suponiendo que tienes un modelo Solicitud
+            DatInsc.objects.create(
+                    nombre=dato.get('nombre', ''),
+                    apellido=dato.get('apellido', ''),
+                    fecha_nac=dato.get('fecha_nac', ''),
+                    provincia=dato.get('provincia', ''),
+                    dni=dato.get('dni', ''),
+                    edad=dato.get('edad', ''),
+                    domicilio=dato.get('domicilio', ''),
+                    telefono_fijo=dato.get('telefono_fijo', ''),
+                    celular_nro=dato.get('celular_nro', ''),
+                    email=dato.get('email', ''),
+                    estado_civil=dato.get('estado_civil', ''),
+                    hijos=dato.get('hijos', None),
+                    lugar_trabajo=dato.get('lugar_trabajo', ''),
+                    tel_emergencia=dato.get('tel_emergencia', ''),
+                    col_egreso=dato.get('col_egreso', ''),
+                    titulo=dato.get('titulo', ''),
+                    otro_titulo=dato.get('otro_titulo', ''),
+                    anio_egreso=dato.get('anio_egreso', ''),
+                    preg_1=dato.get('preg_1', None),
+                    resp_1=dato.get('resp_1', ''),
+                    resp_2=dato.get('resp_2', None),
+                    preg_2=dato.get('preg_2', ''),
+                    matricula=dato.get('matricula', False),
+                    legajo_fisico=dato.get('legajo_fisico', False)
+            )
+        return JsonResponse({'mensaje': 'Datos guardados correctamente'}, status=200)
+
+    return JsonResponse({'error': 'Método no permitido'}, status=405)
 
 @login_required
 def confirmar_solicitud(request, id_datinsc):

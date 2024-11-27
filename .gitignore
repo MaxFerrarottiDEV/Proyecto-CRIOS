@@ -280,3 +280,4 @@ pip-selfcheck.json
 node_modules/
 
 static/firebase/credenciales.json
+staticfiles/firebase/credenciales.json

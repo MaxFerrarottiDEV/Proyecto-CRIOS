@@ -17,9 +17,11 @@ Including another URLconf
 from django.contrib import admin # type: ignore
 from django.urls import path, include # type: ignore
 from django.contrib.auth import views as auth_views # type: ignore
+from django.conf import settings
+from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('MiApp.urls')),  # Incluir las URLs de MiApp
-]
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 
