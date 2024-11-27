@@ -21,6 +21,7 @@
 
 .botonVolver,
 .botonAdjuntar,
+.botonVerMateria,
 .botonBuscar,
 .botonAgregarSolicitud,
 .botonGuardar,
@@ -41,6 +42,7 @@
 }
 .botonVolver:hover,
 .botonAdjuntar:hover,
+.botonVerMateria:hover,
 .botonObtener:hover,
 .botonSubirArchivo:hover,
 .botonAgregarSolicitud:hover,

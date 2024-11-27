@@ -387,7 +387,7 @@ def agregar_plan(request):
                 plan_actual=False  # Asegurarse de asignar False explícitamente
             )
             nuevo_plan.save()
-            messages.success(request, "Plan de estudio agregado con éxito. No se olvide de agregar las materias en el botón 'Administrar Plan'")
+            messages.success(request, "Plan de estudio agregado con éxito. No se olvide de agregar las materias en el botón 'Agregar'")
         except Carreras.DoesNotExist:
             messages.error(request, "La carrera seleccionada no existe.")
         return redirect('plan_estudio')
