@@ -36,8 +36,7 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item">
-              <a class="nav-link nav-titulo" href="{% url 'home' %}">
-                <i class="fa-solid fa-house"></i> Pagina Principal</a>
+              <a class="nav-link nav-titulo" href="{% url 'home' %}"><i class="fa-solid fa-house"></i> Pagina Principal</a>
             </li>
             <!-- Dropdown de EXAMENES -->
             <li class="nav-item dropdown">
@@ -63,19 +62,20 @@
             </li>
             <!-- Dropdown de INSCRIPCIONES -->
             <li class="nav-item dropdown">
-              <a class="nav-link nav-titulo" href="" id="inscripcionesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false ">
+              <a class="nav-link nav-titulo" href="" id="inscripcionesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                 <i class="fa-solid fa-address-card"></i> Inscripciones
               </a>
               <ul class="dropdown-menu" aria-labelledby="inscripcionesDropdown">
-                <li><a class="dropdown-item" href="{% url 'lista_solicitudes' %}">Solicitudes de Inscripción</a></li>
+                <li><a class="dropdown-item" href="{% url 'lista_solicitudes' %}">Solicitudes de Preinscripción</a></li>
                 <li><hr class="dropdown-divider"></li>
                 <li><a class="dropdown-item" href="{% url 'consultas' %}">Consultas de Datos de Estudiantes</a></li>
               </ul>
             </li>
+          </ul>
           <!-- Menú desplegable para perfil del usuario -->
           <ul class="navbar-nav mb-2 mb-lg-0"> 
             <li class="nav-item dropdown">
-                <a class="nav-link nav-titulo" href="" id="perfilDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <a class="nav-link nav-titulo" href="#" id="perfilDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="fa-solid fa-user"></i> Perfil
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="perfilDropdown">
@@ -84,7 +84,12 @@
                     </li>
                     <li><hr class="dropdown-divider"></li>
                     <li>
-                        <a class="dropdown-item" href="{% url 'login' %}"><i class="fa-solid fa-right-from-bracket"></i> Cerrar Sesión</a>
+                        <form method="POST" action="{% url 'logout' %}" style="display: inline;">
+                          {% csrf_token %}
+                          <button type="submit" class="dropdown-item">
+                              <i class="fa-solid fa-right-from-bracket"></i> Cerrar Sesión
+                          </button>
+                      </form> 
                     </li>
                 </ul>
             </li>
@@ -141,20 +146,11 @@
             </div>
         </div>
     </div>
-
-    {% if messages %}
-    <div class="messages">
-        {% for message in messages %}
-            <div class="alert {{ message.tags }}">{{ message }}</div>
-        {% endfor %}
-    </div>
-    {% endif %}
-    
-    {% block javascript %}
-    {% endblock javascript %}
     <script src="{% static 'jQuery-3.7.0/jquery-3.7.0.js' %}"></script>  
     <script src="{% static 'DataTables-1.13.6/js/jquery.dataTables.js' %}"></script>
     <script src="{% static 'DataTables-1.13.6/js/dataTables.bootstrap5.js' %}"></script> 
     <script src="{% static 'bootbox/bootbox.all.min.js' %}"></script>
+    {% block javascript %}
+    {% endblock javascript %}
   </body>
 </html>
