@@ -29,36 +29,41 @@ Estados Curriculares
             </select>
         </div>
         
-        
-
         <div class="mb-3">
             <label for="materia" class="form-label">Materia</label>
-            <select id="materia" name="materia" class="form-select" required>
-                <option value="" disabled selected>Seleccione una materia</option>
-                <!-- Aquí se generarán dinámicamente las opciones -->
+            <select id="materia" name="materia" class="form-select" disabled required>
+                <option value="" disabled selected>Ningún plan seleccionado</option>
             </select>
         </div>
         
-        
-        <div class="mb-3">
-            <label for="condicion" class="form-label">Condición Nota</label>
-            <select id="condicion" name="condicion" class="form-select" required>
-                <option value="">Seleccionar...</option>
-                <option value="Libre">Libre</option>
-                <option value="Regular">Regular</option>
-                <option value="Promocionado">Promocionado</option>
-            </select>
+        <div class="mb-3 row">
+            <div class="col-md-6">
+                <label for="nota" class="form-label">Nota</label>
+                <input type="number" id="nota" name="nota" class="form-control" placeholder="Ingrese el nota del estudiante" required>
+            </div>
+            <div class="col-md-6">
+                <label for="condicion" class="form-label">Condición Nota</label>
+                <select id="condicion" name="condicion" class="form-select" required>
+                    <option value="">Seleccionar...</option>
+                    <option value="Libre">Libre</option>
+                    <option value="Regular">Regular</option>
+                    <option value="Promocionado">Promocionado</option>
+                </select>
+            </div>
         </div>
         
-        <div class="mb-3">
-            <label for="nota" class="form-label">Nota</label>
-            <input type="number" id="nota" name="nota" class="form-control" required>
+        <div class="mb-3 row">
+            <div class="col-md-6">
+                <label for="folio" class="form-label">Folio del Estudiante</label>
+                <input type="text" id="folio" name="folio" class="form-control" maxlength="50" placeholder="Ingrese el folio del estudiante" required>
+            </div>
+            <div class="col-md-6">
+                <label for="fecha" class="form-label">Fecha de Finalización</label>
+                <input type="date" id="fecha" name="fecha" class="form-control" required>
+            </div>
         </div>
         
-        <div class="mb-3">
-            <label for="fecha" class="form-label">Fecha de Finalización</label>
-            <input type="date" id="fecha" name="fecha" class="form-control" required>
-        </div>
+        
 
         <a href="{% url 'estados' %}" class="botonVolver"><i class="fa-solid fa-arrow-left"></i> Volver</a>
         <button type="submit" class="botonDescargar"><i class="fa-solid fa-plus"></i>Guardar Nota</button>
@@ -66,13 +71,15 @@ Estados Curriculares
     </form>
 </div>
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+   document.addEventListener('DOMContentLoaded', function () {
     const planSelect = document.getElementById('plan');
     const materiaSelect = document.getElementById('materia');
+
     planSelect.addEventListener('change', function () {
         const planId = this.value;
         materiaSelect.innerHTML = '<option value="" disabled selected>Seleccione una materia</option>';
         if (planId) {
+            materiaSelect.disabled = false; // Habilitar el select de Materias
             fetch(`/obtener-materias/?plan_id=${planId}`)
                 .then(response => response.json())
                 .then(data => {
@@ -93,9 +100,13 @@ Estados Curriculares
                     }
                 })
                 .catch(error => console.error('Error en la solicitud:', error));
+        } else {
+            materiaSelect.disabled = true; // Deshabilitar el select de Materias si no hay plan seleccionado
+            materiaSelect.innerHTML = '<option value="" disabled selected>Ningún plan seleccionado</option>';
         }
     });
 });
+
 
 </script>
 {% endblock %}
