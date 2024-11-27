@@ -613,6 +613,7 @@ def obtener_materias(request):
 
 @login_required
 def agregar_nota(request, dni):
+    # Obtén el estudiante con el DNI proporcionado
     estudiante = get_object_or_404(Estudiantes, id_datinsc__dni=dni)
 
     if request.method == 'POST':
@@ -622,27 +623,38 @@ def agregar_nota(request, dni):
         nota = request.POST.get('nota')
         fecha = request.POST.get('fecha')
 
+        # Verifica que el plan y la materia existan
         plan = get_object_or_404(PlanesEstudios, id_planestudio=plan_id)
-        materia = get_object_or_404(Materias, id=materia_id)
+        materia = get_object_or_404(MateriasxplanesEstudios, id_materia=materia_id)
+
+        # Crea un nuevo estado curricular y guárdalo en la base de datos
         nuevo_estado = EstadosCurriculares(
-            id_estudiante=estudiante,
-            id_matxplan=materia,
+            id_estudiante_estcur=estudiante,
+            id_matxplan_estcur=materia,
             condicion_nota=condicion,
             nota=nota,
-            fecha_finalizacion=fecha)
+            fecha_finalizacion=fecha
+        )
         nuevo_estado.save()
-        return redirect('estado_curricular', dni=dni)
+        return redirect('agregar_nota', dni=dni)
+
+
+    # Recupera los planes de estudio
     planes = PlanesEstudios.objects.select_related('id_carrera').all()
-    materias =Materias.objects.all()
+    materias = Materias.objects.all()
+
+    # Filtra las materias en función del plan seleccionado
     plan_id = request.GET.get('plan')
     if plan_id:
         materias = Materias.objects.filter(
-            materiasxplanesestudios__id_planestudio=plan_id).distinct()  
+            materiasxplanesestudios__id_planestudio=plan_id
+        ).distinct()
 
     return render(request, 'estadosCurriculares/agregar_nota.html', {
         'estudiante': estudiante,
         'materias': materias,
-        'planes': planes})
+        'planes': planes
+    })
 
 
 

@@ -232,7 +232,7 @@ class EstadosCurriculares(models.Model):
     id_estadocurricular = models.AutoField(db_column='Id_EstadoCurricular', primary_key=True)  # Field name made lowercase.
     id_matxplan_estcur = models.ForeignKey('MateriasxplanesEstudios', models.DO_NOTHING, db_column='Id_MatXPlan_EstCur', blank=True, null=True)  # Field name made lowercase.
     id_estudiante_estcur = models.ForeignKey('Estudiantes', models.DO_NOTHING, db_column='Id_Estudiante_EstCur', blank=True, null=True)  # Field name made lowercase.
-    condicion_nota = models.IntegerField(db_column='Condicion_Nota', blank=True, null=True)  # Field name made lowercase.
+    condicion_nota = models.CharField(db_column='Condicion_Nota', max_length=50, blank=True, null=True)  # Cambio de IntegerField a CharField
     nota = models.IntegerField(db_column='Nota', blank=True, null=True)  # Field name made lowercase.
     fecha_finalizacion = models.DateField(db_column='Fecha_Finalizacion')  # Field name made lowercase.
     folio = models.CharField(db_column='Folio', max_length=45, blank=True, null=True)  # Field name made lowercase.

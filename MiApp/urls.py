@@ -66,5 +66,4 @@ urlpatterns = [
     path('estadosCurriculares/estados', views.agregarNota, name='agregarNota'),
     path('estadosCurriculares/agregar_nota/<str:dni>/', views.agregar_nota, name='agregar_nota'),
     path('estadosCurriculares/verEstado/<str:dni>/', views.verEstado, name='verEstado'),
-    path('pdf_estadoCurricular', views.pdf_estadoCurricular, name='descargar_pdf'),
-    ]
+    path('pdf_estadoCurricular', views.pdf_estadoCurricular, name='descargar_pdf'),]
