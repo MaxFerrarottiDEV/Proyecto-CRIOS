@@ -1,3 +1,38 @@
+/* BOTONES PARA DAR DE BAJA ALUMNOS */
+.botonDarDeBaja{
+  color: #fff;
+  background-color: #ff0000;
+  border: none;
+  padding: 10px 16px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 18px;
+  margin: 5px;
+  border-radius: 18px;}
+.botonCancelarBaja{
+  color: #fff;
+  background-color: #005187;
+  border: none;
+  padding: 10px 16px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 18px;
+  margin: 5px;
+  border-radius: 18px;}
+.botonCancelarBaja:hover{
+  transform: scale(1.1);
+  transition: transform 0.3s ease;
+  color: white;
+  background-color: #005187;}
+.botonDarDeBaja:hover{
+  transform: scale(1.1);
+  transition: transform 0.3s ease;
+  color: white;
+  background-color: #ff0000;}
+
+
 .botonCancelar,
 .botonEliminar {
   color: #fff;
@@ -87,7 +122,9 @@
   border-radius: 18px;}
 .botonVer:hover,
 .botonDescargar:hover
-  {transform: scale(1.1); 
+  {background-color: #28a745;
+  color: #fff;
+  transform: scale(1.1); 
   transition: transform 0.3s ease;}
   
 

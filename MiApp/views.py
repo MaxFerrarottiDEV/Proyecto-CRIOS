@@ -1,7 +1,7 @@
 from datetime import date
 
 from django.contrib import messages
-from django.contrib.auth import update_session_auth_hash, logout, login as auth_login
+from django.contrib.auth import update_session_auth_hash, logout, login as auth_login, authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.db import transaction
@@ -68,31 +68,37 @@ def home(request):
 
 
 @login_required
+def validate_password(request):
+    if request.method == 'POST':
+        current_password = request.POST.get('current_password')
+        user = authenticate(username=request.user.username, password=current_password)
+        if user is not None:
+            # Contraseña válida, redirigir al cambio de contraseña
+            return redirect('change_password')
+        else:
+            # Contraseña incorrecta
+            messages.error(request, 'La contraseña actual es incorrecta.')
+            return redirect('home')  # Puedes redirigir donde creas necesario
+    return redirect('home')
+
+
+@login_required
 def change_password(request):
     if request.method == 'POST':
-        # Obtener las contraseñas ingresadas
         new_password1 = request.POST['new_password1']
         new_password2 = request.POST['new_password2']
         
-        # Verificar si las contraseñas coinciden
         if new_password1 == new_password2:
-            # Establecer la nueva contraseña
             request.user.set_password(new_password1)
             request.user.save()
-            
-            # Cerrar la sesión del usuario
-            logout(request)
-            
-            # Mensaje de éxito
+            logout(request)  # Cerrar la sesión del usuario
             messages.success(request, "Contraseña cambiada exitosamente. Por favor, vuelve a iniciar sesión.")
-            
-            # Redirigir al login
-            return redirect('login')  # Redirigir al login tras cambio de contraseña
+            return redirect('login')  # Redirigir al login
         else:
-            # Mensaje de error si las contraseñas no coinciden
             messages.error(request, "Las contraseñas no coinciden.")
     
     return render(request, 'change_password.html')
+
 
 @login_required
 def tipo_inscripcion(request):
@@ -223,12 +229,15 @@ def consultas(request):
     # Obtener parámetros de búsqueda y filtro
     dni = request.GET.get('dni')
     curso = request.GET.get('curso')  # Filtro por curso
+    carrera_id = request.GET.get('carrera')  # Filtro por carrera
+
+    # Obtener todas las carreras para el dropdown
+    carreras = Carreras.objects.values('id_carrera', 'nombre').distinct()
 
     if dni:
         # Buscar el estudiante por su DNI en DatInsc
         estudiante_datinsc = DatInsc.objects.filter(dni=dni).first()
         if estudiante_datinsc:
-            # Buscar al estudiante relacionado en Estudiantes
             estudiante = Estudiantes.objects.filter(id_datinsc=estudiante_datinsc).first()
             if estudiante:
                 context = {'estudiante': estudiante}
@@ -237,7 +246,7 @@ def consultas(request):
         else:
             context = {'error': 'No se encontró un estudiante con este DNI en DatInsc.'}
     else:
-        # Obtener todos los estudiantes, filtrados y ordenados
+        # Obtener todos los estudiantes
         estudiantes = (
             Estudiantes.objects
             .select_related('id_datinsc')  # Cargar datos relacionados con DatInsc
@@ -245,12 +254,17 @@ def consultas(request):
         )
         
         if curso:
-            # Filtrar por curso si se seleccionó uno
             estudiantes = estudiantes.filter(anio_insc=curso)
         
+        if carrera_id:
+            # Filtrar estudiantes por carrera usando la relación con Carreras
+            estudiantes = estudiantes.filter(insccarreras__id_carrera_ic__id_carrera=carrera_id)
+
         context = {
             'estudiantes': estudiantes,
-            'curso_seleccionado': curso  # Pasar el curso seleccionado al template
+            'curso_seleccionado': curso,
+            'carrera_seleccionada': carrera_id,
+            'carreras': carreras,  # Pasar las carreras al template
         }
 
     return render(request, 'inscripciones/consultas/consultas.html', context)

@@ -3,6 +3,7 @@
 {% load static %} 
 {% block head %} 
 <link href="{% static 'home/style.css' %}" rel="stylesheet">
+<link href="{% static 'home/style-ModalesdeTarjetas.css' %}" rel="stylesheet">
 {% endblock %}
 {% block content %} 
     <!-- Contenido -->
@@ -70,7 +71,7 @@
         <div class="card-body">
           <h5 class="card-title">Inscripciones</h5>
           <p class="card-text">Permite gestionar solicitudes de inscripción de nuevos candidatos y revisar o actualizar la información de los estudiantes ya registrados.</p>
-          <a href="{% url 'tipo_inscripcion' %}" class="btn btn-primary">Acceder</a>
+          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#inscripcionesModal">Acceder</button>
         </div>
       </div>
       <!-- Tarjeta 2 -->
@@ -79,7 +80,7 @@
         <div class="card-body">
           <h5 class="card-title">Estados Curriculares</h5>
           <p class="card-text">Gestiona y visualiza la información académica de los estudiantes, crea planes de estudio, asigna materias y define un plan como "actual".</p>
-          <a href="{% url 'build' %}" class="btn btn-primary">Acceder</a>
+          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#inscripcionesModal">Acceder</button>
         </div>
       </div>
       <!-- Tarjeta 3 -->
@@ -88,7 +89,7 @@
         <div class="card-body">
           <h5 class="card-title">Exámenes</h5>
           <p class="card-text">Permite gestionar fechas de mesas de exámenes, consultar estudiantes inscriptos y evaluar requisitos para inscripciones.</p>
-          <a href="{% url 'build' %}" class="btn btn-primary">Acceder</a>
+          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#examenesModal">Acceder</button>
         </div>
       </div>
       <!-- Tarjeta 4 -->
@@ -101,4 +102,82 @@
         </div>
       </div>
     </div><br><br>
+    <!-- Modal de Estados Curriculares -->
+<div class="modal fade" id="estadosModal" tabindex="-1" aria-labelledby="estadosModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg modal-uniform">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="estadosModalLabel">ESTADOS CURRICULARES - FUNCIONALIDADES</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="d-flex justify-content-center" style="background-color: #4d82b4">
+          <div class="card card-size-large mx-2">
+            <img src="{% static 'images/tipo_inscripcion/Solicitudes.JPG' %}" class="card-img-top" alt="...">
+            <div class="card-body">
+              <h5 class="card-title">Planes de Estudio</h5>
+              <p class="card-text">Sesión para gestionar diversos planes de estudio.
+                Cada plan está compuesto por un conjunto de materias. Además, incluye una función que posibilita designar un único plan de estudio como "actual".</p>
+              <p></p>
+              <p></p>
+              <p></p>
+                <a href="{% url 'plan_estudio' %}" class="btn btn-custom">Ir</a>
+            </div>
+          </div>
+
+          <div class="card card-size-large mx-2">
+            <img src="{% static 'images/tipo_inscripcion/Solicitudes.JPG' %}" class="card-img-top" alt="...">
+            <div class="card-body">
+              <h5 class="card-title">Estado Curricular</h5>
+              <p class="card-text">Sesión para gestionar los estados curriculares de los estudiantes. Permite realizar 
+                búsquedas rápidas utilizando el DNI de cada estudiante. Además, incluye la opción de descargar el estado 
+                curricular en formato PDF, facilitando su envío o impresión para realizar trámites administrativos o consultas académicas de manera ágil.</p>
+              <a href="{% url 'estados' %}" class="btn btn-custom">Ir</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de Exámenes -->
+<div class="modal fade" id="examenesModal" tabindex="-1" aria-labelledby="examenesModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg modal-uniform">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="examenesModalLabel">EXÁMENES - FUNCIONALIDADES</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="d-flex justify-content-center">
+          <div class="card card-size-large mx-2">
+            <img src="{% static 'images/tipo_inscripcion/Solicitudes.JPG' %}" class="card-img-top" alt="...">
+            <div class="card-body">
+              <h5 class="card-title">Mesas de Exámenes</h5>
+              <p class="card-text">Sesión que gestiona las Mesas de Examen, donde cada mesa tiene asignada una fecha 
+                específica y los requisitos necesarios para la inscripción. Además, permite consultar la cantidad de 
+                estudiantes inscriptos en cada mesa, facilitando un seguimiento detallado de la disponibilidad y demanda.</p>
+              <p></p>
+              <p></p>
+                <a href="{% url 'build' %}" class="btn btn-custom">Ir</a>
+            </div>
+          </div>
+
+          <div class="card card-size-large mx-2">
+            <img src="{% static 'images/tipo_inscripcion/Solicitudes.JPG' %}" class="card-img-top" alt="...">
+            <div class="card-body">
+              <h5 class="card-title">Solicitud</h5>
+              <p class="card-text">Sesión que gestiona las solicitudes de estudiantes para inscribirse a las mesas de examen. 
+                El personal encargado debe evaluar si cada estudiante cumple con los requisitos necesarios para la inscripción. 
+                Una vez validada la inscripción, el estudiante se añadirá automáticamente al apartado de "Estudiantes Inscriptos" en la sección de Gestión de Mesas de Examen.</p>
+              <a href="{% url 'build' %}" class="btn btn-custom">Ir</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 {% endblock content %}

@@ -117,7 +117,7 @@ Planes de Estudio
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Guardar Plan de Estudio</button>
+                    <button type="submit" class="botonVer"><i class="fa-solid fa-check"></i> Guardar Plan de Estudio</button>
                 </div>
             </form>
         </div>
@@ -173,7 +173,7 @@ Planes de Estudio
                 </div>
 
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Guardar Materias</button>
+                    <button type="submit" class="botonVer"><i class="fa-solid fa-check"></i> Guardar Materias</button>
                 </div>
             </form>
         </div>
@@ -202,7 +202,7 @@ Planes de Estudio
                     <input type="hidden" name="accion" id="materia-accion">
                 </form>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" id="btnEstablecerPlanActual">Establecer como Plan Actual</button>
+                    <button type="button" class="botonVer" id="btnEstablecerPlanActual"><i class="fa-solid fa-check"></i> Establecer como Plan Actual</button>
                 </div>
             </div>
         </div>
@@ -433,12 +433,12 @@ $('#btnEstablecerPlanActual').on('click', function () {
         message: "¿Está seguro de que desea establecer este plan como el plan actual? Esto desactivará cualquier otro plan actual de la misma carrera.",
         buttons: {
             confirm: {
-                label: 'Sí',
-                className: 'btn-primary'
+                label: 'Sí,establecer',
+                className: 'botonVer'
             },
             cancel: {
-                label: 'No',
-                className: 'btn-secondary'
+                label: 'No,cancelar',
+                className: 'botonDarDeBaja'
             }
         },
         callback: function (result) {
@@ -498,12 +498,12 @@ $('#btnEstablecerPlanActual').on('click', function () {
             message: "¿Está seguro de que desea eliminar este plan de estudio?",
             buttons: {
                 confirm: {
-                    label: 'Sí',
-                    className: 'btn-danger'
+                    label: 'Sí,eliminar plan.',
+                    className: 'botonDarDeBaja'
                 },
                 cancel: {
-                    label: 'No',
-                    className: 'btn-secondary'
+                    label: 'No,cancelar.',
+                    className: 'botonCancelarBaja'
                 }
             },
             callback: function (result) {

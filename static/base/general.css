@@ -77,3 +77,7 @@ footer {
   color: #fff;
   font-size: 16px;
 }
+/* Evitar que el contenido se desplace con modales */
+body.modal-open {
+  padding-right: 0 !important; /* Elimina el margen extra que Bootstrap agrega al abrir el modal */
+}

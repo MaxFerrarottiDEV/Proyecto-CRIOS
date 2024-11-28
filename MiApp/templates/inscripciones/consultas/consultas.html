@@ -30,6 +30,16 @@ Inscripciones - Consultas de datos de estudiantes
                     <option value="4" {% if request.GET.curso == "4" %}selected{% endif %}>4to Año</option>
                     <option value="5" {% if request.GET.curso == "5" %}selected{% endif %}>5to Año</option>
                 </select>
+                
+                <label for="filtroCarrera" class="form-label mt-3">Filtrar por carrera:</label>
+                <select id="filtroCarrera" name="carrera" class="form-select" onchange="this.form.submit()">
+                    <option value="" {% if not request.GET.carrera %}selected{% endif %}>Todas las carreras</option>
+                    {% for carrera in carreras %}
+                        <option value="{{ carrera.id_carrera }}" {% if request.GET.carrera == carrera.id_carrera|stringformat:"s" %}selected{% endif %}>
+                            {{ carrera.nombre }}
+                        </option>
+                    {% endfor %}
+                </select>
             </form>
         </div>
         {% if estudiantes %}
@@ -68,9 +78,9 @@ Inscripciones - Consultas de datos de estudiantes
                         <td>{{ estudiante.id_datinsc.dni }}</td>                
                         <td>{{ estudiante.insccarreras_set.first.fecha_insc }}</td>
                         <td>
-                            <a href="{% url 'ver_datos' estudiante.id_estudiante %}" class="btn btn-info btn-sm botonVer"><i class="fa-solid fa-eye"></i> Ver datos</a>
+                            <a href="{% url 'ver_datos' estudiante.id_estudiante %}" class="botonVer"><i class="fa-solid fa-eye"></i> Ver datos</a>
                             <a href="#" 
-                                class="btn btn-danger btn-sm botonEliminar" 
+                                class=" botonEliminar" 
                                 data-id_estudiante="{{ estudiante.id_estudiante }}">
                                 <i class="fa-solid fa-user-large-slash"></i> Dar de baja
                             </a>
