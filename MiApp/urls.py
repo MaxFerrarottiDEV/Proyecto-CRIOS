@@ -66,8 +66,24 @@ urlpatterns = [
 
     #Modulo de estados Curriculares - Gestión de Estados Curriculares:
     path('estadosCurriculares/estados', views.estados, name='estados'),
-    path('estadosCurriculares/estados', views.agregarNota, name='agregarNota'),
+    path('obtener-materias_/', views.obtener_materias_estados, name='obtener_materias_estados'),
     path('estadosCurriculares/agregar_nota/<str:dni>/', views.agregar_nota, name='agregar_nota'),
     path('estadosCurriculares/verEstado/<str:dni>/', views.verEstado, name='verEstado'),
+    path('modificar_nota/<int:id_estadocurricular>/<int:dni>/', views.modificar_nota, name='modificar_nota'),
     path('pdf_estadoCurricular', views.pdf_estadoCurricular, name='descargar_pdf'),
+
+    # examenes gestion
+    path('examenes/gestionExamenes/',views.gestion_Examenes, name='gestion_Examenes'),
+    path('examenes/obtener_examenes/',views.obtener_examenes, name='Obtener_examenes'),
+    path('examenes/obtener_materias/',views.obtener_materias_ex, name='obtener_materias'),
+    path('examenes/agregar_examen/', views.agregar_examen, name='agregar_examen'),
+    path('examenes/eliminar_mesaExamen/<int:id_mesaexamen>/',views.eliminar_mesaExamen, name='eliminar_mesaExamen'),
+    path('examenes/editar_mesaExamen/<int:id_mesaexamen>/',views.editar_mesaExamen, name='editar_mesaExamen'),
+    path('examenes/ver_inscriptos/<int:id_mesaexamen>/',views.ver_inscExa, name='ver_inscriptos'),
+
+    # INSCRIPCIÓN MESA EXAMENS
+    path('Examenes/solicitud_examenes/',views.solicitud_examenes, name='solicitud_examenes'),
+    path('Examenes/inscripcion_mesaExamen/<int:id_estudiante>/',views.inscribir_examen, name='inscribir_examen'),
+    path('examenes/fechas_disponibles/<int:materiaId>/',views.fechas_disponibles, name='fechas_disponibles'),
+    path('examenes/confirmar_inscripcion/',views.confirmar_inscripcion, name='confirmar_inscripcion'),
     ]

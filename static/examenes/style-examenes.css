@@ -1,0 +1,6 @@
+.custom-width {
+    width: 50%; /* Ajusta el ancho según tus necesidades */
+    margin: 0;  /* Elimina el centrado */
+    display: block; /* Asegura que el select se comporte como un bloque */
+    margin-left: 20px
+}

@@ -67,7 +67,7 @@
     <div class="card-container mt-5">
       <!-- Tarjeta 1 -->
       <div class="card" style="width: 17.5rem; height: 25rem;">
-        <img src="{% static 'images/home/Solicitudes.jpg' %}" class="card-img-top" alt="formulario">
+        <img src="{% static 'images/home/SeccionSolicitud.png' %}" class="card-img-top" alt="formulario">
         <div class="card-body">
           <h5 class="card-title">Inscripciones</h5>
           <p class="card-text">Permite gestionar solicitudes de inscripción de nuevos candidatos y revisar o actualizar la información de los estudiantes ya registrados.</p>
@@ -76,33 +76,72 @@
       </div>
       <!-- Tarjeta 2 -->
       <div class="card" style="width: 17.5rem; height: 25rem;">
-        <img src="{% static 'images/home/EstCur.jpg' %}" class="card-img-top" alt="formulario">
+        <img src="{% static 'images/home/SeccionEstadoCurricular.png' %}" class="card-img-top" alt="formulario">
         <div class="card-body">
           <h5 class="card-title">Estados Curriculares</h5>
           <p class="card-text">Gestiona y visualiza la información académica de los estudiantes, crea planes de estudio, asigna materias y define un plan como "actual".</p>
-          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#inscripcionesModal">Acceder</button>
+          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#estadosModal">Acceder</button>
         </div>
       </div>
       <!-- Tarjeta 3 -->
       <div class="card" style="width: 17.5rem; height: 25rem;">
-        <img src="{% static 'images/home/formularioIns.png' %}" class="card-img-top" alt="formulario">
+        <img src="{% static 'images/home/SeccionInscripcionExamen.png' %}" class="card-img-top" alt="formulario">
         <div class="card-body">
           <h5 class="card-title">Exámenes</h5>
           <p class="card-text">Permite gestionar fechas de mesas de exámenes, consultar estudiantes inscriptos y evaluar requisitos para inscripciones.</p>
           <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#examenesModal">Acceder</button>
         </div>
       </div>
-      <!-- Tarjeta 4 -->
+      <!-- Tarjeta 4 --> 
       <div class="card" style="width: 17.5rem; height: 25rem;">
-        <img src="{% static 'images/home/manualusuario.png' %}" class="card-img-top" alt="formulario">
+        <img src="{% static 'images/home/manualusuario.png' %}" class="card-img-top" alt="manual">
         <div class="card-body">
           <h5 class="card-title">Manual de usuario:</h5>
-          <p class="card-text">Presione en el boton de descargar para obtener a detalle la información de la funcionalidad de toda la pagina en general.</p>
-          <a href="{% url 'build' %}" class="btn btn-primary"><i class="fa-solid fa-download"></i> Descargar</a>
+          <p class="card-text">Presione en el botón de descargar para obtener a detalle la información de la funcionalidad de toda la página en general.</p>
+          <!-- Botón actualizado para descargar el archivo PDF -->
+          <a href="{% static 'ManualUsuario.pdf' %}" class="btn btn-primary" download>
+            <i class="fa-solid fa-download"></i> Descargar
+          </a>
         </div>
       </div>
     </div><br><br>
-    <!-- Modal de Estados Curriculares -->
+
+<!-- Modal de Inscripciones -->
+<div class="modal fade" id="inscripcionesModal" tabindex="-1" aria-labelledby="inscripcionesModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg modal-uniform">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="inscripcionesModalLabel">INSCRIPCIONES - FUNCIONALIDADES</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="d-flex justify-content-center">
+          <div class="card card-size-large mx-2">
+            <img src="{% static 'images/tipo_inscripcion/Solicitudes.JPG' %}" class="card-img-top" alt="...">
+            <div class="card-body">
+              <h5 class="card-title">Solicitudes</h5>
+              <p class="card-text">Permite gestionar inscripciones de candidatos mediante un formulario integrado en la plataforma. Una vez completada la solicitud, esta se registra automáticamente 
+                en la tabla de solicitudes para su seguimiento y gestión.</p>
+              <a href="{% url 'lista_solicitudes' %}" class="btn btn-custom">Ir</a>
+            </div>
+          </div>
+
+          <div class="card card-size-large mx-2">
+            <img src="{% static 'images/tipo_inscripcion/Consultas.JPG' %}" class="card-img-top" alt="...">
+            <div class="card-body">
+              <h5 class="card-title">Consultas</h5>
+              <p class="card-text">Proporciona una tabla con el listado completo de los estudiantes inscritos en el profesorado. Además, permite adjuntar un legajo digital, modificar la información 
+                del estudiante y eliminar su registro en caso de abandono de la carrera.</p>
+              <a href="{% url 'consultas' %}" class="btn btn-custom">Ir</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de Estados Curriculares -->
 <div class="modal fade" id="estadosModal" tabindex="-1" aria-labelledby="estadosModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg modal-uniform">
     <div class="modal-content">
@@ -111,13 +150,12 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <div class="d-flex justify-content-center" style="background-color: #4d82b4">
+        <div class="d-flex justify-content-center">
           <div class="card card-size-large mx-2">
-            <img src="{% static 'images/tipo_inscripcion/Solicitudes.JPG' %}" class="card-img-top" alt="...">
+            <img src="{% static 'images/home/SeccionPlan.png' %}" class="card-img-top" alt="...">
             <div class="card-body">
               <h5 class="card-title">Planes de Estudio</h5>
-              <p class="card-text">Sesión para gestionar diversos planes de estudio.
-                Cada plan está compuesto por un conjunto de materias. Además, incluye una función que posibilita designar un único plan de estudio como "actual".</p>
+              <p class="card-text">Sesión para gestionar planes de estudio, compuestos por un conjunto de materias, y designar un plan como "actual".</p>
               <p></p>
               <p></p>
               <p></p>
@@ -126,12 +164,10 @@
           </div>
 
           <div class="card card-size-large mx-2">
-            <img src="{% static 'images/tipo_inscripcion/Solicitudes.JPG' %}" class="card-img-top" alt="...">
+            <img src="{% static 'images/home/SeccionEstadoCurricular.png' %}" class="card-img-top" alt="...">
             <div class="card-body">
               <h5 class="card-title">Estado Curricular</h5>
-              <p class="card-text">Sesión para gestionar los estados curriculares de los estudiantes. Permite realizar 
-                búsquedas rápidas utilizando el DNI de cada estudiante. Además, incluye la opción de descargar el estado 
-                curricular en formato PDF, facilitando su envío o impresión para realizar trámites administrativos o consultas académicas de manera ágil.</p>
+              <p class="card-text">Sesión para gestionar estados curriculares, con búsqueda rápida por DNI y descarga en PDF para trámites administrativos.</p>
               <a href="{% url 'estados' %}" class="btn btn-custom">Ir</a>
             </div>
           </div>
@@ -152,26 +188,22 @@
       <div class="modal-body">
         <div class="d-flex justify-content-center">
           <div class="card card-size-large mx-2">
-            <img src="{% static 'images/tipo_inscripcion/Solicitudes.JPG' %}" class="card-img-top" alt="...">
+            <img src="{% static 'images/home/SeccionMesa.png' %}" class="card-img-top" alt="...">
             <div class="card-body">
               <h5 class="card-title">Mesas de Exámenes</h5>
-              <p class="card-text">Sesión que gestiona las Mesas de Examen, donde cada mesa tiene asignada una fecha 
-                específica y los requisitos necesarios para la inscripción. Además, permite consultar la cantidad de 
-                estudiantes inscriptos en cada mesa, facilitando un seguimiento detallado de la disponibilidad y demanda.</p>
+              <p class="card-text">Sesión para gestionar mesas de examen con fechas, requisitos y control de inscripciones.</p>
               <p></p>
               <p></p>
-                <a href="{% url 'build' %}" class="btn btn-custom">Ir</a>
+                <a href="{% url 'gestion_Examenes' %}" class="btn btn-custom">Ir</a>
             </div>
           </div>
 
           <div class="card card-size-large mx-2">
-            <img src="{% static 'images/tipo_inscripcion/Solicitudes.JPG' %}" class="card-img-top" alt="...">
+            <img src="{% static 'images/home/SeccionInscripcionExamen.png' %}" class="card-img-top" alt="...">
             <div class="card-body">
               <h5 class="card-title">Solicitud</h5>
-              <p class="card-text">Sesión que gestiona las solicitudes de estudiantes para inscribirse a las mesas de examen. 
-                El personal encargado debe evaluar si cada estudiante cumple con los requisitos necesarios para la inscripción. 
-                Una vez validada la inscripción, el estudiante se añadirá automáticamente al apartado de "Estudiantes Inscriptos" en la sección de Gestión de Mesas de Examen.</p>
-              <a href="{% url 'build' %}" class="btn btn-custom">Ir</a>
+              <p class="card-text">Sesión para gestionar solicitudes de inscripción, validando requisitos y añadiendo estudiantes a las mesas.</p>
+              <a href="{% url 'solicitud_examenes' %}" class="btn btn-custom">Ir</a>
             </div>
           </div>
         </div>

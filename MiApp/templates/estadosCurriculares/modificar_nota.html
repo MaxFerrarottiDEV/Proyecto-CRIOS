@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% block title %} 
+Modificar Nota 
+{% endblock %}
+{% load static %}
+{% block head %} 
+    <link href="{% static '/inscripciones/botones.css' %}" rel="stylesheet">
+{% endblock %}
+{% block content %}
+
+<div class="container mt-4">
+    <div class="card shadow p-4">
+        <div class="card-header" style="background-color: #005187; color: white;">
+            <h1>Modificar nota de el estudiante:   {{estudiante.id_datinsc.apellido}} {{estudiante.id_datinsc.nombre}}</h1>
+            <h2>Asignatura: {{ estado_curricular.id_matxplan_estcur.id_materia.nombre }}</h2>
+
+        </div>
+        <div class="card-body">
+            <!-- Información del estudiante -->
+            <h5 class="mb-3">Información del Estudiante {{ estudiante.id_datinsc.apellido }} </h5>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="legajo" class="form-label">Legajo N</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-card-list"></i></span>
+                        <input type="text" id="legajo" class="form-control" value="{{ estudiante.nro_legajo }}" readonly>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <label for="dni" class="form-label">DNI</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-file-earmark-person"></i></span>
+                        <input type="text" id="dni" class="form-control" value="{{ estudiante.id_datinsc.dni }}" readonly>
+                    </div>
+                </div>
+            </div>
+    
+    
+            <!-- Formulario para modificar la nota -->
+            <form method="POST">
+                {% csrf_token %}
+                <h5 class="mb-3">Modificar Nota</h5>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="nota" class="form-label">
+                            <i class="fas fa-star me-2"></i> Nueva Nota
+                        </label>
+                        <input 
+                            type="number" name="nota" id="nota" class="form-control" 
+                            value="{{ estado_curricular.nota }}" required max="999999"oninput="if(this.value.length > 6) this.value = this.value.slice(0, 6);">
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <label for="estado" class="form-label"><i class="fas fa-clipboard-check me-2"></i> Condición Nota</label>
+                        <select name="estado" id="estado" class="form-control">
+                            <option value="Libre" {% if estado_curricular.condicion_nota == 'Libre' %}selected{% endif %}>Libre</option>
+                            <option value="Regular" {% if estado_curricular.condicion_nota == 'Regular' %}selected{% endif %}>Regular</option>
+                            <option value="Promocionado" {% if estado_curricular.condicion_nota == 'Promocionado' %}selected{% endif %}>Promocionado</option>
+                        </select>
+                    </div>
+                </div>
+        
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="folio" class="form-label"><i class="fas fa-folder me-2"></i> Folio del Estudiante</label>
+                        <input type="text" name="folio" id="folio" class="form-control" value="{{ estado_curricular.folio }}">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="fecha" class="form-label"><i class="fas fa-calendar-alt me-2"></i> Fecha Finalización</label>
+                        <input type="date" name="fecha" id="fecha" class="form-control" value="{{ estado_curricular.fecha_finalizacion }}" required>
+                    </div>
+                </div>
+        
+                <div class="text-end">
+                    <a href="{% url 'verEstado' estudiante.id_datinsc.dni %}" class="botonVolver">
+                        <i class="fa-solid fa-arrow-left"></i> Volver
+                    </a>
+                    <button type="submit" class="botonVer">
+                        <i class="fa-solid fa-check"></i> Actualizar Nota
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

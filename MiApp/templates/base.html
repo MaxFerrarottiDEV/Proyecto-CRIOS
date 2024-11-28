@@ -21,6 +21,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
     <!-- FontAwesome - Iconos -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
   </head>
   <body class="d-flex flex-column min-vh-100">
     <!-- Navbar -->
@@ -44,9 +46,9 @@
                 <i class="fa-solid fa-file-lines"></i> Examenes
               </a>
               <ul class="dropdown-menu" aria-labelledby="examenesDropdown">
-                <li><a class="dropdown-item" href="{% url 'build' %}">Gestión de Mesas de Examen</a></li>
+                <li><a class="dropdown-item" href="{% url 'gestion_Examenes' %}">Gestión de Mesas de Examen</a></li>
                 <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="{% url 'build' %}">Solicitudes a Mesas de Examen</a></li>
+                <li><a class="dropdown-item" href="{% url 'solicitud_examenes' %}">Solicitudes a Mesas de Examen</a></li>
               </ul>
             </li>
             <!-- Dropdown de ESTADOS CURRICULARES -->

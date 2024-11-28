@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% block title %} 
+Ver Inscriptos
+{% endblock %}
+{% load static %}
+{% block head %}
+    {% csrf_token %}
+    <meta name="csrf-token" content="{{ csrf_token }}">
+    <link href="{% static 'inscripciones/botones.css' %}" rel="stylesheet">
+{% endblock %}
+
+
+{% block content %}
+<div class="container mt-5">
+    <a href="{% url 'gestion_Examenes' %}" class="btn btn-info btn-sm mx-1 botonVolver"><i class="fa-solid fa-arrow-left"></i>Volver</a>
+    <h2 style="text-align: center;">ALUMNOS INSCRIPTOS</h2>
+    <hr>
+    <form method="post" action="{% url 'confirmar_inscripcion' %}" autocomplete="off">
+        {% if messages %}
+        <div class="alert alert-info" role="alert">
+            {% for message in messages %}
+                {{ message }}
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% csrf_token %}
+        <div class="container mt-4">
+            <!-- Card -->
+            <div class="card">
+                <!-- Card Header --> 
+                {% if materia %} 
+                <div class="card-header " style="background-color: #005187; color: white;">
+                    <h4>Materia: {{ materia.nombre }}</h4>
+                </div>  
+                {% endif %}
+                <!-- Card Body -->
+                <div class="card-body">
+                    {% if inscriptos %}
+                    <table class="table table-striped table-bordered">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>#</th>
+                                <th>DNI</th>
+                                <th>Nombre y Apellido</th>
+                                <th>Nro de Legajo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for alumno in inscriptos %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ alumno.dni }}</td>
+                                <td>{{ alumno.nombre }}</td>
+                                <td>{{ alumno.legajo }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% else %}
+                    <p>No hay estudiantes inscritos para esta mesa de examen.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<hr>
+<script>
+
+</script>
+{% endblock %}
+

@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block head %} 
+    <link href="{% static 'examenes/style-examenes.css' %}" rel="stylesheet">
+{% endblock %} 
+
+{% block content %}
+<form method="post" action="{% url 'confirmar_inscripcion' %}" autocomplete="off">
+        {% if messages %}
+        <div class="alert alert-info" role="alert">
+            {% for message in messages %}
+                {{ message }}
+            {% endfor %}
+        </div>
+    {% endif %}
+    {% csrf_token %}
+    <div class="card">
+        <div class="card-header " style="background-color: #005187; color: white;">
+            <h4>Datos Personales</h4>
+        </div>
+        <ul>
+            <br>
+            <li><strong>DNI:</strong> {{ datos.dni }}</li>
+            <li><strong>Nombre:</strong> {{ datos.nombre }} {{ datos.apellido }}</li>
+            <li><strong>Nro de Legajo:</strong> {{ datos.nro_legajo }}</li>
+        </ul>
+
+        <!-- Campo oculto para pasar el ID del estudiante -->
+        <input type="hidden" name="id_estudiante" value="{{ estudiante.id_estudiante }}">
+
+        <!-- Campo de selección para las mesas de examen -->
+        <div class="form-group">
+            <select class="form-control custom-width" id="materia" name="materia" required>
+                <option value="" disabled selected>Seleccione una Mesa de Examen</option>
+                {% for mesa in mesas_examenes %} 
+                    <option value="{{ mesa.id_mesaexamen }}">
+                        Materia: {{  mesa.id_matxplan_me.id_materia.nombre }} 
+                        | Fecha: {{ mesa.fecha_examen }} 
+                        | Hora: {{ mesa.hora_examen }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="text-left">
+            <br>
+            <button type="submit" class="btn btn-success ms-3">Confirmar Inscripción</button>
+            <a href="{% url 'solicitud_examenes' %}" class="btn btn-secondary"">Cancelar</a>
+        </div>
+        <br>
+    </div>
+    <br>
+</form>
+
+<hr>
+<script>
+document.querySelector('form').addEventListener('submit', function(e) {
+        const materia = document.getElementById('materia').value;
+        if (!materia) {
+            alert('Por favor, seleccione una materia.');
+            e.preventDefault();  // Evita el envío del formulario
+        }
+    });
+</script>
+{% endblock %}

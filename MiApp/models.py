@@ -267,11 +267,11 @@ class InscCarreras(models.Model):
 
 
 class InscExamenes(models.Model):
-    id_inscexamen = models.AutoField(db_column='Id_InscExamen', primary_key=True)  # Field name made lowercase.
-    id_estudiante_ie = models.ForeignKey(Estudiantes, models.DO_NOTHING, db_column='Id_Estudiante_IE', blank=True, null=True)  # Field name made lowercase.
-    id_mesaexamen = models.ForeignKey('Mesas_Examenes', models.DO_NOTHING, db_column='Id_MatXPlan_IE', blank=True, null=True)  # Field name made lowercase.
-    id_estadocuota_ie = models.ForeignKey(EstadosCuotas, models.DO_NOTHING, db_column='Id_EstadoCuota_IE', blank=True, null=True)  # Field name made lowercase.
-    id_empleado_ie = models.ForeignKey(Empleados, models.DO_NOTHING, db_column='Id_Empleado_IE', blank=True, null=True)  # Field name made lowercase.
+    id_inscexamen = models.AutoField(db_column='Id_InscExamen', primary_key=True)
+    estudiante = models.ForeignKey(Estudiantes, models.DO_NOTHING, db_column='Id_Estudiante_IE', blank=True, null=True)
+    id_mesaexamen = models.ForeignKey('Mesas_Examenes', models.DO_NOTHING, db_column='Id_MesaExamen', blank=True, null=True)
+    id_estadocuota_ie = models.ForeignKey(EstadosCuotas, models.DO_NOTHING, db_column='Id_EstadoCuota_IE', blank=True, null=True)
+    id_empleado_ie = models.ForeignKey(Empleados, models.DO_NOTHING, db_column='Id_Empleado_IE', blank=True, null=True)
 
     class Meta:
         managed = False
@@ -301,12 +301,22 @@ class MateriasxplanesEstudios(models.Model):
         managed = False
         db_table = 'materiasxplanes_estudios'
 
+    def __str__(self):
+        # Devuelve el nombre de la materia asociada
+        if self.id_materia:
+            # Asumiendo que nombre es un campo en el modelo Materias
+            return self.id_materia.nombre
+        return f"Materia (ID: {self.id_matxplan})"
+
 
 class Mesas_Examenes(models.Model):
-    id_mesaexamen = models.AutoField(db_column='Id_MesaExamen', primary_key=True)
-    id_matxplan_me = models.ForeignKey('MateriasxplanesEstudios', models.DO_NOTHING, db_column='Id_MatXPlan_ME', blank=True, null=True)
+    id_mesaexamen = models.AutoField(
+        db_column='Id_MesaExamen', primary_key=True)
+    id_matxplan_me = models.ForeignKey(
+        'MateriasxplanesEstudios', models.DO_NOTHING, db_column='Id_MatXPlan_ME', blank=True, null=True)
     fecha_examen = models.DateField(db_column='Fecha_Examen')
-    hora_examen = models.TimeField(db_column='Hora_Examen',blank=True, null=True)
+    hora_examen = models.TimeField(
+        db_column='Hora_Examen', blank=True, null=True)
 
     class Meta:
         managed = False

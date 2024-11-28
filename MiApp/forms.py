@@ -6,6 +6,7 @@ from django.core.exceptions import ValidationError # type: ignore
 from django.contrib.auth.models import User # type: ignore
 from MiApp.models import DatInsc # type: ignore
 from django import forms # type: ignore
+from .models import Mesas_Examenes, MateriasxplanesEstudios
 
 class CustomRegisterForm(UserCreationForm):
     email = forms.EmailField(required=True)
@@ -156,3 +157,34 @@ class PreinscripcionForm(forms.ModelForm):
         if preg_2 in ['', None]:  # Si está vacío o es None
             return 'Sin responder'  # Devuelve 'Sin responder' en lugar de una cadena vacía
         return preg_2
+
+
+class Mesas_ExamenesForm(forms.ModelForm):
+    id_matxplan_me = forms.ModelChoiceField(
+        queryset=MateriasxplanesEstudios.objects.all(),
+        label="Materia",
+        # Agregar una clase personalizada
+        widget=forms.Select(attrs={'class': 'form-control custom-class'}),
+        empty_label="Selecciona una materia"
+    )
+    fecha_examen = forms.DateField(
+        widget=forms.DateInput(
+            attrs={
+                'type': 'date',
+                'class': 'form-control custom-class',  # Clases adicionales para personalización
+            },
+            format='%Y-%m-%d',
+        ),
+        input_formats=['%Y-%m-%d'],
+        label="Fecha de Examen"
+    )
+    hora_examen = forms.TimeField(
+        widget=forms.TimeInput(
+            attrs={'type': 'time', 'class': 'form-control custom-class'}
+        ),
+        label="Hora de Examen"
+    )
+
+    class Meta:
+        model = Mesas_Examenes
+        fields = ['id_matxplan_me', 'fecha_examen', 'hora_examen']

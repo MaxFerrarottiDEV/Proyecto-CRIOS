@@ -1,4 +1,7 @@
-from datetime import date
+from io import BytesIO
+import json
+import logging
+from datetime import date, datetime
 
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash, logout, login as auth_login, authenticate
@@ -14,16 +17,19 @@ from django.urls import reverse
 
 from MiApp.management.commands.sync_firebase_to_mysql import Command
 
-from io import BytesIO
-
+# importaciones de mauro para generar pdfs
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import letter  # type: ignore
+from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
 from reportlab.lib.units import inch  # type: ignore
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfgen import canvas  # type: ignore
-from reportlab.platypus import Table, TableStyle  # type: ignore
+from reportlab.platypus import Image, Paragraph, Spacer, Table, TableStyle  # type: ignore
 
-from .forms import PreinscripcionForm
-from .models import CamposEstudios,Carreras, DatInsc, EstadosCurriculares, Estudiantes, InscCarreras, Materias, MateriasxplanesEstudios, PlanesEstudios, TiposUnidades
+from .forms import PreinscripcionForm, Mesas_ExamenesForm
+from .models import CamposEstudios, Carreras, DatInsc, EstadosCurriculares, Estudiantes, InscCarreras, Materias, MateriasxplanesEstudios, PlanesEstudios, TiposUnidades, Mesas_Examenes, InscExamenes
+
 
 def login_view(request):
     if request.user.is_authenticated:
@@ -54,8 +60,6 @@ def register(request):
             form.save() 
             messages.success(request, '¡Cuenta creada exitosamente! Ahora puedes iniciar sesión.')
             return redirect('login')  
-        else:
-            messages.error(request, 'Hubo un error en la creación de la solicitud. Inténtalo de nuevo.')
     else:
         form = UserCreationForm()
     
@@ -453,7 +457,6 @@ def guardar_materias_plan(request):
         return redirect('plan_estudio')
 
     
-
 @login_required
 def obtener_materias_plan(request, plan_id):
     try:
@@ -623,71 +626,148 @@ def estados(request):
             if estudiante:
                 estado_curricular = EstadosCurriculares.objects.filter(id_estudiante_estcur=estudiante)
                 materias = Materias.objects.all()
+                planes = PlanesEstudios.objects.select_related('id_carrera').all()
                 context = {
                     'estudiante': estudiante,
                     'estudiante_datinsc': estudiante_datinsc,
                     'estado_curricular': estado_curricular,
-                    'materias': materias  }
+                    'materias': materias,
+                    'planes':planes  }
+                
             else:
                 context = {'error': 'No se encontró el estado curricular para este estudiante.'}
         else:
             context = {'error': 'Estudiante no encontrado.'}
     else:
         lista_estudiantes = Estudiantes.objects.all()
+        planes = PlanesEstudios.objects.select_related('id_carrera').all()
+        plan_id = request.GET.get('plan')
         materias = Materias.objects.all()  #
         context = {
             'estudiantes': lista_estudiantes,
+            'planes': planes,
             'materias': materias }
 
     return render(request, 'estadosCurriculares/estados.html', context)
 
 
-@login_required
-def agregarNota(request):
-    if request.method == 'POST':
-        materia_id = request.POST.get('materia')
-        condicion_nota = request.POST.get('condicion')
-        nota = request.POST.get('nota')
-        fecha_finalizacion = request.POST.get('fecha')
-        estudiante_id = request.POST.get('estudiante_id')
-
-        nueva_nota = EstadosCurriculares(
-            id_matxplan_estcur_id=materia_id, 
-            id_estudiante_estcur_id=estudiante_id,
-            condicion_nota=condicion_nota,
-            nota=nota,
-            fecha_finalizacion=fecha_finalizacion
-        )
-        nueva_nota.save()
-        return redirect('estados')
-    else:
-        materias = Materias.objects.all()
-        return render(request, 'estados.html', {'materias': materias})
     
+@login_required
+def obtener_materias_estados(request):
+    plan_id = request.GET.get('plan_id')
+    if plan_id:
+        materias = MateriasxplanesEstudios.objects.filter(
+            id_planestudio=plan_id
+        ).select_related('id_materia').values(
+            'id_materia', 'id_materia__nombre', 'anio_materia'
+        ).order_by('anio_materia', 'id_materia__nombre')
+        
+        # Agrupar materias por año
+        materias_agrupadas = {}
+        for materia in materias:
+            anio = materia['anio_materia']
+            if anio not in materias_agrupadas:
+                materias_agrupadas[anio] = []
+            materias_agrupadas[anio].append({
+                'id_materia': materia['id_materia'],
+                'nombre': materia['id_materia__nombre']
+            })
+        return JsonResponse(materias_agrupadas, safe=False)
+    return JsonResponse({'error': 'No se encontró el plan'}, status=400)
 
-@login_required    
+@login_required
 def agregar_nota(request, dni):
     estudiante = get_object_or_404(Estudiantes, id_datinsc__dni=dni)
     
     if request.method == 'POST':
+        plan_id = request.POST.get('plan') 
         materia_id = request.POST.get('materia')
         condicion = request.POST.get('condicion')
         nota = request.POST.get('nota')
         fecha = request.POST.get('fecha')
-
-        # Crear la nueva nota
-        materia = get_object_or_404(Materias, id=materia_id)
-        nuevo_estado = EstadosCurriculares(
-            id_estudiante=estudiante,
-            id_matxplan=materia,
-            condicion_nota=condicion,
-            nota=nota,
-            fecha_finalizacion=fecha
-        )
-        nuevo_estado.save()
-        return redirect('estado_curricular', dni=dni)
+        folio = request.POST.get('folio')
+        
+        # Obtener el plan y la materia
+        plan = get_object_or_404(PlanesEstudios, id_planestudio=plan_id)
+        materia = get_object_or_404(MateriasxplanesEstudios, id_materia=materia_id, id_planestudio=plan_id)
+        
+        # Buscar si ya existe un estado curricular para esta materia y estudiante
+        with transaction.atomic():
+            estado_existente = EstadosCurriculares.objects.filter(
+                id_estudiante_estcur=estudiante, 
+                id_matxplan_estcur=materia
+            ).first()
+            
+            if estado_existente:
+                # Sobreescribir el estado existente
+                estado_existente.condicion_nota = condicion
+                estado_existente.nota = nota
+                estado_existente.fecha_finalizacion = fecha
+                estado_existente.folio = folio
+                estado_existente.save()
+                messages.success(request, "Nota actualizada correctamente.")
+            else:
+                # Crear un nuevo estado curricular
+                nuevo_estado = EstadosCurriculares(
+                    id_estudiante_estcur=estudiante,
+                    id_matxplan_estcur=materia,
+                    condicion_nota=condicion,
+                    nota=nota,
+                    fecha_finalizacion=fecha,
+                    folio=folio
+                )
+                nuevo_estado.save()
+                messages.success(request, "Nota agregada correctamente.")
+        
+        return redirect('estados')
+    
+    # Obtener planes y materias para el formulario
+    planes = PlanesEstudios.objects.select_related('id_carrera').all()
     materias = Materias.objects.all()
-    return render(request, 'estadosCurriculares/agregar_nota.html', {'estudiante': estudiante, 'materias': materias})
+    plan_id = request.GET.get('plan')
+    if plan_id:
+        materias = Materias.objects.filter(
+            materiasxplanesestudios__id_planestudio=plan_id).distinct()
+    
+    return render(request, 'estadosCurriculares/agregar_nota.html', {
+        'estudiante': estudiante,
+        'materias': materias,
+        'planes': planes
+    })
+
+
+def modificar_nota(request, id_estadocurricular, dni):
+    estado_curricular = get_object_or_404(EstadosCurriculares, pk=id_estadocurricular)
+    estudiante = get_object_or_404(Estudiantes, id_datinsc__dni=dni)
+
+    if request.method == 'POST':
+        # Obtener los valores enviados en el formulario
+        nueva_nota = request.POST.get('nota')
+        nueva_condicion = request.POST.get('estado')
+        nuevo_folio = request.POST.get('folio')
+        nueva_fecha = request.POST.get('fecha')
+
+        # Actualizar los campos del estado curricular
+        estado_curricular.nota = nueva_nota
+        estado_curricular.condicion_nota = nueva_condicion
+        estado_curricular.folio = nuevo_folio
+        estado_curricular.fecha_finalizacion = nueva_fecha
+
+        # Guardar los cambios
+        estado_curricular.save()
+
+        # Redirigir con un mensaje de éxito
+        messages.success(request, "Nota modificada correctamente.")
+        return redirect('verEstado', dni=dni)
+
+    # Renderizar la plantilla con los datos necesarios
+    return render(request, 'estadosCurriculares/modificar_nota.html', {
+        'estado_curricular': estado_curricular,
+        'estudiante': estudiante,
+    })
+
+
+
 
 
 @login_required
@@ -696,41 +776,382 @@ def pdf_estadoCurricular(request):
     if not dni:
         return HttpResponse("DNI no proporcionado.", status=400)
     estudiante = get_object_or_404(Estudiantes, id_datinsc__dni=dni)
+    estados_curriculares = estudiante.estadoscurriculares_set.order_by(
+    'id_matxplan_estcur__anio_materia')
     buffer = BytesIO()
     p = canvas.Canvas(buffer, pagesize=letter)
-    p.drawString(100, 710, f"Apellidos: {estudiante.id_datinsc.apellido}"),p.drawString(100, 690, f"Nombres: {estudiante.id_datinsc.nombre}")
-    p.drawString(100, 750, f"Legajo N: {estudiante.nro_legajo}"), p.drawString(100, 730, f"DNI: {estudiante.id_datinsc.dni}")
-    p.drawString(100, 650, "Notas del Estudiante")
-    estado_curricular = estudiante.estadoscurriculares_set.all()
-   
-    data = [["Materia", "Estado", "Nota", "Fecha"]]  
-    for materia in estado_curricular:
-        data.append([
-            materia.id_matxplan_estcur.id_materia.nombre,
-            materia.condicion_nota,
-            str(materia.nota),
-            materia.fecha_finalizacion.strftime("%d/%m/%Y")
-        ])
+
+    def draw_header():
+        logo_path = "static/images/crios_logo.jpg"
+        p.drawImage(logo_path, 40, 700, width=100, height=100)
+        p.setFont("Times-Bold", 16)
+        p.drawString(150, 750, "Instituto Superior de Formación Docente N°8022 - CRIOS")
+        p.setFont("Times-Roman", 14)
+        fecha = f"Fecha de emisión: {datetime.now().strftime('%d/%m/%Y')}"
+        hora = f"Hora de emisión: {datetime.now().strftime('%H:%M:%S')}"
+        p.drawString(150, 730, fecha)
+        p.drawString(400, 730, hora)
+
+    def draw_title(y, spacing=1):
+        p.setFont("Times-Bold", 16)
+        p.drawCentredString(300, y, "Certificado de Estudio")
+        return y - spacing
+
+    def draw_description(y):
+        text = (
+            f"El rectorado del Instituto Superior de Formación Docente N°8022 - CRIOS, "
+            f"certifica que el alumno/a {estudiante.id_datinsc.apellido} {estudiante.id_datinsc.nombre} "
+            f"con documento: {estudiante.id_datinsc.dni}, es alumno regular de la carrera.")
+        styles = getSampleStyleSheet()
+        style = styles["Normal"]
+        style.fontName = "Times-Roman"
+        style.fontSize = 12
+        style.textColor = colors.black
+        style.alignment = 1
+        paragraph = Paragraph(text, style)
+        paragraph_width, paragraph_height = paragraph.wrap(500, y)
+        paragraph.drawOn(p, 50, y - paragraph_height)
+        return y - paragraph_height - 20 
     
-    table = Table(data, colWidths=[2*inch, 1.5*inch, 1*inch, 1.5*inch])
-    table.setStyle(TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),  
-        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
-        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-        ('FONTSIZE', (0, 0), (-1, 0), 10),
-        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-        ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
-        ('GRID', (0, 0), (-1, -1), 1, colors.black)
-    ]))
+    def draw_main_content(y):
+        p.setFont("Times-Roman", 12)
+        data = [["Año", "Asignatura", "Condición", "Nota", "Fecha", "Folio"]]
+        styles = getSampleStyleSheet()
+        cell_style = ParagraphStyle(
+            name="CellStyle",
+            fontName="Times-Roman",
+            fontSize=10,
+            leading=12,
+            alignment=1,
+            wordWrap="LTR")
 
-    table.wrapOn(p, 100, 500)
-    table.drawOn(p, 100, 500)
-
+        for estado in estados_curriculares:
+            materia = estado.id_matxplan_estcur
+            asignatura = Paragraph(
+                materia.id_materia.nombre if hasattr(materia, 'id_materia') else "---",
+                cell_style)
+            data.append([
+                materia.anio_materia if hasattr(materia, 'anio_materia') else "---",
+                asignatura,
+                estado.condicion_nota if estado.condicion_nota else "---",
+                str(estado.nota) if estado.nota is not None else "---",
+                estado.fecha_finalizacion.strftime("%d/%m/%Y") if estado.fecha_finalizacion else "---",
+                estado.folio if estado.folio else "---"])
+        table = Table(data, colWidths=[30, 220, 75, 40, 60, 100])
+        table.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#005187")),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+            ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
+            ('FONTNAME', (0, 0), (-1, 0), 'Times-Bold'),
+            ('FONTSIZE', (0, 0), (-1, 0), 8),
+            ('BOTTOMPADDING', (0, 0), (-1, 0), 10),
+            ('BACKGROUND', (0, 1), (-1, -1), colors.whitesmoke),
+            ('GRID', (0, 0), (-1, -1), 1, colors.black),]))
+        table_width, table_height = table.wrap(500, y)
+        table.drawOn(p, 60, y - table_height)
+        return y - table_height - 20  
+    # Generar el PDF
+    draw_header()
+    y = 650
+    y = draw_title(y, spacing=10)
+    y = draw_description(y)
+    y = draw_main_content(y)
     p.showPage()
     p.save()
-    
     buffer.seek(0)
     response = HttpResponse(buffer, content_type='application/pdf')
-    response['Content-Disposition'] = f'attachment; filename="{estudiante.id_datinsc.apellido} {estudiante.id_datinsc.nombre}-Estado Curricular.pdf"'
+    response['Content-Disposition'] = f'attachment; filename="EstadoCurricular {estudiante.id_datinsc.apellido} {estudiante.id_datinsc.nombre}.pdf"'
     return response
+
+
+    # examenes
+@login_required
+def gestion_Examenes(request):
+    return render(request, 'examenes/Gestion/gestion_Examenes.html')
+
+
+@login_required
+def obtener_examenes(request):
+    # Cambiar el modelo a Mesas_Examenes
+    examenes = Mesas_Examenes.objects.select_related('id_matxplan_me').values(
+        'id_mesaexamen',  # ID único de la mesa de examen
+        'id_matxplan_me__id_materia__nombre',  # Nombre de la materia
+        'fecha_examen',
+        'hora_examen'
+    )
+
+    data = [
+        {
+            "Id_MesaExamen": examen["id_mesaexamen"],
+            "materia": examen["id_matxplan_me__id_materia__nombre"],
+            "fecha_examen": examen["fecha_examen"],
+            "hora_examen": examen["hora_examen"]
+        }
+        for examen in examenes
+    ]
+
+    return JsonResponse({"data": data})
+
+
+@login_required
+def obtener_materias_ex(request):
+    materias = MateriasxplanesEstudios.objects.select_related('id_materia').values(
+        'id_matxplan',  # ID de la materia en el plan
+        'id_materia__nombre'  # Nombre de la materia
+    )
+    data = [
+        {
+            "id": materia["id_matxplan"],
+            "nombre": materia["id_materia__nombre"]
+        }
+        for materia in materias
+    ]
+    return JsonResponse({"materias": data})
+
+
+logger = logging.getLogger('mi_aplicacion')
+
+
+@login_required
+@csrf_exempt
+def agregar_examen(request):
+    if request.method == 'POST':
+        try:
+            # Cargar los datos JSON de la solicitud
+            data = json.loads(request.body)
+            id_materia_plan = data.get('materia')
+            fecha_examen = data.get('fecha_examen')
+            hora_examen = data.get('hora_examen')
+
+            # Verificar que los datos no estén vacíos
+            if not id_materia_plan or not fecha_examen or not hora_examen:
+                return JsonResponse({'success': False, 'message': 'Todos los campos son obligatorios.'}, status=400)
+
+            # Verificar si ya existe una mesa de examen con la misma materia, fecha y hora
+            existe = Mesas_Examenes.objects.filter(
+                id_matxplan_me_id=id_materia_plan,
+                fecha_examen=fecha_examen,
+                hora_examen=hora_examen
+            ).exists()
+
+            if existe:
+                return JsonResponse({'success': False, 'message': 'Ya existe una mesa de examen para esta materia en esa fecha y hora.'}, status=409)
+
+            # Crear y guardar la nueva mesa de examen
+            Mesas_Examenes.objects.create(
+                id_matxplan_me_id=id_materia_plan,
+                fecha_examen=fecha_examen,
+                hora_examen=hora_examen
+            )
+
+            return JsonResponse({'success': True, 'message': 'Mesa de examen guardada con éxito.'}, status=201)
+
+        except MateriasxplanesEstudios.DoesNotExist:
+            return JsonResponse({'success': False, 'message': 'Materia no encontrada.'}, status=404)
+        except Exception as e:
+            logger.error(f"Error al guardar la mesa de examen: {e}")
+            return JsonResponse({'success': False, 'message': f'Error inesperado: {str(e)}'}, status=500)
+
+    return JsonResponse({'success': False, 'message': 'Método no permitido.'}, status=405)
+
+
+@login_required
+@csrf_protect
+def eliminar_mesaExamen(request, id_mesaexamen):
+    # Cambiar el modelo a Mesas_Examenes
+    mesaExamen = get_object_or_404(Mesas_Examenes, id_mesaexamen=id_mesaexamen)
+
+    if request.method == 'POST':  # Confirmar eliminación
+        try:
+            mesaExamen.delete()
+            messages.success(
+                request, "La mesa de examen ha sido eliminada correctamente.")
+            return redirect('gestion_Examenes')  # Redirige después de eliminar
+        except Exception as e:
+            messages.error(
+                request, f"Ocurrió un error al eliminar la mesa de examen: {str(e)}")
+
+    # Si es GET, muestra el formulario de confirmación
+    return render(request, 'examenes/Gestion/eliminar_mesaExamen.html', {'mesaExamen': mesaExamen})
+
+
+@login_required
+@csrf_protect
+def editar_mesaExamen(request, id_mesaexamen):
+    # Cambiar el modelo a Mesas_Examenes
+    mesaExamen = get_object_or_404(Mesas_Examenes, id_mesaexamen=id_mesaexamen)
+
+    if request.method == 'POST':
+        # Al enviar el formulario, actualiza la instancia con los datos del POST
+        form = Mesas_ExamenesForm(request.POST, instance=mesaExamen)
+        if form.is_valid():
+            form.save()  # Guarda los cambios en la base de datos
+            messages.success(
+                request, "La mesa de examen se ha actualizado correctamente.")
+            return redirect('gestion_Examenes')
+        else:
+            messages.error(
+                request, "Por favor corrige los errores en el formulario.")
+    else:
+        # Carga el formulario con los datos de la instancia
+        form = Mesas_ExamenesForm(instance=mesaExamen)
+        print("Formulario inicial:", form)  # Para depuración
+        print("Instancia inicial:", mesaExamen)  # Para depuración
+    return render(request, 'examenes/Gestion/editar_mesaExamen.html', {'form': form, 'mesaExamen': mesaExamen})
+
+
+@login_required
+@csrf_protect
+def ver_inscExa(request, id_mesaexamen):
+    # Obtener la mesa de examen correspondiente
+    mesa_examen = Mesas_Examenes.objects.get(id_mesaexamen=id_mesaexamen)
+
+    # Obtener la materia asociada a la mesa de examen
+    materia = mesa_examen.id_matxplan_me.id_materia if mesa_examen.id_matxplan_me else None
+
+    # Consulta para obtener los estudiantes inscritos a la mesa de examen
+    inscriptos = InscExamenes.objects.filter(id_mesaexamen=id_mesaexamen).select_related(
+        'estudiante__id_datinsc'
+    )
+
+    # Preparamos los datos necesarios
+    inscriptos_data = [
+        {
+            "dni": insc.estudiante.id_datinsc.dni if insc.estudiante and insc.estudiante.id_datinsc else "Sin DNI",
+            "nombre": f"{insc.estudiante.id_datinsc.nombre} {insc.estudiante.id_datinsc.apellido}" if insc.estudiante and insc.estudiante.id_datinsc else "Sin nombre",
+            "legajo": insc.estudiante.nro_legajo if insc.estudiante else "Sin legajo",
+        }
+        for insc in inscriptos
+    ]
+
+    return render(request, 'examenes/Gestion/ver_inscriptos.html', {
+        'id_mesaexamen': id_mesaexamen,
+        'materia': materia,  # Pasamos la materia
+        'inscriptos': inscriptos_data,
+    })
+
+
+# incribir Examenes
+
+
+@login_required
+@csrf_protect
+def solicitud_examenes(request):
+    # Obtener parámetros de búsqueda y filtro
+    dni = request.GET.get('dni')
+    curso = request.GET.get('curso')  # Filtro por curso
+
+    if dni:
+        # Buscar el estudiante por su DNI en DatInsc
+        estudiante_datinsc = DatInsc.objects.filter(dni=dni).first()
+        if estudiante_datinsc:
+            # Buscar al estudiante relacionado en Estudiantes
+            estudiante = Estudiantes.objects.filter(
+                id_datinsc=estudiante_datinsc).first()
+            if estudiante:
+                context = {'estudiante': estudiante}
+            else:
+                context = {
+                    'error': 'No se encontró un estudiante con este DNI en la tabla de Estudiantes.'}
+        else:
+            context = {
+                'error': 'No se encontró un estudiante con este DNI en DatInsc.'}
+    else:
+        # Obtener todos los estudiantes, filtrados y ordenados
+        estudiantes = (
+            Estudiantes.objects
+            # Cargar datos relacionados con DatInsc
+            .select_related('id_datinsc')
+            # Ordenar por apellido y nombre
+            .order_by('id_datinsc__apellido', 'id_datinsc__nombre')
+        )
+
+        if curso:
+            # Filtrar por curso si se seleccionó uno
+            estudiantes = estudiantes.filter(anio_insc=curso)
+
+        context = {
+            'estudiantes': estudiantes,
+            'curso_seleccionado': curso  # Pasar el curso seleccionado al template
+        }
+
+    return render(request, 'examenes/solicitud/solicitud_Examenes.html', context)
+
+
+@login_required
+@csrf_protect
+def inscribir_examen(request, id_estudiante):
+    # Obtener el estudiante usando el ID
+    estudiante = get_object_or_404(Estudiantes, id_estudiante=id_estudiante)
+
+    # Extraer datos básicos
+    datos = {
+        'dni': estudiante.id_datinsc.dni,
+        'nombre': estudiante.id_datinsc.nombre,
+        'apellido': estudiante.id_datinsc.apellido,
+        'nro_legajo': estudiante.nro_legajo,
+    }
+
+    # Cambiar el modelo a Mesas_Examenes
+    mesas_examenes = Mesas_Examenes.objects.all()
+    # Pasar los datos a la plantilla
+    return render(request, 'examenes/solicitud/inscribir_Examen.html', {
+        'mesas_examenes': mesas_examenes,
+        'datos': datos,
+        'estudiante': estudiante,
+    })
+
+
+@login_required
+@csrf_protect
+def fechas_disponibles(request, materia_id):
+    # Cambiar el modelo a Mesas_Examenes
+    mesas = Mesas_Examenes.objects.filter(
+        id_matxplan_me__id_materia=materia_id)
+    fechas = [{'id': mesa.id, 'fecha': mesa.fecha_examen}
+              for mesa in mesas]
+    return JsonResponse({'fechas': fechas})
+
+
+@login_required
+@csrf_protect
+def confirmar_inscripcion(request):
+    if request.method == 'POST':
+        # Obtener el ID del estudiante desde el formulario
+        id_estudiante = request.POST.get('id_estudiante')
+        materia_id = request.POST.get('materia')
+
+        try:
+            # Obtener el estudiante y la mesa de examen
+            estudiante = get_object_or_404(
+                Estudiantes, id_estudiante=id_estudiante)
+            mesa_examen = get_object_or_404(
+                Mesas_Examenes, id_mesaexamen=materia_id)
+
+            # Verificar si el estudiante ya está inscrito en esta mesa
+            if InscExamenes.objects.filter(estudiante=estudiante, id_mesaexamen=mesa_examen).exists():
+                messages.error(
+                    request, 'Este alumno ya está inscrito en esta mesa de examen.')
+                return redirect('solicitud_examenes')
+
+            # Crear un nuevo registro de inscripción en la tabla InscExamenes
+            inscripcion = InscExamenes.objects.create(
+                estudiante=estudiante,
+                id_mesaexamen=mesa_examen,
+                id_estadocuota_ie=None,  # Puedes ajustar esto según tus necesidades
+                id_empleado_ie=None       # Puedes ajustar esto según tus necesidades
+            )
+
+            # Mensaje de éxito
+            messages.success(request, 'Inscripción confirmada exitosamente.')
+            return redirect('solicitud_examenes')
+
+        except Exception as e:
+            # Capturar cualquier error y mostrar un mensaje
+            messages.error(
+                request, f'Error al confirmar la inscripción: {str(e)}')
+            return redirect('solicitud_examenes')
+
+    # En caso de que no sea POST, redirige o muestra un mensaje
+    messages.error(request, 'Error al confirmar la inscripción.')
+    return redirect('solicitud_examenes')
