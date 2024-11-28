@@ -107,3 +107,28 @@
   margin-top: auto;
   background-color: #005187;
 }
+
+/* Asegurar fondo blanco en el modal */
+.modal-content {
+  background-color: white !important;
+  border-radius: 10px; /* Opcional: esquinas redondeadas */
+}
+
+/* Espaciado entre elementos */
+.modal-body h5,
+.modal-body p {
+  margin-bottom: 15px;
+}
+
+/* Video centrado */
+.modal-body video {
+  display: block;
+  margin: 0 auto;
+}
+
+/* Ajuste de botón de enlace */
+.btn-link {
+  font-size: 1rem;
+  text-decoration: underline;
+}
+

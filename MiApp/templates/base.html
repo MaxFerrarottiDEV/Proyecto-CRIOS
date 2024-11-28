@@ -98,7 +98,7 @@
       </div>
     </nav>
     <!-- Contenido -->
-    <div class="flex-grow-1 container mt-5">
+    <div class="container flex-grow-1 mt-5">
       <!-- Mostrar mensajes -->
       {% if messages %}
       <div class="container mt-0">
@@ -109,11 +109,11 @@
           {% endfor %}
       </div>
       {% endif %}
-        {% block content %}
-        {% endblock content %}
+      {% block content %}
+      {% endblock content %}
     </div>
     <!-- Footer -->
-    <footer class="text-white text-center py-3 mt-auto">
+    <footer>
       <p class="footer-text">Profesorado CRIOS - Dirección: Tucumán 667, Salta, Argentina | 
         Teléfono: 423-3761
         <br>
@@ -133,32 +133,28 @@
 
     <!-- Modal de Perfil -->
     <div class="modal fade" id="perfilModal" tabindex="-1" aria-labelledby="perfilModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                   <h5 class="modal-title" id="perfilModalLabel">Perfil</h5>
-                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" ></button>
-                </div>
-                <div class="modal-body">
-                    <div class="text-center">
-                        <video width="120" height="120" autoplay loop muted>
-                          <source src="{% static 'images/Profile.mp4' %}" type="video/mp4">
-                        </video>
-                        <h5 class="mt-3">Hola, {{ user.username }}</h5>
-                    </div>
-                    <p class="mt-4"><strong>Nombre de Usuario:</strong> {{ user.username }}</p>
-                    <p><strong>Correo Electrónico:</strong> {{ user.email }}</p>
-                    <div class="text-center">
-                      <a href="#" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#currentPasswordModal">Cambiar contraseña</a>
-                    </div>
-                    
-                </div>
-            </div>
-        </div>
+      <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="perfilModalLabel">Perfil</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                  <video width="120" height="120" autoplay loop muted>
+                      <source src="{% static 'images/Profile.mp4' %}" type="video/mp4">
+                  </video>
+                  <h5>Hola, {{ user.username }}</h5>
+                  <p><strong>Nombre de Usuario:</strong> {{ user.username }}</p>
+                  <p><strong>Correo Electrónico:</strong> {{ user.email }}</p>
+                  <a href="#" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#currentPasswordModal">Cambiar contraseña</a>
+              </div>
+          </div>
+      </div>
     </div>
+
     <!-- Modal para ingresar la contraseña actual -->
     <div class="modal fade" id="currentPasswordModal" tabindex="-1" aria-labelledby="currentPasswordModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered"> <!-- Ajustar tamaño a modal-lg -->
+      <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
              <h5 class="modal-title" id="currentPasswordModalLabel">Verificar Contraseña</h5>
@@ -197,8 +193,17 @@
               setTimeout(() => alert.remove(), 200); // Retirar del DOM
           });
       }, 2000);
-  </script>
-  
+    </script>
+    <script>
+      // Prevenir el desplazamiento no deseado al abrir modales
+      document.addEventListener('show.bs.modal', function () {
+        document.body.style.paddingRight = '0px';
+      });
+    
+      document.addEventListener('hidden.bs.modal', function () {
+        document.body.style.paddingRight = '';
+      });
+    </script>
     {% block javascript %}
     {% endblock javascript %}
   </body>
