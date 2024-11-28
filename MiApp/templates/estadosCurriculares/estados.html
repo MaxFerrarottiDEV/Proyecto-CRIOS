@@ -130,22 +130,31 @@ Estados Curriculares
             </div>
         </div>
 
+        <!-- Asegúrate de incluir Font Awesome en el proyecto -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
         <div class="modal fade" id="modalAgregarNota" tabindex="-1" aria-labelledby="modalAgregarNotaLabel" aria-hidden="true">
             <div class="modal-dialog modal-custom">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h3 class="modal-title" id="modalAgregarNotaLabel">Agregar Nota</h3>
+                        <h3 class="modal-title" id="modalAgregarNotaLabel">
+                            <i class="fas fa-pen-alt me-2"></i>Agregar Nota
+                        </h3>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <h4>Estudiante: {{ estudiante.id_datinsc.apellido }} {{ estudiante.id_datinsc.nombre }}</h4>
+                        <h4>
+                            <i class="fas fa-user me-2"></i>Estudiante: {{ estudiante.id_datinsc.apellido }} {{ estudiante.id_datinsc.nombre }}
+                        </h4>
                         <form method="POST" action="{% url 'agregar_nota' dni=estudiante.id_datinsc.dni %}">
                             {% csrf_token %}
                             <input type="hidden" name="estudiante_id" value="{{ estudiante.id }}">
                             <input type="hidden" name="dni" value="{{ estudiante.id_datinsc.dni }}">
-        
+
                             <div class="mb-3">
-                                <label for="plan" class="form-label">Plan de Estudio</label>
+                                <label for="plan" class="form-label">
+                                    <i class="fas fa-graduation-cap me-2"></i>Plan de Estudio
+                                </label>
                                 <select id="plan" name="plan" class="form-select" required>
                                     <option value="" disabled selected>Seleccione un plan</option>
                                     {% for plan in planes %}
@@ -156,23 +165,28 @@ Estados Curriculares
                                         <option value="">No hay planes disponibles</option>
                                     {% endfor %}
                                 </select>
-                                
                             </div>
-                            
+
                             <div class="mb-3">
-                                <label for="materia" class="form-label">Materia</label>
+                                <label for="materia" class="form-label">
+                                    <i class="fas fa-book me-2"></i>Materia
+                                </label>
                                 <select id="materia" name="materia" class="form-select" disabled required>
                                     <option value="" disabled selected>Ningún plan seleccionado</option>
                                 </select>
                             </div>
-                            
+
                             <div class="mb-3 row">
                                 <div class="col-md-6">
-                                    <label for="nota" class="form-label">Nota</label>
+                                    <label for="nota" class="form-label">
+                                        <i class="fas fa-star me-2"></i>Nota
+                                    </label>
                                     <input type="number" id="nota" name="nota" class="form-control" placeholder="Ingrese el nota del estudiante" required>
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="condicion" class="form-label">Condición Nota</label>
+                                    <label for="condicion" class="form-label">
+                                        <i class="fas fa-clipboard-check me-2"></i>Condición Nota
+                                    </label>
                                     <select id="condicion" name="condicion" class="form-select" required>
                                         <option value="">Seleccionar...</option>
                                         <option value="Libre">Libre</option>
@@ -181,27 +195,36 @@ Estados Curriculares
                                     </select>
                                 </div>
                             </div>
-                            
+
                             <div class="mb-3 row">
                                 <div class="col-md-6">
-                                    <label for="folio" class="form-label">Folio del Estudiante</label>
+                                    <label for="folio" class="form-label">
+                                        <i class="fas fa-folder me-2"></i>Folio del Estudiante
+                                    </label>
                                     <input type="text" id="folio" name="folio" class="form-control" maxlength="50" placeholder="Ingrese el folio del estudiante" required>
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="fecha" class="form-label">Fecha de Finalización</label>
+                                    <label for="fecha" class="form-label">
+                                        <i class="fas fa-calendar-alt me-2"></i>Fecha de Finalización
+                                    </label>
                                     <input type="date" id="fecha" name="fecha" class="form-control" required>
                                 </div>
                             </div>
-        
+
                             <div class="modal-footer">
-                                <button type="button" class="botonVolver" data-bs-dismiss="modal"><i class="fa-solid fa-arrow-left"></i> Volver</button>
-                                <button type="submit" class="botonDescargar"><i class="fa-solid fa-plus"></i> Guardar Nota</button>
+                                <button type="button" class="botonVolver" data-bs-dismiss="modal">
+                                    <i class="fas fa-arrow-left me-2"></i>Volver
+                                </button>
+                                <button type="submit" class="botonDescargar">
+                                    <i class="fas fa-plus me-2"></i>Guardar Nota
+                                </button>
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
+
         
 
         {% elif estudiantes %}

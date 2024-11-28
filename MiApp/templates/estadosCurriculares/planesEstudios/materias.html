@@ -13,7 +13,7 @@ Planes de Estudio - Materias
 <div class="container mt-5">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <!-- Botón Volver alineado a la izquierda -->
-        <a href="{% url 'plan_estudio' %}" class="btn btn-info btn-sm mx-1 botonVolver"><i class="fa-solid fa-arrow-left"></i> Volver a Planes de Estudio</a>
+        <a href="{% url 'plan_estudio' %}" class="botonVolver"><i class="fa-solid fa-arrow-left"></i> Volver a Planes de Estudio</a>
         <!-- Botones Agregar alineado a la derecha -->
         <div>
             <button type="button" class="botonAgregarSolicitud" data-bs-toggle="modal" data-bs-target="#agregarMateriaModal">
@@ -62,7 +62,7 @@ Planes de Estudio - Materias
                     {% endif %}
                     </td>
                     <td>
-                        <button class="btn btn-warning btn-sm mx-1 botonModificar" 
+                        <button class="botonModificar" 
                             data-id_materia="{{ materia.id_materia }}" 
                             data-nombre="{{ materia.nombre }}" 
                             data-id_unidad="{{ materia.id_unidad.id_unidad }}" 
@@ -72,7 +72,7 @@ Planes de Estudio - Materias
                             <i class="fa-solid fa-edit"></i> Editar
                         </button>               
                         <button 
-                            class="btn btn-danger btn-sm botonEliminar" 
+                            class="botonEliminar" 
                             data-id_materia="{{ materia.id_materia }}">
                             <i class="fa-solid fa-trash"></i> Eliminar
                         </button>
@@ -147,7 +147,8 @@ Planes de Estudio - Materias
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                    <button type="button" class="botonVolver" data-bs-dismiss="modal"><i class="fa-solid fa-arrow-left"></i> Volver</button>
+                    <button type="submit" class="botonVer"><i class="fa-solid fa-check"></i>Guardar Cambios</button>
                 </div>
             </form>
         </div>
@@ -249,12 +250,12 @@ Planes de Estudio - Materias
                 message: "¿Está seguro de que desea eliminar esta materia?",
                 buttons: {
                     confirm: {
-                        label: 'Sí',
-                        className: 'btn-danger'
+                        label: 'Sí,eliminar materia.',
+                        className: 'botonDarDeBaja'
                     },
                     cancel: {
-                        label: 'No',
-                        className: 'btn-secondary'
+                        label: 'No.cancelar,',
+                        className: 'botonCancelarBaja'
                     }
                 },
                 callback: function (result) {

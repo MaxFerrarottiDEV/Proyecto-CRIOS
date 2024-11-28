@@ -16,7 +16,9 @@ Estados Curriculares
         <input type="hidden" name="dni" value="{{ estudiante.id_datinsc.dni }}">
 
         <div class="mb-3">
-            <label for="plan" class="form-label">Plan de Estudio</label>
+            <label for="plan" class="form-label">
+                <i class="fas fa-graduation-cap me-2"></i>Plan de Estudio
+            </label>
             <select id="plan" name="plan" class="form-select" required>
                 <option value="" disabled selected>Seleccione un plan</option>
                 {% for plan in planes %}
@@ -30,7 +32,9 @@ Estados Curriculares
         </div>
         
         <div class="mb-3">
-            <label for="materia" class="form-label">Materia</label>
+            <label for="materia" class="form-label">
+                <i class="fas fa-book me-2"></i>Materia
+            </label>
             <select id="materia" name="materia" class="form-select" disabled required>
                 <option value="" disabled selected>Ningún plan seleccionado</option>
             </select>
@@ -38,11 +42,15 @@ Estados Curriculares
         
         <div class="mb-3 row">
             <div class="col-md-6">
-                <label for="nota" class="form-label">Nota</label>
+                <label for="nota" class="form-label">
+                    <i class="fas fa-star me-2"></i>Nota
+                </label>
                 <input type="number" id="nota" name="nota" class="form-control" placeholder="Ingrese el nota del estudiante" required>
             </div>
             <div class="col-md-6">
-                <label for="condicion" class="form-label">Condición Nota</label>
+                <label for="condicion" class="form-label">
+                    <i class="fas fa-clipboard-check me-2"></i>Condición Nota
+                </label>
                 <select id="condicion" name="condicion" class="form-select" required>
                     <option value="">Seleccionar...</option>
                     <option value="Libre">Libre</option>
@@ -54,11 +62,15 @@ Estados Curriculares
         
         <div class="mb-3 row">
             <div class="col-md-6">
-                <label for="folio" class="form-label">Folio del Estudiante</label>
+                <label for="folio" class="form-label">
+                    <i class="fas fa-folder me-2"></i>Folio del Estudiante
+                </label>
                 <input type="text" id="folio" name="folio" class="form-control" maxlength="50" placeholder="Ingrese el folio del estudiante" required>
             </div>
             <div class="col-md-6">
-                <label for="fecha" class="form-label">Fecha de Finalización</label>
+                <label for="fecha" class="form-label">
+                    <i class="fas fa-calendar-alt me-2"></i>Fecha de Finalización
+                </label>
                 <input type="date" id="fecha" name="fecha" class="form-control" required>
             </div>
         </div>

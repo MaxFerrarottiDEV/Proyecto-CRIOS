@@ -19,7 +19,7 @@ Planes de Estudio
             Agregar un nuevo plan
         </button>
         <div>
-            <a href="{% url 'materia' %}" class="btn btn-info btn-sm mx-1 botonVolver">Ir a materias <i class="fa-solid fa-arrow-right"></i></a>
+            <a href="{% url 'materia' %}" class=" botonVolver">Ir a materias <i class="fa-solid fa-arrow-right"></i></a>
         </div>
     </div>
     <h2 style="text-align: center;">PLANES DE ESTUDIO</h2>
@@ -54,7 +54,7 @@ Planes de Estudio
                 </td>
                 <td>
                     <button type="button" 
-                    class="btn btn-info btn-sm botonVer" 
+                    class="botonVer" 
                     data-bs-toggle="modal" 
                     data-bs-target="#modalAgregarMaterias"
                     data-id_planestudio="{{ plan.id_planestudio }}">
@@ -71,7 +71,7 @@ Planes de Estudio
                         Ver Materias
                     </button>
                     <button 
-                    class="btn btn-danger btn-sm botonEliminar"
+                    class="botonEliminar"
                     data-id_planestudio="{{ plan.id_planestudio }}">
                     <i class="fa-solid fa-trash-can"></i> 
                         Quitar Plan
@@ -117,7 +117,8 @@ Planes de Estudio
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Guardar Plan de Estudio</button>
+                    <button type="button" class="botonVolver" data-bs-dismiss="modal"><i class="fa-solid fa-arrow-left"></i> Volver</button>
+                    <button type="submit" class="botonVer"><i class="fa-solid fa-check"></i>Guardar Plan de Estudio</button>
                 </div>
             </form>
         </div>
@@ -173,7 +174,8 @@ Planes de Estudio
                 </div>
 
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Guardar Materias</button>
+                    <button type="button" class="botonVolver" data-bs-dismiss="modal"><i class="fa-solid fa-arrow-left"></i> Volver</button>
+                    <button type="submit" class="botonVer"><i class="fa-solid fa-check"></i>Guardar Materias</button>
                 </div>
             </form>
         </div>
@@ -202,7 +204,8 @@ Planes de Estudio
                     <input type="hidden" name="accion" id="materia-accion">
                 </form>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" id="btnEstablecerPlanActual">Establecer como Plan Actual</button>
+                    <button type="button" class="botonVolver" data-bs-dismiss="modal"><i class="fa-solid fa-arrow-left"></i> Volver</button>
+                    <button type="button" class="botonVer" id="btnEstablecerPlanActual"><i class="fa-solid fa-check"></i>Establecer como Plan Actual</button>
                 </div>
             </div>
         </div>
@@ -388,7 +391,7 @@ $(document).on('click', '.botonEliminarMateria', function (e) {
         message: "¿Está seguro de que desea quitar esta materia del plan de estudio?",
         buttons: {
             confirm: {
-                label: 'Sí',
+                label: 'Sí,',
                 className: 'btn-danger'
             },
             cancel: {
@@ -433,12 +436,12 @@ $('#btnEstablecerPlanActual').on('click', function () {
         message: "¿Está seguro de que desea establecer este plan como el plan actual? Esto desactivará cualquier otro plan actual de la misma carrera.",
         buttons: {
             confirm: {
-                label: 'Sí',
-                className: 'btn-primary'
+                label: 'Sí,establecer.',
+                className: 'botonVer'
             },
             cancel: {
-                label: 'No',
-                className: 'btn-secondary'
+                label: 'No,cancelar.',
+                className: 'botonCancelarBaja'
             }
         },
         callback: function (result) {
@@ -498,12 +501,12 @@ $('#btnEstablecerPlanActual').on('click', function () {
             message: "¿Está seguro de que desea eliminar este plan de estudio?",
             buttons: {
                 confirm: {
-                    label: 'Sí',
-                    className: 'btn-danger'
+                    label: 'Sí,eliminar plan.',
+                    className: 'botonDarDeBaja'
                 },
                 cancel: {
-                    label: 'No',
-                    className: 'btn-secondary'
+                    label: 'No,cancelar.',
+                    className: 'botonCancelarBaja'
                 }
             },
             callback: function (result) {
