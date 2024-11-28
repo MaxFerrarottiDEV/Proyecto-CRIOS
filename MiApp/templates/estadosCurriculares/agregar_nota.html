@@ -9,80 +9,95 @@ Estados Curriculares
 {% block content %}
 
 <div class="container mt-4">
-    <h1 class="mb-4 text-center">Agregar Nota </h1>
-    <h2 class="mb-4 text-center">Estudiante: {{ estudiante.id_datinsc.apellido }} {{ estudiante.id_datinsc.nombre }}</h2>
-    <form method="POST" action="{% url 'agregar_nota' dni=estudiante.id_datinsc.dni %}">
-        {% csrf_token %}
-        <input type="hidden" name="dni" value="{{ estudiante.id_datinsc.dni }}">
-
-        <div class="mb-3">
-            <label for="plan" class="form-label">
-                <i class="fas fa-graduation-cap me-2"></i>Plan de Estudio
-            </label>
-            <select id="plan" name="plan" class="form-select" required>
-                <option value="" disabled selected>Seleccione un plan</option>
-                {% for plan in planes %}
-                    <option value="{{ plan.id_planestudio }}">
-                        {{ plan.id_carrera.nombre }} - {{ plan.descripcion }} (Año: {{ plan.anio_plan }})
-                    </option>
-                {% empty %}
-                    <option value="">No hay planes disponibles</option>
-                {% endfor %}
-            </select>
+    <div class="card shadow-lg">
+        <div class="card-header " style="background-color: #005187; color: white;">
+            <h1 class="mb-0">Agregar Nota para el estudiante: {{ estudiante.id_datinsc.apellido }} {{ estudiante.id_datinsc.nombre }} </h1>
         </div>
-        
-        <div class="mb-3">
-            <label for="materia" class="form-label">
-                <i class="fas fa-book me-2"></i>Materia
-            </label>
-            <select id="materia" name="materia" class="form-select" disabled required>
-                <option value="" disabled selected>Ningún plan seleccionado</option>
-            </select>
-        </div>
-        
-        <div class="mb-3 row">
-            <div class="col-md-6">
-                <label for="nota" class="form-label">
-                    <i class="fas fa-star me-2"></i>Nota
-                </label>
-                <input type="number" id="nota" name="nota" class="form-control" placeholder="Ingrese la nota del estudiante" required max="6">
-            </div>
+        <div class="card-body">
             
-            <div class="col-md-6">
-                <label for="condicion" class="form-label">
-                    <i class="fas fa-clipboard-check me-2"></i>Condición Nota
-                </label>
-                <select id="condicion" name="condicion" class="form-select" required>
-                    <option value="">Seleccionar...</option>
-                    <option value="Libre">Libre</option>
-                    <option value="Regular">Regular</option>
-                    <option value="Promocionado">Promocionado</option>
-                </select>
-            </div>
+            <form method="POST" action="{% url 'agregar_nota' dni=estudiante.id_datinsc.dni %}">
+                {% csrf_token %}
+                <input type="hidden" name="dni" value="{{ estudiante.id_datinsc.dni }}">
+                
+                <!-- Plan de Estudio -->
+                <div class="mb-3">
+                    <label for="plan" class="form-label">
+                        <i class="fas fa-graduation-cap me-2"></i>Plan de Estudio
+                    </label>
+                    <select id="plan" name="plan" class="form-select" required>
+                        <option value="" disabled selected>Seleccione un plan</option>
+                        {% for plan in planes %}
+                            <option value="{{ plan.id_planestudio }}">
+                                {{ plan.id_carrera.nombre }} - {{ plan.descripcion }} (Año: {{ plan.anio_plan }})
+                            </option>
+                        {% empty %}
+                            <option value="">No hay planes disponibles</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <!-- Materia -->
+                <div class="mb-3">
+                    <label for="materia" class="form-label">
+                        <i class="fas fa-book me-2"></i>Materia
+                    </label>
+                    <select id="materia" name="materia" class="form-select" disabled required>
+                        <option value="" disabled selected>Ningún plan seleccionado</option>
+                    </select>
+                </div>
+                
+                <!-- Nota y Condición Nota -->
+                <div class="mb-3 row">
+                    <div class="col-md-6">
+                        <label for="nota" class="form-label">
+                            <i class="fas fa-star me-2"></i>Nota
+                        </label>
+                        <input type="number" id="nota" name="nota" class="form-control" placeholder="Ingrese la nota del estudiante" required maxlength="6" oninput="if(this.value.length > 6) this.value = this.value.slice(0, 6);">
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <label for="condicion" class="form-label">
+                            <i class="fas fa-clipboard-check me-2"></i>Condición Nota
+                        </label>
+                        <select id="condicion" name="condicion" class="form-select" required>
+                            <option value="">Seleccionar...</option>
+                            <option value="Libre">Libre</option>
+                            <option value="Regular">Regular</option>
+                            <option value="Promocionado">Promocionado</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Folio y Fecha -->
+                <div class="mb-3 row">
+                    <div class="col-md-6">
+                        <label for="folio" class="form-label">
+                            <i class="fas fa-folder me-2"></i>Folio del Estudiante
+                        </label>
+                        <input type="text" id="folio" name="folio" class="form-control" maxlength="50" placeholder="Ingrese el folio del estudiante" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="fecha" class="form-label">
+                            <i class="fas fa-calendar-alt me-2"></i>Fecha de Finalización
+                        </label>
+                        <input type="date" id="fecha" name="fecha" class="form-control" required>
+                    </div>
+                </div>
+                
+                <div class="">
+                    <button type="submit" class="botonVer float-end">
+                        <i class="fa-solid fa-plus"></i> Guardar Nota
+                    </button>
+                    <a href="{% url 'estados' %}" class="botonVolver float-end">
+                        <i class="fa-solid fa-arrow-left"></i> Volver
+                    </a>
+                    
+                </div>
+            </form>
         </div>
-        
-        <div class="mb-3 row">
-            <div class="col-md-6">
-                <label for="folio" class="form-label">
-                    <i class="fas fa-folder me-2"></i>Folio del Estudiante
-                </label>
-                <input type="text" id="folio" name="folio" class="form-control" maxlength="50" placeholder="Ingrese el folio del estudiante" required>
-            </div>
-            <div class="col-md-6">
-                <label for="fecha" class="form-label">
-                    <i class="fas fa-calendar-alt me-2"></i>Fecha de Finalización
-                </label>
-                <input type="date" id="fecha" name="fecha" class="form-control" required>
-            </div>
-        </div>
-        
-        
-
-        <a href="{% url 'estados' %}" class="botonVolver"><i class="fa-solid fa-arrow-left"></i> Volver</a>
-        <button type="submit" class="botonDescargar"><i class="fa-solid fa-plus"></i>Guardar Nota</button>
-        
-    </form>
+    </div>
 </div>
+
 <script>
    document.addEventListener('DOMContentLoaded', function () {
     const planSelect = document.getElementById('plan');

@@ -7,6 +7,14 @@ Estados Curriculares
     <link href="{% static 'estilos/inscripciones/botones.css' %}" rel="stylesheet">
 {% endblock %}
 {% block content %}
+{% if messages %}
+    <div class="alert alert-success mt-3" role="alert">
+        {% for message in messages %}
+            {{ message }}
+        {% endfor %}
+    </div>
+{% endif %}
+
 
 <!-- Contenedor principal -->
 <div class="container mt-4">
@@ -102,6 +110,14 @@ Estados Curriculares
 {% endblock content %}
 {% block javascript %}
 <script>
+    $(document).ready(function () {
+        // Verifica si hay un mensaje y ocúltalo después de 2 segundos
+        if ($('.alert').length) {
+            setTimeout(function () {
+                $('.alert').fadeOut(1000); // Desaparece el mensaje con una transición de 1 segundo
+            }, 2000); // Espera 2 segundos antes de iniciar la desaparición
+        }
+    });
     $(document).ready(function () {
         $('#dataTable').DataTable({
             language: {

@@ -711,25 +711,35 @@ def agregar_nota(request, dni):
 
 
 def modificar_nota(request, id_estadocurricular, dni):
-    # Obtener el estado curricular
     estado_curricular = get_object_or_404(EstadosCurriculares, pk=id_estadocurricular)
-
-    # Obtener el estudiante relacionado a través del DNI
     estudiante = get_object_or_404(Estudiantes, id_datinsc__dni=dni)
 
-    # Lógica para manejar la solicitud POST si es necesario
     if request.method == 'POST':
+        # Obtener los valores enviados en el formulario
         nueva_nota = request.POST.get('nota')
+        nueva_condicion = request.POST.get('estado')
+        nuevo_folio = request.POST.get('folio')
+        nueva_fecha = request.POST.get('fecha')
+
+        # Actualizar los campos del estado curricular
         estado_curricular.nota = nueva_nota
+        estado_curricular.condicion_nota = nueva_condicion
+        estado_curricular.folio = nuevo_folio
+        estado_curricular.fecha_finalizacion = nueva_fecha
+
+        # Guardar los cambios
         estado_curricular.save()
-        messages.success(request, "Nota actualizada con éxito.")
-        return redirect('estados', dni=dni)
+
+        # Redirigir con un mensaje de éxito
+        messages.success(request, "Nota modificada correctamente.")
+        return redirect('verEstado', dni=dni)
 
     # Renderizar la plantilla con los datos necesarios
     return render(request, 'estadosCurriculares/modificar_nota.html', {
         'estado_curricular': estado_curricular,
         'estudiante': estudiante,
     })
+
 
 
 

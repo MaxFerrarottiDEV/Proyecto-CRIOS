@@ -118,8 +118,10 @@ Estados Curriculares
                                 <td>{{ materia.fecha_finalizacion|date:"d/m/Y" }}</td>
                                 <td>{{ materia.folio}}</td>
                                 <td>
-                                    <a href="" 
-                                    class="botonModificar mt-3" style="font-size: 16px; padding: 4px 8px;"><i class="bi bi-pencil-fill"></i> Modificar Nota</a>
+                                    <a href="{% url 'modificar_nota' materia.id_estadocurricular estudiante.id_datinsc.dni %}" 
+                       class="botonModificar mt-3" style="font-size: 16px; padding: 4px 8px;">
+                       <i class="bi bi-pencil-fill"></i> Modificar Nota
+                    </a>
                                 </td>
                             </tr>
                             {% empty %}
@@ -186,7 +188,7 @@ Estados Curriculares
                                     <label for="nota" class="form-label">
                                         <i class="fas fa-star me-2"></i>Nota
                                     </label>
-                                    <input type="number" id="nota" name="nota" class="form-control" placeholder="Ingrese la nota del estudiante" required max="6">
+                                    <input type="number" id="nota" name="nota" class="form-control" placeholder="Ingrese la nota del estudiante" required maxlength="6" oninput="if(this.value.length > 6) this.value = this.value.slice(0, 6);">
                                 </div>
                                 <div class="col-md-6">
                                     <label for="condicion" class="form-label">
@@ -268,15 +270,12 @@ Estados Curriculares
 {% block javascript %}
 <script>
     // Espera a que la página cargue completamente
-    document.addEventListener('DOMContentLoaded', function() {
-        // Selecciona el contenedor de mensajes (puedes ajustar el selector según tu HTML)
-        const alertContainer = document.querySelector('.alert-container');
-
-        if (alertContainer) {
-            // Configura un temporizador para ocultar el mensaje después de 2 segundos (2000 ms)
-            setTimeout(function() {
-                alertContainer.style.display = 'none';
-            }, 3000);
+    $(document).ready(function () {
+        // Verifica si hay un mensaje y ocúltalo después de 2 segundos
+        if ($('.alert').length) {
+            setTimeout(function () {
+                $('.alert').fadeOut(1000); // Desaparece el mensaje con una transición de 1 segundo
+            }, 2000); // Espera 2 segundos antes de iniciar la desaparición
         }
     });
 </script>
