@@ -652,35 +652,85 @@ def obtener_materias(request):
 @login_required
 def agregar_nota(request, dni):
     estudiante = get_object_or_404(Estudiantes, id_datinsc__dni=dni)
+    
     if request.method == 'POST':
         plan_id = request.POST.get('plan') 
         materia_id = request.POST.get('materia')
         condicion = request.POST.get('condicion')
         nota = request.POST.get('nota')
         fecha = request.POST.get('fecha')
-        folio= request.POST.get('folio')
+        folio = request.POST.get('folio')
+        
+        # Obtener el plan y la materia
         plan = get_object_or_404(PlanesEstudios, id_planestudio=plan_id)
         materia = get_object_or_404(MateriasxplanesEstudios, id_materia=materia_id, id_planestudio=plan_id)
-        nuevo_estado = EstadosCurriculares(
-            id_estudiante_estcur=estudiante,
-            id_matxplan_estcur=materia,
-            condicion_nota=condicion,
-            nota=nota,
-            fecha_finalizacion=fecha,
-            folio=folio)
-        nuevo_estado.save()
-        messages.success(request, "Nota agregada correctamente.")
+        
+        # Buscar si ya existe un estado curricular para esta materia y estudiante
+        with transaction.atomic():
+            estado_existente = EstadosCurriculares.objects.filter(
+                id_estudiante_estcur=estudiante, 
+                id_matxplan_estcur=materia
+            ).first()
+            
+            if estado_existente:
+                # Sobreescribir el estado existente
+                estado_existente.condicion_nota = condicion
+                estado_existente.nota = nota
+                estado_existente.fecha_finalizacion = fecha
+                estado_existente.folio = folio
+                estado_existente.save()
+                messages.success(request, "Nota actualizada correctamente.")
+            else:
+                # Crear un nuevo estado curricular
+                nuevo_estado = EstadosCurriculares(
+                    id_estudiante_estcur=estudiante,
+                    id_matxplan_estcur=materia,
+                    condicion_nota=condicion,
+                    nota=nota,
+                    fecha_finalizacion=fecha,
+                    folio=folio
+                )
+                nuevo_estado.save()
+                messages.success(request, "Nota agregada correctamente.")
+        
         return redirect('estados')
+    
+    # Obtener planes y materias para el formulario
     planes = PlanesEstudios.objects.select_related('id_carrera').all()
     materias = Materias.objects.all()
     plan_id = request.GET.get('plan')
     if plan_id:
         materias = Materias.objects.filter(
             materiasxplanesestudios__id_planestudio=plan_id).distinct()
+    
     return render(request, 'estadosCurriculares/agregar_nota.html', {
         'estudiante': estudiante,
         'materias': materias,
-        'planes': planes})
+        'planes': planes
+    })
+
+
+def modificar_nota(request, id_estadocurricular, dni):
+    # Obtener el estado curricular
+    estado_curricular = get_object_or_404(EstadosCurriculares, pk=id_estadocurricular)
+
+    # Obtener el estudiante relacionado a través del DNI
+    estudiante = get_object_or_404(Estudiantes, id_datinsc__dni=dni)
+
+    # Lógica para manejar la solicitud POST si es necesario
+    if request.method == 'POST':
+        nueva_nota = request.POST.get('nota')
+        estado_curricular.nota = nueva_nota
+        estado_curricular.save()
+        messages.success(request, "Nota actualizada con éxito.")
+        return redirect('estados', dni=dni)
+
+    # Renderizar la plantilla con los datos necesarios
+    return render(request, 'estadosCurriculares/modificar_nota.html', {
+        'estado_curricular': estado_curricular,
+        'estudiante': estudiante,
+    })
+
 
 
 

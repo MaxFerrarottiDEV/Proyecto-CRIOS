@@ -80,11 +80,14 @@ Estados Curriculares
                 <td>{{ materia.nota }}</td>
                 <td>{{ materia.fecha_finalizacion|date:"d/m/Y" }}</td>
                 <td>{{ materia.folio}}</td>
-                
                 <td>
-                    <a href="" 
-                    class="botonModificar mt-3" style="font-size: 16px; padding: 4px 8px;"><i class="bi bi-pencil-fill"></i> Modificar Nota</a>
+                    <a href="{% url 'modificar_nota' materia.id_estadocurricular estudiante.id_datinsc.dni %}" 
+                       class="botonModificar mt-3" style="font-size: 16px; padding: 4px 8px;">
+                       <i class="bi bi-pencil-fill"></i> Modificar Nota
+                    </a>
                 </td>
+                
+                
                 
             </tr>
             {% empty %}
