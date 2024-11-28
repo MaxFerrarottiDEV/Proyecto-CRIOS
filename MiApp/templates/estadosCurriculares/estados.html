@@ -93,6 +93,7 @@ Estados Curriculares
                                     <th style="color: white;background-color:#005187;">Nota</th>
                                     <th style="color: white;background-color:#005187;">Fecha</th>
                                     <th style="color: white;background-color:#005187;">Folio</th>
+                                    <th class="text-center" style="color: white;background-color:#005187;">Acción</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -116,6 +117,10 @@ Estados Curriculares
                                 <td>{{ materia.nota }}</td>
                                 <td>{{ materia.fecha_finalizacion|date:"d/m/Y" }}</td>
                                 <td>{{ materia.folio}}</td>
+                                <td>
+                                    <a href="" 
+                                    class="botonModificar mt-3" style="font-size: 16px; padding: 4px 8px;"><i class="bi bi-pencil-fill"></i> Modificar Nota</a>
+                                </td>
                             </tr>
                             {% empty %}
                             {% endfor %}
@@ -181,7 +186,7 @@ Estados Curriculares
                                     <label for="nota" class="form-label">
                                         <i class="fas fa-star me-2"></i>Nota
                                     </label>
-                                    <input type="number" id="nota" name="nota" class="form-control" placeholder="Ingrese el nota del estudiante" required>
+                                    <input type="number" id="nota" name="nota" class="form-control" placeholder="Ingrese la nota del estudiante" required max="6">
                                 </div>
                                 <div class="col-md-6">
                                     <label for="condicion" class="form-label">

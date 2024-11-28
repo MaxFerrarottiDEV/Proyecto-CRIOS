@@ -35,7 +35,7 @@ Inscripciones - Consultas de datos de estudiantes
                         <th style="color: white;background-color:#005187;">Curso</th>
                         <th style="color: white;background-color:#005187;">DNI</th>         
                         <th style="color: white;background-color:#005187;">Fecha de Inscripción</th>
-                        <th style="color: white;background-color:#005187;">Acciones</th>
+                        <th class="text-center" style="color: white;background-color:#005187;">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -60,7 +60,7 @@ Inscripciones - Consultas de datos de estudiantes
                         </td>  
                         <td>{{ estudiante.id_datinsc.dni }}</td>                
                         <td>{{ estudiante.insccarreras_set.first.fecha_insc }}</td>
-                        <td>
+                        <td class="text-center">
                             <a href="{% url 'ver_datos' estudiante.id_estudiante %}" class="botonVer"><i class="fa-solid fa-eye"></i> Ver datos</a>
                             <a href="#" 
                                 class="botonEliminar" 

@@ -38,15 +38,15 @@
     <hr>
 
     <!-- Datos Estudiantiles -->
-    <div class="card mb-4" >
-        <div class="card-header "style="background-color: #005187; color: white;">
-            <h4>Datos Estudiantiles</h4>
+    <div class="card mb-4">
+        <div class="card-header" style="background-color: #005187; color: white;">
+            <h4><i class="fas fa-user-graduate"></i> Datos Estudiantiles</h4>
         </div>
         <div class="card-body">
             <div class="row">
                 <div class="col-md-6">
-                    <p><strong>Número de Legajo:</strong> {{ estudiante.nro_legajo }}</p>
-                    <p><strong>Curso:</strong>
+                    <p><strong><i class="fas fa-id-badge"></i> Número de Legajo:</strong> {{ estudiante.nro_legajo }}</p>
+                    <p><strong><i class="fas fa-chalkboard-teacher"></i> Curso:</strong>
                         {% if estudiante.anio_insc == 1 %}
                             1er Año
                         {% elif estudiante.anio_insc == 2 %}
@@ -61,15 +61,15 @@
                             No asignado
                         {% endif %}
                     </p>
-                    <p><strong>Inscripto por:</strong> {{ estudiante.insccarreras_set.first.id_empleado_ic.nombre }} {{ estudiante.insccarreras_set.first.id_empleado_ic.apellido }}</p>
-                    <p><strong>Pago de Matricula:</strong> 
+                    <p><strong><i class="fas fa-user-plus"></i> Inscripto por:</strong> {{ estudiante.insccarreras_set.first.id_empleado_ic.nombre }} {{ estudiante.insccarreras_set.first.id_empleado_ic.apellido }}</p>
+                    <p><strong><i class="fas fa-credit-card"></i> Pago de Matricula:</strong> 
                         {% if estudiante.id_datinsc.matricula == 0 %}
                             Pendiente
                         {% elif estudiante.id_datinsc.matricula == 1 %}
                             Realizado
                         {% endif %} 
                     </p>
-                    <p><strong>Posee un legajo físico:</strong> 
+                    <p><strong><i class="fas fa-archive"></i> Posee un legajo físico:</strong> 
                         {% if estudiante.id_datinsc.legajo_fisico == 0 %}
                             No 
                         {% elif estudiante.id_datinsc.legajo_fisico == 1 %}
@@ -78,41 +78,40 @@
                     </p>
                 </div>
                 <div class="col-md-6">
-                    <p>
-                        <strong>Legajo Digital:</strong> 
+                    <p><strong><i class="fas fa-file-download"></i> Legajo Digital:</strong> 
                         {% if estudiante.legajo_digital %}
                             <a href="{{ estudiante.legajo_digital }}" target="_blank">{{ estudiante.legajo_digital }}</a>
                         {% else %}
                             No disponible
                         {% endif %}
                     </p>                    
-                    <p><strong>Fecha de Inscripción:</strong> {{ estudiante.insccarreras_set.first.fecha_insc }}</p>
-                    <p><strong>Carrera:</strong> {{ estudiante.insccarreras_set.first.id_carrera_ic.nombre }}</p>        
+                    <p><strong><i class="fas fa-calendar-alt"></i> Fecha de Inscripción:</strong> {{ estudiante.insccarreras_set.first.fecha_insc }}</p>
+                    <p><strong><i class="fas fa-graduation-cap"></i> Carrera:</strong> {{ estudiante.insccarreras_set.first.id_carrera_ic.nombre }}</p>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Datos Personales -->
-    <div class="card" >
-        <div class="card-header "style="background-color: #005187; color: white;">
-            <h4>Datos Personales</h4>
+    <div class="card">
+        <div class="card-header" style="background-color: #005187; color: white;">
+            <h4><i class="fas fa-user"></i> Datos Personales</h4>
         </div>
         <div class="card-body">
             <div class="row">
                 <div class="col-md-6">
-                    <p><strong>Nombre/s:</strong> {{ estudiante.id_datinsc.nombre }}</p>
-                    <p><strong>Apellido/s:</strong> {{ estudiante.id_datinsc.apellido }}</p>
-                    <p><strong>Fecha de Nacimiento:</strong> {{ estudiante.id_datinsc.fecha_nac }}</p>
-                    <p><strong>Provincia:</strong> {{ estudiante.id_datinsc.provincia }}</p>
-                    <p><strong>DNI:</strong> {{ estudiante.id_datinsc.dni }}</p>
-                    <p><strong>Edad:</strong> {{ estudiante.id_datinsc.edad }}</p>
-                    <p><strong>Domicilio:</strong> {{ estudiante.id_datinsc.domicilio }}</p>
-                    <p><strong>Teléfono Fijo:</strong> {{ estudiante.id_datinsc.telefono_fijo }}</p>
-                    <p><strong>Celular:</strong> {{ estudiante.id_datinsc.celular_nro }}</p>
-                    <p><strong>Email:</strong> {{ estudiante.id_datinsc.email }}</p>
-                    <p><strong>Estado Civil:</strong> {{ estudiante.id_datinsc.estado_civil }}</p>
-                    <p><strong>¿Tiene hijos?:</strong> 
+                    <p><strong><i class="fas fa-user-alt"></i> Nombre/s:</strong> {{ estudiante.id_datinsc.nombre }}</p>
+                    <p><strong><i class="fas fa-user-alt-slash"></i> Apellido/s:</strong> {{ estudiante.id_datinsc.apellido }}</p>
+                    <p><strong><i class="fas fa-birthday-cake"></i> Fecha de Nacimiento:</strong> {{ estudiante.id_datinsc.fecha_nac }}</p>
+                    <p><strong><i class="fas fa-map-marker-alt"></i> Provincia:</strong> {{ estudiante.id_datinsc.provincia }}</p>
+                    <p><strong><i class="fas fa-id-card"></i> DNI:</strong> {{ estudiante.id_datinsc.dni }}</p>
+                    <p><strong><i class="fas fa-calendar-day"></i> Edad:</strong> {{ estudiante.id_datinsc.edad }}</p>
+                    <p><strong><i class="fas fa-home"></i> Domicilio:</strong> {{ estudiante.id_datinsc.domicilio }}</p>
+                    <p><strong><i class="fas fa-phone-alt"></i> Teléfono Fijo:</strong> {{ estudiante.id_datinsc.telefono_fijo }}</p>
+                    <p><strong><i class="fas fa-mobile-alt"></i> Celular:</strong> {{ estudiante.id_datinsc.celular_nro }}</p>
+                    <p><strong><i class="fas fa-envelope"></i> Email:</strong> {{ estudiante.id_datinsc.email }}</p>
+                    <p><strong><i class="fas fa-heart"></i> Estado Civil:</strong> {{ estudiante.id_datinsc.estado_civil }}</p>
+                    <p><strong><i class="fas fa-baby"></i> ¿Tiene hijos?:</strong> 
                         {% if estudiante.id_datinsc.hijos == 0 %}
                             No
                         {% elif estudiante.id_datinsc.hijos == 1 %}
@@ -122,14 +121,14 @@
                         {% endif %}
                     </p>
                 </div>
-                <div class="col-md-6"> 
-                    <p><strong>Lugar de Trabajo:</strong> {{ estudiante.id_datinsc.lugar_trabajo }}</p>
-                    <p><strong>Teléfono de Emergencia:</strong> {{ estudiante.id_datinsc.tel_emergencia }}</p>
-                    <p><strong>Colegio de Egreso:</strong> {{ estudiante.id_datinsc.col_egreso }}</p>
-                    <p><strong>Título:</strong> {{ estudiante.id_datinsc.titulo }}</p>
-                    <p><strong>Otro Título:</strong> {{ estudiante.id_datinsc.otro_titulo }}</p>
-                    <p><strong>Año de Egreso:</strong> {{ estudiante.id_datinsc.anio_egreso }}</p>                   
-                    <p><strong>¿Tuvo otro ingreso a nivel Superior o universitario anterior a este?:</strong> 
+                <div class="col-md-6">
+                    <p><strong><i class="fas fa-briefcase"></i> Lugar de Trabajo:</strong> {{ estudiante.id_datinsc.lugar_trabajo }}</p>
+                    <p><strong><i class="fas fa-phone-square-alt"></i> Teléfono de Emergencia:</strong> {{ estudiante.id_datinsc.tel_emergencia }}</p>
+                    <p><strong><i class="fas fa-school"></i> Colegio de Egreso:</strong> {{ estudiante.id_datinsc.col_egreso }}</p>
+                    <p><strong><i class="fas fa-certificate"></i> Título:</strong> {{ estudiante.id_datinsc.titulo }}</p>
+                    <p><strong><i class="fas fa-certificate"></i> Otro Título:</strong> {{ estudiante.id_datinsc.otro_titulo }}</p>
+                    <p><strong><i class="fas fa-calendar-alt"></i> Año de Egreso:</strong> {{ estudiante.id_datinsc.anio_egreso }}</p>
+                    <p><strong><i class="fas fa-graduation-cap"></i> ¿Tuvo otro ingreso a nivel Superior o universitario anterior a este?:</strong> 
                         {% if estudiante.id_datinsc.preg_1 == 0 %}
                             No
                         {% elif estudiante.id_datinsc.preg_1 == 1 %}
@@ -138,9 +137,9 @@
                             Sin responder
                         {% endif %}
                     </p>
-                    <p><strong>¿Cuál?:</strong> {{ estudiante.id_datinsc.resp_1 }}</p>
-                    <p><strong>¿Completo esos estudios?:</strong> {{ estudiante.id_datinsc.preg_2 }}</p>
-                    <p><strong>¿Es beneficiario de algún tipo de Beca/Ayuda Social? (Especifique):</strong> 
+                    <p><strong><i class="fas fa-question-circle"></i> ¿Cuál?:</strong> {{ estudiante.id_datinsc.resp_1 }}</p>
+                    <p><strong><i class="fas fa-check-circle"></i> ¿Completo esos estudios?:</strong> {{ estudiante.id_datinsc.preg_2 }}</p>
+                    <p><strong><i class="fas fa-users"></i> ¿Es beneficiario de algún tipo de Beca/Ayuda Social? (Especifique):</strong> 
                         {% if estudiante.id_datinsc.resp_2 == 0 %}
                             No
                         {% elif estudiante.id_datinsc.resp_2 == 1 %}
@@ -153,6 +152,7 @@
             </div>
         </div>
     </div>
+
 </div>
 
 <!-- Modal -->

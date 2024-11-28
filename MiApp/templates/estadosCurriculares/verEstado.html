@@ -56,6 +56,7 @@ Estados Curriculares
                 <th style="color: white;background-color:#005187;">Nota</th>
                 <th style="color: white;background-color:#005187;">Fecha</th>
                 <th style="color: white;background-color:#005187;">Folio</th>
+                <th class="text-center" style="color: white;background-color:#005187;">Acción</th>
             </tr>
         </thead>
         <tbody>
@@ -79,12 +80,19 @@ Estados Curriculares
                 <td>{{ materia.nota }}</td>
                 <td>{{ materia.fecha_finalizacion|date:"d/m/Y" }}</td>
                 <td>{{ materia.folio}}</td>
+                
+                <td>
+                    <a href="" 
+                    class="botonModificar mt-3" style="font-size: 16px; padding: 4px 8px;"><i class="bi bi-pencil-fill"></i> Modificar Nota</a>
+                </td>
+                
             </tr>
             {% empty %}
             {% endfor %}
         </tbody>
     </table>
     <a href="{% url 'estados' %}" class="botonVolver"><i class="fa-solid fa-arrow-left"></i> Volver</a>
+    
     <a href="{% url 'descargar_pdf' %}?dni={{ estudiante.id_datinsc.dni }}" class="botonDescargar mt-3"><i class="fa-regular fa-file-pdf"></i>Descargar PDF</a>
     
 </div>

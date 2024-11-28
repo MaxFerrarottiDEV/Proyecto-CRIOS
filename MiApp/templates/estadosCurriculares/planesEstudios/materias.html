@@ -39,7 +39,7 @@ Planes de Estudio - Materias
                     <th style="color: white;background-color:#005187;">Tipo de Unidad</th>                     
                     <th style="color: white;background-color:#005187;">Cursado</th>
                     <th style="color: white;background-color:#005187;">Es Correlativa</th>
-                    <th style="color: white;background-color:#005187;">Acciones</th>
+                    <th class="text-center" style="color: white;background-color:#005187;">Acciones</th>
                 </tr>
             </thead>
             <tbody>
@@ -61,7 +61,7 @@ Planes de Estudio - Materias
                         Si
                     {% endif %}
                     </td>
-                    <td>
+                    <td class="text-center">
                         <button class="botonModificar" 
                             data-id_materia="{{ materia.id_materia }}" 
                             data-nombre="{{ materia.nombre }}" 
@@ -208,7 +208,8 @@ Planes de Estudio - Materias
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                    <button type="button" class="botonVolver" data-bs-dismiss="modal"><i class="fa-solid fa-arrow-left"></i> Volver</button>
+                    <button type="submit" class="botonVer"><i class="fa-solid fa-check"></i>Guardar Cambios</button>
                 </div>
             </form>
         </div>

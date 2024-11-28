@@ -626,7 +626,6 @@ def estados(request):
 
 
     
-
 @login_required
 def obtener_materias(request):
     plan_id = request.GET.get('plan_id')
@@ -682,15 +681,6 @@ def agregar_nota(request, dni):
         'estudiante': estudiante,
         'materias': materias,
         'planes': planes})
-
-
-
-
-    
-
-
-
-
 
 
 
@@ -761,7 +751,7 @@ def pdf_estadoCurricular(request):
                 str(estado.nota) if estado.nota is not None else "---",
                 estado.fecha_finalizacion.strftime("%d/%m/%Y") if estado.fecha_finalizacion else "---",
                 estado.folio if estado.folio else "---"])
-        table = Table(data, colWidths=[30, 290, 75, 30, 60, 50])
+        table = Table(data, colWidths=[30, 220, 75, 40, 60, 100])
         table.setStyle(TableStyle([
             ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#005187")),
             ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),

@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Modificar Nota de {{ materia.id_matxplan_estcur.id_materia.nombre }}</h2>
+    
+    <form method="POST">
+        {% csrf_token %}
+        <label for="nota">Nueva Nota:</label>
+        <input type="number" name="nota" id="nota" value="{{ estado_curricular.nota }}" required>
+        <button type="submit">Actualizar Nota</button>
+    </form>
+    
+    <a href="{% url 'estados' %}?dni={{ estudiante.id_datinsc.dni }}" class="btn btn-secondary mt-3">Volver</a>
+</div>
+{% endblock %}
+
