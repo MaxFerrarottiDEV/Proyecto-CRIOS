@@ -13,12 +13,12 @@ Modificar Datos - {{ estudiante.id_datinsc.nombre }} {{ estudiante.id_datinsc.ap
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <!-- Botón de Volver -->
-        <a href="{% url 'ver_datos' estudiante.id_estudiante %}" class="btn btn-info btn-sm mx-1 botonVolver">
+        <a href="{% url 'ver_datos' estudiante.id_estudiante %}" class=" botonVolver">
             <i class="fa-solid fa-arrow-left"></i> Volver
         </a>
 
         <!-- Botón de Guardar Cambios -->
-        <button type="submit" form="modificar-form" class="btn btn-info btn-sm botonVer mx-1">
+        <button type="submit" form="modificar-form" class=" botonVer ">
             <i class="fa-solid fa-floppy-disk"></i> Guardar Cambios
         </button>
     </div>

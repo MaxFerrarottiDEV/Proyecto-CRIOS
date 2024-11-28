@@ -19,7 +19,7 @@ Planes de Estudio
             Agregar un nuevo plan
         </button>
         <div>
-            <a href="{% url 'materia' %}" class="btn btn-info btn-sm mx-1 botonVolver">Ir a materias <i class="fa-solid fa-arrow-right"></i></a>
+            <a href="{% url 'materia' %}" class=" botonVolver">Ir a materias <i class="fa-solid fa-arrow-right"></i></a>
         </div>
     </div>
     <h2 style="text-align: center;">PLANES DE ESTUDIO</h2>
@@ -54,7 +54,7 @@ Planes de Estudio
                 </td>
                 <td>
                     <button type="button" 
-                    class="btn btn-info btn-sm botonVer" 
+                    class="botonVer" 
                     data-bs-toggle="modal" 
                     data-bs-target="#modalAgregarMaterias"
                     data-id_planestudio="{{ plan.id_planestudio }}">
@@ -62,7 +62,7 @@ Planes de Estudio
                         Agregar
                     </button>
                     <button type="button" 
-                    class="btn btn-info botonVerMateria" 
+                    class=" botonVerMateria" 
                     data-bs-toggle="modal" 
                     data-bs-target="#modalVerMaterias" 
                     data-plan-id="{{ plan.id_planestudio }}"
@@ -71,7 +71,7 @@ Planes de Estudio
                         Ver Materias
                     </button>
                     <button 
-                    class="btn btn-danger btn-sm botonEliminar"
+                    class="botonEliminar"
                     data-id_planestudio="{{ plan.id_planestudio }}">
                     <i class="fa-solid fa-trash-can"></i> 
                         Quitar Plan
