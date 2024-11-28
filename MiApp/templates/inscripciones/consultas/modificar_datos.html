@@ -12,14 +12,23 @@ Modificar Datos - {{ estudiante.id_datinsc.nombre }} {{ estudiante.id_datinsc.ap
 {% block content %}
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <a href="{% url 'ver_datos' estudiante.id_estudiante %}" class="btn btn-info btn-sm mx-1 botonVolver"><i class="fa-solid fa-arrow-left"></i> Volver</a>
+        <!-- Botón de Volver -->
+        <a href="{% url 'ver_datos' estudiante.id_estudiante %}" class="btn btn-info btn-sm mx-1 botonVolver">
+            <i class="fa-solid fa-arrow-left"></i> Volver
+        </a>
+
+        <!-- Botón de Guardar Cambios -->
+        <button type="submit" form="modificar-form" class="btn btn-info btn-sm botonVer mx-1">
+            <i class="fa-solid fa-floppy-disk"></i> Guardar Cambios
+        </button>
     </div>
+
     <h1 class="text-center">Modificar datos de {{ estudiante.id_datinsc.nombre }} {{ estudiante.id_datinsc.apellido }}</h1>
     <hr>
 
-    <form method="post" action="{% url 'modificar_datos' estudiante.id_estudiante %}">
+    <form id="modificar-form" method="post" action="{% url 'modificar_datos' estudiante.id_estudiante %}">
         {% csrf_token %}
-        
+
         <!-- Datos Estudiantiles -->
         <div class="card mb-4">
             <div class="card-header bg-primary text-white">
@@ -46,13 +55,13 @@ Modificar Datos - {{ estudiante.id_datinsc.nombre }} {{ estudiante.id_datinsc.ap
                         <div class="form-check mb-3">
                             <input class="form-check-input" type="checkbox" id="matricula" name="matricula" value="True" {% if estudiante.id_datinsc.matricula %}checked{% endif %}>
                             <label class="form-check-label" for="matricula">
-                                ¿Ya se ha realizado el pago de matrícula? (Marcar para un "Si" o sino dejar vacio para un "No")
+                                ¿Ya se ha realizado el pago de matrícula? (Marcar para un "Si" o sino dejar vacío para un "No")
                             </label>
                         </div>
                         <div class="form-check mb-3">
                             <input class="form-check-input" type="checkbox" id="legajo_fisico" name="legajo_fisico" value="True" {% if estudiante.id_datinsc.legajo_fisico %}checked{% endif %}>
                             <label class="form-check-label" for="legajo_fisico">
-                                ¿Posee un legajo físico? (Marcar para un "Si" o sino dejar vacio para un "No")
+                                ¿Posee un legajo físico? (Marcar para un "Si" o sino dejar vacío para un "No")
                             </label>
                         </div>
                     </div>
@@ -111,12 +120,9 @@ Modificar Datos - {{ estudiante.id_datinsc.nombre }} {{ estudiante.id_datinsc.ap
                 </div>
             </div>
         </div>
-        <div class="d-flex justify-content-end">
-            <button type="submit" class="btn btn-info btn-sm botonVer"><i class="fa-solid fa-floppy-disk"></i> Guardar Cambios</button>
-        </div>
-        <br>
     </form>
 </div>
+
 {% endblock %}
 
 {% block javascript %}

@@ -3,7 +3,7 @@ from django.contrib.auth.views import LogoutView
 from django.urls import path, include # type: ignore
 from django.contrib import admin # type: ignore
 from . import views
-from .views import login_view, logout_view
+from .views import login_view, logout_view, sincronizar_datos
 from .forms import CustomPasswordResetForm
 
 urlpatterns = [
@@ -37,6 +37,7 @@ urlpatterns = [
     # Modulo de inscripciones - solicitudes 
     path('inscripciones/tipoInscripcion/',views.tipo_inscripcion, name='tipo_inscripcion'),
     path('inscripciones/solicitudes/', views.lista_solicitudes, name='lista_solicitudes'),
+    path('sincronizar/', sincronizar_datos, name='sincronizar_datos'),
     path('inscripciones/solicitudes/confirmar/<int:id_datinsc>/', views.confirmar_solicitud, name='confirmar_solicitud'),
     path('inscripciones/solicitudes/editar/<int:id_datinsc>', views.editar_solicitud, name='editar_solicitud'),
     path('inscripciones/solicitudes/eliminar/<int:id_datinsc>', views.eliminar_solicitud, name='eliminar_solicitud'),

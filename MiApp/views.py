@@ -9,8 +9,10 @@ from django.db.models import Q, Count
 from django.http import JsonResponse, HttpResponse, HttpResponseRedirect, HttpResponseBadRequest
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import render_to_string
-from django.views.decorators.csrf import csrf_protect
+from django.views.decorators.csrf import csrf_protect, csrf_exempt
 from django.urls import reverse
+
+from MiApp.management.commands.sync_firebase_to_mysql import Command
 
 from io import BytesIO
 
@@ -122,6 +124,21 @@ def lista_solicitudes(request):
         'solicitudes': solicitudes,
         'form': form  # Pasamos el formulario al contexto
     })
+
+
+@csrf_exempt  # Desactiva la verificación CSRF solo para este endpoint
+def sincronizar_datos(request):
+    if request.method == 'POST':
+        try:
+            # Ejecutar el comando de sincronización de Firebase a MySQL
+            command = Command()
+            command.handle()
+
+            return JsonResponse({'success': True, 'message': 'Datos sincronizados correctamente'})
+        except Exception as e:
+            return JsonResponse({'success': False, 'message': str(e)})
+
+    return JsonResponse({'success': False, 'message': 'Método no permitido'}, status=405)
 
 
 @login_required

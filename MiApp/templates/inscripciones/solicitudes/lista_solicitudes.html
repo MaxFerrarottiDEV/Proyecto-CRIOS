@@ -226,4 +226,38 @@ Inscripciones - Solicitudes de Preinscripción
         });
     }
 </script>
+<!-- Asegúrate de cargar el archivo antes de usar la función -->
+<script type="module" src="{% static 'firebase/firebase-mysql2.js' %}"></script>
+
+<script type="text/javascript">
+    // Asegúrate de que syncFirebaseToMySQL esté definida correctamente en el archivo JS que has importado.
+    async function obtenerRegistrosDrive() {
+        try {
+            const response = await fetch('/sincronizar/', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({})
+            });
+
+            // Verifica si la respuesta es exitosa
+            if (response.ok) {
+                const result = await response.json();
+                if (result.success) {
+                    alert("Datos obtenidos y guardados correctamente");
+                    location.reload();
+                } else {
+                    throw new Error(result.message);
+                }
+            } else {
+                throw new Error("Error al sincronizar datos");
+            }
+        } catch(error) {
+            console.error("Error al sincronizar con el backend:", error);
+            alert("Ocurrió un error: " + error.message);
+        }
+    }
+</script>
 {% endblock javascript %}

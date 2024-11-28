@@ -138,7 +138,15 @@
                         {% endif %}
                     </p>
                     <p><strong>¿Cuál?:</strong> {{ estudiante.id_datinsc.resp_1 }}</p>
-                    <p><strong>¿Completo esos estudios?:</strong> {{ estudiante.id_datinsc.preg_2 }}</p>
+                    <p><strong>¿Completo esos estudios?:</strong>
+                    {% if estudiante.id_datinsc.preg_2 == 0 %}
+                        No
+                    {% elif estudiante.id_datinsc.preg_2 == 1 %}
+                        Si
+                    {% else %}
+                        Sin responder
+                    {% endif %}
+                    </p>
                     <p><strong>¿Es beneficiario de algún tipo de Beca/Ayuda Social? (Especifique):</strong> 
                         {% if estudiante.id_datinsc.resp_2 == 0 %}
                             No
